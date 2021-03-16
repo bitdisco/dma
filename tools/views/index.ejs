@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      <%= title %>
+    </title>
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.0/axios.min.js"></script>
+    <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+    <script src="./js/ant-vue/antd.min.js"></script>
+    <link href="./js/ant-vue/antd.min.css" rel="stylesheet" type="text/css" />
+    <link href="./css/styles.css" rel="stylesheet" type="text/css" />
+    <script src="https://cdn.bootcdn.net/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <script src="./js/index.js"></script>
+    <script>
+      var swaggerUrls = []
+      <% for(var key in swaggerUrls){ %>swaggerUrls.push({ name:'<%=key %>',value:'<%=swaggerUrls[key] %>'});
+      <% }%>
+      var data = {
+        title: "<%=title %>",
+        description: "<%=description %>",
+        version: "<%=version %>",
+        swaggerUrls: swaggerUrls,
+        dictionaryUrl: "<%=dictionaryUrl %>",
+        enumUrl: "<%=enumUrl %>",
+        logs: [],
+        logsVisible: false,
+        activeIndex: 0
+      };
+
+      window.addEventListener(
+        "load",
+        () => {
+          createApp(data);
+        },
+        false
+      );
+    </script>
+  </head>
+
+  <body>
+    <div id="app" class="page">
+      <header>
+        <h2><%=title %></h2>
+        <p>
+          <span style="float:right">版本号：{{ version }}</span
+          ><%= description %>
+        </p>
+      </header>
+      <div class="container">
+        <div class="wrapper">
+          <div class="panel">
+            <div class="action-bar">
+              <a-button-group>
+                <a-button
+                  :type="activeIndex==0?'primary':''"
+                  @click="activeIndex=0"
+                >
+                  生成API接口</a-button
+                >
+                <a-button
+                  :type="activeIndex==1?'primary':''"
+                  @click="activeIndex=1"
+                >
+                  生成VUE页面
+                </a-button>
+                <a-button
+                  :type="activeIndex==2?'primary':''"
+                  @click="activeIndex=2"
+                  >生成枚举
+                </a-button></a-button-group
+              >
+            </div>
+            <div class="params-bar" v-if="activeIndex==0">
+              <div><span> 远程swagger地址：</span></div>
+              <div>
+                <a-select
+                  placeholder="请选择Swagger地址"
+                  v-model="selectedSystemName"
+                  @change="onSystemChanged"
+                  style="flex:1"
+                >
+                  <a-select-option
+                    v-for="(item,index) in swaggerUrls"
+                    :key="index"
+                    :value="item.name"
+                  >
+                    {{ item.name }} - {{ item.value }}
+                  </a-select-option>
+                  <a-select-option key="-" value="">其它地址</a-select-option>
+                </a-select>
+              </div>
+
+              <div class="input-view" v-show="selectedSystemName===''">
+                <div class="system-name">
+                  <a-input class="input" placeholder="请输入模块名称"></a-input>
+                </div>
+                <div class="swagger-url">
+                  <a-input
+                    placeholder="请输入远程swagger接口信息地址"
+                    type="text"
+                    class="input"
+                    v-model="swaggerUrl"
+                  ></a-input>
+                </div>
+              </div>
+              <div>
+                <!-- <a-button type="primary" @click="getSwaggerInfo">获取</a-button> -->
+                <a-button type="primary" @click="createSwaggerApi"
+                  >生成API</a-button
+                >
+              </div>
+            </div>
+            <div class="params-bar" v-if="activeIndex==1">
+              <div><span> 远程swagger地址：</span></div>
+              <div>
+                <a-select
+                  placeholder="请选择Swagger地址"
+                  v-model="selectedSystemName"
+                  @change="onSystemChanged"
+                  style="flex:1"
+                >
+                  <a-select-option
+                    v-for="(item,index) in swaggerUrls"
+                    :key="index"
+                    :value="item.name"
+                  >
+                    {{ item.name }} - {{ item.value }}
+                  </a-select-option>
+                  <a-select-option key="-" value="">其它地址</a-select-option>
+                </a-select>
+              </div>
+
+              <div class="input-view" v-show="selectedSystemName===''">
+                <div class="system-name">
+                  <a-input class="input" placeholder="请输入模块名称"></a-input>
+                </div>
+                <div class="swagger-url">
+                  <a-input
+                    placeholder="请输入远程swagger接口信息地址"
+                    type="text"
+                    class="input"
+                    v-model="swaggerUrl"
+                  ></a-input>
+                </div>
+              </div>
+              <div>
+                <!-- <a-button type="primary" @click="getSwaggerInfo">获取</a-button> -->
+                <a-button type="primary" @click="createSwaggerVue"
+                  >生成页面</a-button
+                >
+              </div>
+            </div>
+            <div class="params-bar" v-if="activeIndex==2">
+              <div v-if="activeIndex===2">
+                <span> 枚举接口地址：</span>
+
+                <a-input
+                  id="enumUrl"
+                  type="text"
+                  class="input"
+                  v-model="enumUrl"
+                ></a-input>
+                <!-- <a-button type="primary" @click="getEnumInfo">获取</a-button> -->
+                <a-button type="primary" @click="createEnumTypes"
+                  >生成枚举</a-button
+                >
+              </div>
+            </div>
+          </div>
+          <div class="logs-box" v-show="logPanelVisible">
+            <div class="title">
+              <span class="close" @click="logPanelVisible=false"> × </span>
+              日志信息
+            </div>
+            <div class="logs">
+              <pre
+                v-for="(message,index) in logs"
+                :key="index"
+                v-html="message"
+              ></pre>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
