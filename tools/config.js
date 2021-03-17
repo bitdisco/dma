@@ -2,14 +2,15 @@
  * @Description: 
  * @Autor: 胡涛
  * @Date: 2021-02-20 11:43:06
- * @LastEditors: 胡涛
- * @LastEditTime: 2021-03-16 09:56:41
+ * @LastEditors: 朱海良
+ * @LastEditTime: 2021-03-17 22:00:54
  */
 /**
  * swagger文档接口地址
  */
 const swaggerUrls = {
-    platform: "http://139.224.255.200:4000/swagger/v1/swagger.json",
+    // platform: "http://139.224.255.200:4000/swagger/v1/swagger.json",
+    dma: "http://localhost:44333/swagger/v1/swagger.json",
     // message: "http://139.224.255.200:3026/swagger/v1/swagger.json"
 };
 
@@ -28,6 +29,10 @@ const generateConfig = {
          */
         generateAll: true,
         /**
+         * 生成所有带控制器注解的模块
+         */
+        allAnnotation: false,
+        /**
          * 要排除生成的模块名配置集合（后端控制器名称）
          * 键值对格式，键名同swaggerUrls配置的键名称一致及
          */
@@ -43,7 +48,8 @@ const generateConfig = {
             /**
              * 消息服务
              */
-            message: []
+            message: [],
+            meterManagement:['Enum', 'AbpApiDefinition', 'Stat', 'AbpApplicationConfiguration','AbpTenant','AuditLogging','DictionaryItem','DictionaryItemDetail']
         },
         /**
          * 要包含生成的模块名配置集合（后端控制器名称）
@@ -53,7 +59,7 @@ const generateConfig = {
             /**
              * 营业系统
              */
-            charge: ['ArchiveInfo'],
+            charge: [],
             /**
              * 平台管理
              */
@@ -69,6 +75,7 @@ const generateConfig = {
      */
     vue: {
         generateAll: false,
+        allAnnotation: true,
         excludes: {
             charge: [],
             platform: [],
@@ -85,7 +92,7 @@ const generateConfig = {
 /**
  * 枚举接口地址
  */
-const enumUrl = "http://139.224.255.200:4000/api/utils/enum";
+const enumUrl = "http://139.224.255.200:4006/api/utils/enum";
 
 
 /**

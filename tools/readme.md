@@ -29,6 +29,10 @@ const generateConfig = {
      */
     generateAll: false,
     /**
+     * 生成所有带控制器注解的模块
+     */
+    allAnnotation: true,
+    /**
      * 要排除生成的模块名配置集合（后端控制器名称）
      * 键值对格式，键名同swaggerUrls配置的键名称一致及
      */
@@ -54,9 +58,13 @@ const generateConfig = {
      */
     generateAll: false,
     /**
+     * 生成所有带控制器注解的模块
+     */
+    allAnnotation: true
+    /**
      * 要排除生成的模块名配置集合（后端控制器名称）
      * 键值对格式，键名同swaggerUrls配置的键名称一致及
-     */
+     */,
     excludes: {
       charge: [],
       platform: [],
@@ -75,7 +83,8 @@ const generateConfig = {
 ```
 
 swaggerUrls 配置为键值对格式，键名为系统名称(systemName)，键值为 swagger 接口数据信息地址、生成器将根键名作为目录或文件部分标识生成对应代码。
-generateConfig.api 配置用于控制生成全部 API 模块还是按控制器名称生成部分模块。
+generateConfig.api 配置用于控制生成全部API模块还是按控制器名称生成部分模块。
+generateConfig.vue 配置用于控制生成全部页面模块还是按控制器名称生成部分模块。
 
 2. 执行生成
 

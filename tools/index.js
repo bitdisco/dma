@@ -3,7 +3,7 @@
  * @Autor: 胡涛
  * @Date: 2021-02-20 11:43:06
  * @LastEditors: 胡涛
- * @LastEditTime: 2021-03-16 09:35:45
+ * @LastEditTime: 2021-03-17 09:43:58
  */
 
 const config = require("./config.js");
@@ -18,9 +18,14 @@ const createApi = function () {
     for (var systemName in swaggerUrls) {
         let swaggerUrl = swaggerUrls[systemName];
         let excludes = generateConfig.api.excludes[systemName];
-        if (generateConfig.api.generateAll) {
+        if (generateConfig.api.allAnnotation) {
+            //生成所有带控制器注解的方法(排除项除外)
+            apiGenertor(systemName, swaggerUrl, null, excludes, true);
+        } else if (generateConfig.api.generateAll) {
+            //生成所有控制器注解的方法(排除项除外)
             apiGenertor(systemName, swaggerUrl, null, excludes);
         } else {
+            //根据匹配项和排队项生成
             let includes = generateConfig.api.includes[systemName];
             if (!includes || includes.length === 0) {
                 console.log(`配置错误：当参数generateAll=false,必须配置includes.${systemName}参数`)
@@ -37,16 +42,21 @@ const createApi = function () {
 const createVue = function () {
     for (var systemName in swaggerUrls) {
         let swaggerUrl = swaggerUrls[systemName];
-        if (generateConfig.vue.generateAll) {
-            vueGenertor(systemName, swaggerUrl);
+        let excludes = generateConfig.api.excludes[systemName];
+        if (generateConfig.vue.allAnnotation) {
+            //生成所有带控制器注解的方法(排除项除外)
+            vueGenertor(systemName, swaggerUrl, null, excludes, true);
+        } else if (generateConfig.vue.generateAll) {
+            //生成所有控制器注解的方法(排除项除外)
+            vueGenertor(systemName, swaggerUrl, null, excludes, false);
         } else {
+            //根据匹配项和排队项生成
             let includes = generateConfig.vue.includes[systemName];
             if (!includes || includes.length === 0) {
                 console.log(`配置错误：当参数generateConfig.api.generateAll=false,必须配置generateConfig.api.includes.${systemName}参数`)
                 return;
             }
-            let excludes = generateConfig.api.excludes[systemName];
-            vueGenertor(systemName, swaggerUrl, includes, excludes);
+            vueGenertor(systemName, swaggerUrl, includes, excludes, false);
         }
     }
 }

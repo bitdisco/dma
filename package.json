@@ -1,6 +1,6 @@
 {
-  "name": "vue-sr-template",
-  "projectName": "后台管理平台项目前端框架",
+  "name": "dma-project",
+  "projectName": "DMA分区管理系统",
   "version": "0.1.0",
   "private": true,
   "scripts": {
