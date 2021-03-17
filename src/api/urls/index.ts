@@ -1,5 +1,13 @@
+/*
+ * @Description: 
+ * @Autor: 朱海良
+ * @Date: 2021-03-16 14:20:47
+ * @LastEditors: 朱海良
+ * @LastEditTime: 2021-03-17 22:36:36
+ */
 import generatorUrls from "./generatorUrls";
 import platformGeneratorUrls from "../platform/generatorUrls";
+import dmaUrls from "../dma/generatorUrls";
 
 /**
  * 全局URL配置说明
@@ -52,7 +60,8 @@ const urls = {
     delete: "/api/platform/searchInfomation/{id}"
   },
   ...generatorUrls,
-  ...platformGeneratorUrls
+  ...platformGeneratorUrls,
+  ...dmaUrls
 };
 
 export default urls;
