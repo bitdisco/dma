@@ -3,7 +3,7 @@
  * @Autor: 朱海良
  * @Date: 2021-03-16 14:20:47
  * @LastEditors: 朱海良
- * @LastEditTime: 2021-03-17 21:58:29
+ * @LastEditTime: 2021-03-18 15:21:17
  */
 /**
  * 获取当前运行环境变量
@@ -18,7 +18,7 @@ export const isProduction = environment === "production";
 /**
  * 是否从本地加载菜单
  */
-export const isLoadLocalMenu = false || !isProduction;
+export const isLoadLocalMenu = false ;
 
 /**
  * 判断是否为后台开发人员开发
