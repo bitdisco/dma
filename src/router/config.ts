@@ -39,6 +39,40 @@ export const indexRoutes: RouteConfig[] = [
       },
     ],
   },
+  {
+    path: "/baseInfo",
+    name: "baseInfo",
+    component: Layout,
+    redirect: "/meter",
+    meta: {
+      permissionCode: "",
+      allowAnonymous: false,
+      title: "DMA分区配置",
+    },
+    children: [
+      {
+        path: "meter",
+        name: "meter",
+        meta: {
+          keepAlive: true,
+          permissionCode: "",
+          allowAnonymous: false,
+          title: "首监测点配置页",
+        },
+        component: () => import("@/views/baseInfo/meter/Index.vue"),
+      },
+      {
+        path: "about",
+        name: "about",
+        meta: {
+          permissionCode: "",
+          allowAnonymous: false,
+          title: "关于我们",
+        },
+        component: () => import("@/views/dashboard/About.vue"),
+      },
+    ],
+  }
 ];
 
 /**
