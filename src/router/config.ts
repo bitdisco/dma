@@ -55,11 +55,11 @@ export const indexRoutes: RouteConfig[] = [
         name: "meter",
         meta: {
           keepAlive: true,
-          permissionCode: "",
+          permissionCode: "DMA.Meter",
           allowAnonymous: false,
           title: "首监测点配置页",
         },
-        component: () => import("@/views/baseInfo/meter/Index.vue"),
+        component: () => import("@/views/dma/baseInfo/meter/Index.vue"),
       },
       {
         path: "about",

@@ -154,7 +154,7 @@ export default class CaliberFormPage extends FormPageVue<any,
    */
   private submitUpdate() {
     this.submitLoading = true;
-    api.edit(this.getModel.id, this.getModel).then((res) => {
+    api.update(this.getModel.id, this.getModel).then((res) => {
       this.submitLoading = false;
       this.$emit("input", false);
       this.$emit("success");

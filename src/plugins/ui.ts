@@ -8,7 +8,7 @@
 import Antdv from "ant-design-vue";
 
 import "xe-utils";
-import {VXETable} from "vxe-table";
+import VXETable from "vxe-table";
 import "vxe-table/lib/style.css";
 
 import CrDatePicker from "@/components/CR/DatePicker/Index.vue";
