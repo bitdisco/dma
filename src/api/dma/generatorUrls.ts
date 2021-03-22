@@ -1,9 +1,22 @@
 /**
  * 全局URL配置说明 - 本文件由前端工具生成器自动生成
- * 生成日期：2021-3-17 22:35:30
+ * 生成日期：2021-3-22 17:16:32
  * 接口生成地址：http://localhost:44333/swagger/v1/swagger.json
  */
 export default {
+  /**
+   * 分区管理相关
+   */
+  area:{
+    create:"/api/dMA/area", //新增
+    getPageList:"/api/dMA/area", //获取列表
+    delete:"/api/dMA/area/{id}", //删除
+    get:"/api/dMA/area/{id}", //获取某条记录
+    update:"/api/dMA/area/{id}", //修改
+    getAreaTree:"/api/dMA/area/getAreaTree", //获取分区树型列表
+    getAreaMeterTree:"/api/dMA/area/getAreaMeterTree", //获取分区流量计树型列表
+    getQueryList:"/api/dMA/area/getQueryList" //按条件查询列表
+  },
   /**
    * 
    */
@@ -42,19 +55,6 @@ export default {
     delete:"/api/dMA/alarmInfo/{id}", //删除
     get:"/api/dMA/alarmInfo/{id}", //获取某条记录
     update:"/api/dMA/alarmInfo/{id}" //修改
-  },
-  /**
-   * 
-   */
-  area:{
-    create:"/api/dMA/area", //新增
-    getPageList:"/api/dMA/area", //获取列表
-    delete:"/api/dMA/area/{id}", //删除
-    get:"/api/dMA/area/{id}", //获取某条记录
-    update:"/api/dMA/area/{id}", //修改
-    getAreaTree:"/api/dMA/area/getAreaTree", //获取分区树型列表
-    getAreaMeterTree:"/api/dMA/area/getAreaMeterTree", //获取分区流量计树型列表
-    getQueryList:"/api/dMA/area/getQueryList" //按条件查询列表
   },
   /**
    * 
@@ -111,7 +111,33 @@ export default {
     get:"/api/platform/auditLogging/{id}", 
     getPageList:"/api/platform/auditLogging" 
   },
-  
+  /**
+   * 
+   */
+  dictionaryItem:{
+    dictionary:"/api/dictionary", 
+    dictionary:"/api/dictionary", 
+    dictionary:"/api/dictionary/{id}", 
+    dictionary:"/api/dictionary/{id}", 
+    dictionary:"/api/dictionary/{id}", 
+    all:"/api/dictionary/all/{moduleCode}", 
+    tree:"/api/dictionary/tree", 
+    tree:"/api/dictionary/tree/{moduleCode}", 
+    items:"/api/dictionary/items/{moduleCode}/{itemCode}", 
+    value:"/api/dictionary/value/{moduleCode}/{itemCode}/{dictionayKey}", 
+    clearCache:"/api/dictionary/clearCache", 
+    dictionaryItems:"/api/dictionary/dictionaryItems" 
+  },
+  /**
+   * 
+   */
+  dictionaryItemDetail:{
+    itemDetail:"/api/dictionary/itemDetail", 
+    itemDetail:"/api/dictionary/itemDetail", 
+    itemDetail:"/api/dictionary/itemDetail/{id}", 
+    itemDetail:"/api/dictionary/itemDetail/{id}", 
+    itemDetail:"/api/dictionary/itemDetail/{id}" 
+  },
   /**
    * 
    */
@@ -155,7 +181,11 @@ export default {
     get:"/api/dMA/leakageDay/{id}", //获取某条记录
     update:"/api/dMA/leakageDay/{id}", //修改
     getLeakageTree:"/api/dMA/leakageDay/getLeakageTree", //获取分区漏损树型列表
-    getLeakageRanking:"/api/dMA/leakageDay/getLeakageRanking" //获取分区漏损数据
+    getLeakageRanking:"/api/dMA/leakageDay/getLeakageRanking", //获取分区漏损排行
+    getLeakageLine:"/api/dMA/leakageDay/getLeakageLine", //获取分区漏损曲线
+    getNightFlow:"/api/dMA/leakageDay/getNightFlow", //获取夜间流量数据
+    getPipeLeakage:"/api/dMA/leakageDay/getPipeLeakage", //获取管网漏损数据
+    getAreaWaterSupplyMonth:"/api/dMA/leakageDay/getAreaWaterSupplyMonth" //获取分区供水量月
   },
   /**
    * 
@@ -166,7 +196,8 @@ export default {
     delete:"/api/dMA/leakageHour/{id}", //删除
     get:"/api/dMA/leakageHour/{id}", //获取某条记录
     update:"/api/dMA/leakageHour/{id}", //修改
-    getQueryList:"/api/dMA/leakageHour/getQueryList" //获取列表
+    getQueryList:"/api/dMA/leakageHour/getQueryList", //获取列表
+    getAreaWaterSupplyDay:"/api/dMA/leakageHour/getAreaWaterSupplyDay" //获取分区供水量月
   },
   /**
    * 
@@ -177,7 +208,9 @@ export default {
     delete:"/api/dMA/machiningData/{id}", //删除
     get:"/api/dMA/machiningData/{id}", //获取某条记录
     update:"/api/dMA/machiningData/{id}", //修改
-    getQueryList:"/api/dMA/machiningData/getQueryList" //按条件查询列表
+    getQueryList:"/api/dMA/machiningData/getQueryList", //按条件查询列表
+    getDayAnalyse:"/api/dMA/machiningData/getDayAnalyse", //获取日分析 瞬时流量:RealValue、正向累计:ForValue、反向累计:RevValue、管道压力:PressValue、液位:FuelLevel、温度：Temperature
+    getDayContrast:"/api/dMA/machiningData/getDayContrast" //获取日对比 瞬时流量:RealValue、正向累计:ForValue、反向累计:RevValue、管道压力:PressValue、液位:FuelLevel、温度：Temperature
   },
   /**
    * 

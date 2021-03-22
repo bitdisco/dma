@@ -1,6 +1,6 @@
 /**
  *  - 本文件由前端工具生成器自动生成
- * 生成日期：2021-3-17 22:35:30
+ * 生成日期：2021-3-22 17:16:32
  * 接口生成地址：http://localhost:44333/swagger/v1/swagger.json
  */
 
@@ -10,6 +10,9 @@ import * as dtoTypes from "@/api/dma/types";
 
 const serviceName = 'dma';
 
+/**
+ * 
+ */
 export default {
   /**
    * 新增
@@ -55,9 +58,37 @@ export default {
     api.get(api.getAbsoluteUrl(serviceName,"leakageDay/getLeakageTree"), params),
 
   /**
-   * 获取分区漏损数据
+   * 获取分区漏损排行
    * @params {object} params 查询参数
    */
   getLeakageRanking: (params: object): Promise<any> =>
-    api.get(api.getAbsoluteUrl(serviceName,"leakageDay/getLeakageRanking"), params)
+    api.get(api.getAbsoluteUrl(serviceName,"leakageDay/getLeakageRanking"), params),
+
+  /**
+   * 获取分区漏损曲线
+   * @params {object} params 查询参数
+   */
+  getLeakageLine: (params: object): Promise<any> =>
+    api.get(api.getAbsoluteUrl(serviceName,"leakageDay/getLeakageLine"), params),
+
+  /**
+   * 获取夜间流量数据
+   * @params {object} params 查询参数
+   */
+  getNightFlow: (params: object): Promise<dtoTypes.PagedResultDto<dtoTypes.NightFlowDto>> =>
+    api.get(api.getAbsoluteUrl(serviceName,"leakageDay/getNightFlow"), params),
+
+  /**
+   * 获取管网漏损数据
+   * @params {object} params 查询参数
+   */
+  getPipeLeakage: (params: object): Promise<dtoTypes.PagedResultDto<dtoTypes.PipeLeakageDto>> =>
+    api.get(api.getAbsoluteUrl(serviceName,"leakageDay/getPipeLeakage"), params),
+
+  /**
+   * 获取分区供水量月
+   * @params {object} params 查询参数
+   */
+  getAreaWaterSupplyMonth: (params: object): Promise<dtoTypes.DataTable> =>
+    api.get(api.getAbsoluteUrl(serviceName,"leakageDay/getAreaWaterSupplyMonth"), params)
 };

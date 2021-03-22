@@ -1,6 +1,6 @@
 /**
  *  - 本文件由前端工具生成器自动生成
- * 生成日期：2021-3-17 22:35:30
+ * 生成日期：2021-3-22 17:16:32
  * 接口生成地址：http://localhost:44333/swagger/v1/swagger.json
  */
 
@@ -10,6 +10,9 @@ import * as dtoTypes from "@/api/dma/types";
 
 const serviceName = 'dma';
 
+/**
+ * 
+ */
 export default {
   /**
    * 新增
@@ -52,5 +55,12 @@ export default {
    * @params {object} params 查询参数
    */
   getQueryList: (params: object): Promise<any> =>
-    api.get(api.getAbsoluteUrl(serviceName,"leakageHour/getQueryList"), params)
+    api.get(api.getAbsoluteUrl(serviceName,"leakageHour/getQueryList"), params),
+
+  /**
+   * 获取分区供水量月
+   * @params {object} params 查询参数
+   */
+  getAreaWaterSupplyDay: (params: object): Promise<dtoTypes.DataTable> =>
+    api.get(api.getAbsoluteUrl(serviceName,"leakageHour/getAreaWaterSupplyDay"), params)
 };

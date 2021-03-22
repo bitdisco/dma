@@ -1,6 +1,6 @@
 /**
  *  - 本文件由前端工具生成器自动生成
- * 生成日期：2021-3-17 22:35:30
+ * 生成日期：2021-3-22 17:16:32
  * 接口生成地址：http://localhost:44333/swagger/v1/swagger.json
  */
 
@@ -10,6 +10,9 @@ import * as dtoTypes from "@/api/dma/types";
 
 const serviceName = 'dma';
 
+/**
+ * 
+ */
 export default {
   /**
    * 新增
@@ -52,5 +55,19 @@ export default {
    * @params {object} params 查询参数
    */
   getQueryList: (params: object): Promise<dtoTypes.PagedResultDto<dtoTypes.MachiningDataDto>> =>
-    api.get(api.getAbsoluteUrl(serviceName,"machiningData/getQueryList"), params)
+    api.get(api.getAbsoluteUrl(serviceName,"machiningData/getQueryList"), params),
+
+  /**
+   * 获取日分析 瞬时流量:RealValue、正向累计:ForValue、反向累计:RevValue、管道压力:PressValue、液位:FuelLevel、温度：Temperature
+   * @params {object} params 查询参数
+   */
+  getDayAnalyse: (params: object): Promise<dtoTypes.DataTable> =>
+    api.get(api.getAbsoluteUrl(serviceName,"machiningData/getDayAnalyse"), params),
+
+  /**
+   * 获取日对比 瞬时流量:RealValue、正向累计:ForValue、反向累计:RevValue、管道压力:PressValue、液位:FuelLevel、温度：Temperature
+   * @params {object} params 查询参数
+   */
+  getDayContrast: (params: object): Promise<dtoTypes.DataTable> =>
+    api.get(api.getAbsoluteUrl(serviceName,"machiningData/getDayContrast"), params)
 };

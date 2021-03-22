@@ -1,6 +1,6 @@
 /**
  * 后端接口DTO相关类型定文件 - 本文件由前端工具生成器自动生成
- * 生成日期：2021-3-17 22:35:30
+ * 生成日期：2021-3-22 17:16:32
  * 接口地址：http://localhost:44333/swagger/v1/swagger.json
  */
 
@@ -83,6 +83,43 @@ export {CreateOrUpdateLeakageDayDto} from "./createOrUpdateLeakageDayDto";
 export {LeakageDayDto} from "./leakageDayDto";
 export {LeakageTreeDto} from "./leakageTreeDto";
 export {LeakageRankingDto} from "./leakageRankingDto";
+export {NightFlowDto} from "./nightFlowDto";
+export {PipeLeakageDto} from "./pipeLeakageDto";
+export {SortVersion} from "./sortVersion";
+export {CompareInfo} from "./compareInfo";
+export {TextInfo} from "./textInfo";
+export {NumberFormatInfo} from "./numberFormatInfo";
+export {Calendar} from "./calendar";
+export {DateTimeFormatInfo} from "./dateTimeFormatInfo";
+export {CultureInfo} from "./cultureInfo";
+export {IComponent} from "./iComponent";
+export {IContainer} from "./iContainer";
+export {ISite} from "./iSite";
+export {DataSet} from "./dataSet";
+export {IntPtr} from "./intPtr";
+export {RuntimeMethodHandle} from "./runtimeMethodHandle";
+export {ModuleHandle} from "./moduleHandle";
+export {CustomAttributeTypedArgument} from "./customAttributeTypedArgument";
+export {MemberInfo} from "./memberInfo";
+export {CustomAttributeNamedArgument} from "./customAttributeNamedArgument";
+export {CustomAttributeData} from "./customAttributeData";
+export {Module} from "./module";
+export {ConstructorInfo} from "./constructorInfo";
+export {ParameterInfo} from "./parameterInfo";
+export {ICustomAttributeProvider} from "./iCustomAttributeProvider";
+export {MethodInfo} from "./methodInfo";
+export {EventInfo} from "./eventInfo";
+export {RuntimeFieldHandle} from "./runtimeFieldHandle";
+export {FieldInfo} from "./fieldInfo";
+export {PropertyInfo} from "./propertyInfo";
+export {MethodBase} from "./methodBase";
+export {StructLayoutAttribute} from "./structLayoutAttribute";
+export {RuntimeTypeHandle} from "./runtimeTypeHandle";
+export {TypeInfo} from "./typeInfo";
+export {Assembly} from "./assembly";
+export {Type} from "./type";
+export {DataColumn} from "./dataColumn";
+export {DataTable} from "./dataTable";
 export {CreateOrUpdateLeakageHourDto} from "./createOrUpdateLeakageHourDto";
 export {LeakageHourDto} from "./leakageHourDto";
 export {CreateOrUpdateMachiningDataDto} from "./createOrUpdateMachiningDataDto";
