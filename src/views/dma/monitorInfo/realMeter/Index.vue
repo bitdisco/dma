@@ -76,6 +76,15 @@
         ></a-pagination>
       </div>
     </div>
+    <!--添加修改模块-->
+    <form-view
+      v-if="popupModel.visible"
+      :action="popupModel.action"
+      v-model="popupModel.visible"
+      :id="popupModel.id"
+      :item="popupModel.data"
+      @success="queryList"
+    />
   </page-header-wrapper>
 </template>
 
@@ -83,13 +92,15 @@
 import { Component, Vue, Watch, Prop } from "vue-property-decorator";
 import { SortedInfo, ToolbarActionItem, ListPageVxe } from "@cr/types";
 import { PaginationConfig } from "ant-design-vue/types/list/list";
-import api from "@/api/dma/generatorApis/armRealData";
-import { ArmRealDataDto } from "@/api/dma/types";
+import api from "@/api/dma/generatorApis/area";
+import { AreaDto } from "@/api/dma/types";
+import FormView from "./Form.vue";
 
-@Component<RealDataList>({
-  name: "RealDataList"
+@Component<AreaList>({
+  name: "AreaList",
+  components: { FormView },
 })
-export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
+export default class AreaList extends ListPageVxe<AreaDto, string> {
   /**
    * 工具栏按钮属性
    */
@@ -109,8 +120,8 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
   created() {
     this.columns = [
       {
-        title: "地址编码",
-        field: "addressCode",
+        title: "DMA分区名称",
+        field: "areaName",
         width: 300,
       },
       {
@@ -216,7 +227,7 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
   /**
    * 删除选择项
    */
-  private onDeleteItem(row: ArmRealDataDto) {
+  private onDeleteItem(row: AreaDto) {
     api.delete(row.id).then((res) => {
       this.$message.success({ content: "删除成功~" });
       this.queryList();

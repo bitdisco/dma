@@ -1,4 +1,4 @@
-import {RouteConfig} from "vue-router";
+import { RouteConfig } from "vue-router";
 import Layout from "@/layout/default/Index.vue";
 
 /**
@@ -38,6 +38,41 @@ export const indexRoutes: RouteConfig[] = [
         component: () => import("@/views/dashboard/About.vue"),
       },
     ],
+  },
+  {
+    path: "/monitorInfo",
+    name: "monitorInfo",
+    component: Layout,
+    redirect: "/realData",
+    meta: {
+      permissionCode: "",
+      allowAnonymous: false,
+      title: "监测信息",
+    },
+    children: [
+      {
+        path: "realData",
+        name: "realData",
+        meta: {
+          keepAlive: true,
+          permissionCode: "DMA.RealData",
+          allowAnonymous: false,
+          title: "实时数据",
+        },
+        component: () => import("@/views/dma/monitorInfo/realData/Index.vue"),
+      },
+      {
+        path: "realMeter",
+        name: "realMeter",
+        meta: {
+          keepAlive: true,
+          permissionCode: "DMA.RealMeter",
+          allowAnonymous: false,
+          title: "实时数据",
+        },
+        component: () => import("@/views/dma/monitorInfo/realMeter/Index.vue"),
+      }
+    ]
   },
   {
     path: "/baseInfo",
