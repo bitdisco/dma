@@ -82,7 +82,7 @@
       :item="popupModel.data"
       @success="queryList"
     />
-  </page-header-wrapper>
+      
 </template>
 
 <script lang="ts">

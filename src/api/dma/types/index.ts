@@ -1,6 +1,6 @@
 /**
  * 后端接口DTO相关类型定文件 - 本文件由前端工具生成器自动生成
- * 生成日期：2021-3-22 17:16:32
+ * 生成日期：2021-3-24 14:21:04
  * 接口地址：http://localhost:44333/swagger/v1/swagger.json
  */
 
@@ -66,15 +66,6 @@ export {CreateOrUpdateArmHistoryDataDto} from "./createOrUpdateArmHistoryDataDto
 export {ArmHistoryDataDto} from "./armHistoryDataDto";
 export {CreateOrUpdateArmRealDataDto} from "./createOrUpdateArmRealDataDto";
 export {ArmRealDataDto} from "./armRealDataDto";
-export {EntityPropertyChangeDto} from "./entityPropertyChangeDto";
-export {EntityChangeDto} from "./entityChangeDto";
-export {AuditLogActionDto} from "./auditLogActionDto";
-export {AuditLogDto} from "./auditLogDto";
-export {CreateOrUpdateDictionaryItemDto} from "./createOrUpdateDictionaryItemDto";
-export {DictionaryItemDetailDto} from "./dictionaryItemDetailDto";
-export {DictionaryItemDto} from "./dictionaryItemDto";
-export {DictionaryTreeDto} from "./dictionaryTreeDto";
-export {CreateOrUpdateDictionaryItemDetailDto} from "./createOrUpdateDictionaryItemDetailDto";
 export {CreateOrUpdateFlowDayDto} from "./createOrUpdateFlowDayDto";
 export {FlowDayDto} from "./flowDayDto";
 export {CreateOrUpdateFlowHourDto} from "./createOrUpdateFlowHourDto";
@@ -133,9 +124,6 @@ export {MongoTestDto} from "./mongoTestDto";
 export {CreateOrUpdateRptTempDto} from "./createOrUpdateRptTempDto";
 export {RptTempDto} from "./rptTempDto";
 export {SampleDto} from "./sampleDto";
-export {SettingDto} from "./settingDto";
-export {CreateOrUpdateDto} from "./createOrUpdateDto";
-export {SettingValue} from "./settingValue";
 export {CreateOrUpdateSupplierDto} from "./createOrUpdateSupplierDto";
 export {SupplierDto} from "./supplierDto";
 export {AllSupplierListDto} from "./allSupplierListDto";

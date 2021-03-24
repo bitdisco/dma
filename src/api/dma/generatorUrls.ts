@@ -1,6 +1,6 @@
 /**
  * 全局URL配置说明 - 本文件由前端工具生成器自动生成
- * 生成日期：2021-3-22 17:16:32
+ * 生成日期：2021-3-24 14:21:04
  * 接口生成地址：http://localhost:44333/swagger/v1/swagger.json
  */
 export default {
@@ -103,40 +103,6 @@ export default {
     get:"/api/dMA/armRealData/{id}", //获取某条记录
     update:"/api/dMA/armRealData/{id}", //修改
     getQueryList:"/api/dMA/armRealData/getQueryList" //按条件查询列表
-  },
-  /**
-   * 
-   */
-  auditLogging:{
-    get:"/api/platform/auditLogging/{id}", 
-    getPageList:"/api/platform/auditLogging" 
-  },
-  /**
-   * 
-   */
-  dictionaryItem:{
-    dictionary:"/api/dictionary", 
-    dictionary:"/api/dictionary", 
-    dictionary:"/api/dictionary/{id}", 
-    dictionary:"/api/dictionary/{id}", 
-    dictionary:"/api/dictionary/{id}", 
-    all:"/api/dictionary/all/{moduleCode}", 
-    tree:"/api/dictionary/tree", 
-    tree:"/api/dictionary/tree/{moduleCode}", 
-    items:"/api/dictionary/items/{moduleCode}/{itemCode}", 
-    value:"/api/dictionary/value/{moduleCode}/{itemCode}/{dictionayKey}", 
-    clearCache:"/api/dictionary/clearCache", 
-    dictionaryItems:"/api/dictionary/dictionaryItems" 
-  },
-  /**
-   * 
-   */
-  dictionaryItemDetail:{
-    itemDetail:"/api/dictionary/itemDetail", 
-    itemDetail:"/api/dictionary/itemDetail", 
-    itemDetail:"/api/dictionary/itemDetail/{id}", 
-    itemDetail:"/api/dictionary/itemDetail/{id}", 
-    itemDetail:"/api/dictionary/itemDetail/{id}" 
   },
   /**
    * 
@@ -273,19 +239,6 @@ export default {
   sample:{
     getPageList:"/api/DMA/sample", 
     authorized:"/api/DMA/sample/authorized" 
-  },
-  /**
-   * 
-   */
-  setting:{
-    delete:"/api/setting/{id}", 
-    get:"/api/setting/{id}", 
-    getInfoByName:"/api/setting/getInfoByName", 
-    getPageList:"/api/setting", 
-    create:"/api/setting", 
-    batchSet:"/api/setting/batchSet", 
-    setList:"/api/setting/setList", 
-    mySetting:"/api/setting/mySetting" 
   },
   /**
    * 
