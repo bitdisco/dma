@@ -17,20 +17,20 @@
                 <a-form-model-item
                   v-bind="formLayoutInput"
                   has-feedback
-                  label="监测点名称"
-                  prop="meterName"
+                  label="父级分区"
+                  prop="parentId"
                 >
-                  <a-input v-model="model.meterName"></a-input>
+                  <a-input v-model="model.parentId"></a-input>
                 </a-form-model-item>
               </a-col>
               <a-col :span="12">
                 <a-form-model-item
                   v-bind="formLayoutInput"
                   has-feedback
-                  label="监测点编码"
-                  prop="meterCode"
+                  label="分区级别"
+                  prop="areaGrade"
                 >
-                  <a-input v-model="model.meterCode"></a-input>
+                  <a-input v-model="model.areaGrade"></a-input>
                 </a-form-model-item>
               </a-col>
             </a-row>
@@ -39,15 +39,15 @@
                 <a-form-model-item
                   v-bind="formLayoutInput"
                   has-feedback
-                  label="挂接表号"
-                  prop="addressCode"
+                  label="分区名称"
+                  prop="areaName"
                 >
-                  <a-input v-model="model.addressCode"></a-input>
+                  <a-input v-model="model.areaName"></a-input>
                 </a-form-model-item>
               </a-col>
               <a-col :span="12">
-                <a-form-model-item v-bind="formLayoutInput" has-feedback label="SIM卡号" prop="sIM">
-                  <a-input v-model="model.sIM"></a-input>
+                <a-form-model-item v-bind="formLayoutInput" has-feedback label="分区编号" prop="areaCode">
+                  <a-input v-model="model.areaCode"></a-input>
                 </a-form-model-item>
               </a-col>
             </a-row>
@@ -56,20 +56,20 @@
                 <a-form-model-item
                   v-bind="formLayoutInput"
                   has-feedback
-                  label="管线直径"
-                  prop="diameter"
+                  label="负者人"
+                  prop="principal"
                 >
-                  <a-input v-model="model.diameter"></a-input>
+                  <a-input v-model="model.principal"></a-input>
                 </a-form-model-item>
               </a-col>
               <a-col :span="12">
                 <a-form-model-item
                   v-bind="formLayoutInput"
                   has-feedback
-                  label="管线材质"
-                  prop="material"
+                  label="联系电话"
+                  prop="principalPhone"
                 >
-                  <a-input v-model="model.material"></a-input>
+                  <a-input v-model="model.principalPhone"></a-input>
                 </a-form-model-item>
               </a-col>
             </a-row>
@@ -78,40 +78,24 @@
                 <a-form-model-item
                   v-bind="formLayoutInput"
                   has-feedback
-                  label="安装地址"
-                  prop="installAddress"
+                  label="建设年代"
+                  prop="constructionYear"
                 >
-                  <a-input v-model="model.installAddress"></a-input>
+                  <a-input v-model="model.constructionYear"></a-input>
                 </a-form-model-item>
               </a-col>
               <a-col :span="12">
-                <a-form-model-item
+                      <a-form-model-item
                   v-bind="formLayoutInput"
                   has-feedback
-                  label="安装日期"
-                  prop="installDate"
+                  label="是否通水"
+                  prop="noWater"
                 >
-                  <a-input v-model="model.installDate"></a-input>
+                    <a-switch v-model="model.noWater" />
                 </a-form-model-item>
               </a-col>
             </a-row>
-            <a-row>
-              <a-col :span="12">
-                <a-form-model-item v-bind="formLayoutInput" has-feedback label="XY坐标" prop="xY">
-                  <a-input v-model="model.xY"></a-input>
-                </a-form-model-item>
-              </a-col>
-              <a-col :span="12">
-                <a-form-model-item
-                  v-bind="formLayoutInput"
-                  has-feedback
-                  label="监测点编码"
-                  prop="meterCode"
-                >
-                  <a-input v-model="model.meterCode"></a-input>
-                </a-form-model-item>
-              </a-col>
-            </a-row>
+         
             <a-row>
               <a-col :span="12">
                 <a-form-model-item
@@ -148,43 +132,52 @@
             </a-row>
           </div>
         </a-tab-pane>
-        <!-- 供电设施 -->
-        <a-tab-pane :key="2" tab="供电设施">
+        <!-- 漏损配置 -->
+        <a-tab-pane :key="2" tab="漏损配置">
           <div class="tab-paneBox">
             <a-row>
               <a-col :span="12">
-                <a-form-model-item v-bind="formLayoutInput" has-feedback label="太阳能杆编号" prop="solarCode">
-                  <a-input v-model="model.solarCode"></a-input>
+                <a-form-model-item v-bind="formLayoutInput" has-feedback label="大用户夜间用水量" prop="enterpriseWaterDemand">
+                  <a-input v-model="model.enterpriseWaterDemand"></a-input>
                 </a-form-model-item>
               </a-col>
               <a-col :span="12">
-                <a-form-model-item v-bind="formLayoutInput" has-feedback label="DTU序列号" prop="dtuSN">
-                  <a-input v-model="model.dtuSN"></a-input>
-                </a-form-model-item>
-              </a-col>
-            </a-row>
-            <a-row>
-              <a-col :span="12">
-                <a-form-model-item v-bind="formLayoutInput" has-feedback label="品牌厂家" prop="solarFactory">
-                  <a-input v-model="model.solarFactory"></a-input>
-                </a-form-model-item>
-              </a-col>
-              <a-col :span="12">
-                <a-form-model-item v-bind="formLayoutInput" has-feedback label="安装坐标" prop="solarCoordinate">
-                  <a-input v-model="model.solarCoordinate"></a-input>
+                <a-form-model-item v-bind="formLayoutInput" has-feedback label="夜间平均压力" prop="averageNightPressure">
+                  <a-input v-model="model.averageNightPressure"></a-input>
                 </a-form-model-item>
               </a-col>
             </a-row>
             <a-row>
               <a-col :span="12">
-                <a-form-model-item v-bind="formLayoutInput" has-feedback label="责任人" prop="solarSupervisor">
-                  <a-input v-model="model.solarSupervisor"></a-input>
+                <a-form-model-item v-bind="formLayoutInput" has-feedback label="居民用户数量" prop="residentNumber">
+                  <a-input v-model="model.residentNumber"></a-input>
                 </a-form-model-item>
               </a-col>
               <a-col :span="12">
-                <a-form-model-item v-bind="formLayoutInput" has-feedback label="联系方式" prop="solarPhone">
-                  <a-input v-model="model.solarPhone"></a-input>
+                <a-form-model-item v-bind="formLayoutInput" has-feedback label="主干管道长度" prop="mainPipeLength">
+                  <a-input v-model="model.mainPipeLength"></a-input>
                 </a-form-model-item>
+              </a-col>
+            </a-row>
+            <a-row>
+              <a-col :span="12">
+                <a-form-model-item v-bind="formLayoutInput" has-feedback label="私有管道平均长度" prop="subPipeLength">
+                  <a-input v-model="model.subPipeLength"></a-input>
+                </a-form-model-item>
+              </a-col>
+              <a-col :span="12">
+                <a-form-model-item v-bind="formLayoutInput" has-feedback label="私有管道数量" prop="subPipeNumber">
+                  <a-input v-model="model.subPipeNumber"></a-input>
+                </a-form-model-item>
+              </a-col>
+            </a-row>
+            <a-row>
+              <a-col :span="12">
+                <a-form-model-item v-bind="formLayoutInput" has-feedback label="ICF因子" prop="iCF">
+                  <a-input v-model="model.iCF"></a-input>
+                </a-form-model-item>
+              </a-col>
+              <a-col :span="12">
               </a-col>
             </a-row>
           </div>
@@ -201,13 +194,13 @@ import {
   ITreeOptionItem,
   ITreeOptions,
 } from "@cr/types";
-import api from "@/api/dma/generatorApis/meter";
+import api from "@/api/dma/generatorApis/area";
 
 import { FormModel } from "ant-design-vue";
 import { FormLayoutInfo } from "@cr/types/app/form";
 
-@Component<MeterFormPage>({ name: "MeterFormPage" })
-export default class MeterFormPage extends FormPageVue<any, string> {
+@Component<AreaFormPage>({ name: "AreaFormPage" })
+export default class AreaFormPage extends FormPageVue<any, string> {
   protected formLayoutInput: FormLayoutInfo = {
     labelCol: { span: 6 },
     labelAlign: "right",
@@ -229,9 +222,24 @@ export default class MeterFormPage extends FormPageVue<any, string> {
 
   created() {
     this.rules = {
-      meterName: [{ required: true, message: "请输入监测点名称~" }],
-      meterCode: [{ required: true, message: "请输入监测点编码~" }],
-      addressCode: [{ required: true, message: "请输入挂接表号~" }],
+      areaGrade: [{ required: true, type:"number",defaultField: 1}],
+      areaName: [{ required: true, message: "请输入DMA分区名称~" }],
+      areaCode: [{ required: true, message: "请输入DMA分区编码~" }],
+
+      //大用户夜间用水量
+      enterpriseWaterDemand: [{ required: true,type:"number", defaultField: 0 }],              
+      //夜间平均压力
+      averageNightPressure: [{ required: true, type:"number",defaultField: 30 }],      
+      //居民用户数量
+      residentNumber: [{ required: true, type:"number",defaultField: 1500 }],
+      //主干管道长度
+      mainPipeLength: [{ required: true, type:"number",defaultField: 2000 }],
+      //私有管道平均长度
+      subPipeLength: [{ required: true, type:"number",defaultField: 2 }],
+      //私有管道数量
+      subPipeNumber: [{ required: true, type:"number",defaultField: 1500 }],
+      //ICF因子
+      iCF: [{ required: true, type:"number",defaultField: 4 }],
     };
     this.formLayout = {
       layout: "horizontal",

@@ -92,15 +92,15 @@
 import { Component, Vue, Watch, Prop } from "vue-property-decorator";
 import { SortedInfo, ToolbarActionItem, ListPageVxe } from "@cr/types";
 import { PaginationConfig } from "ant-design-vue/types/list/list";
-import api from "@/api/dma/generatorApis/meter";
-import { MeterDto } from "@/api/dma/types";
+import api from "@/api/dma/generatorApis/area";
+import { AreaDto } from "@/api/dma/types";
 import FormView from "./Form.vue";
 
-@Component<MeterList>({
-  name: "MeterList",
+@Component<AreaList>({
+  name: "AreaList",
   components: { FormView },
 })
-export default class MeterList extends ListPageVxe<MeterDto, string> {
+export default class AreaList extends ListPageVxe<AreaDto, string> {
   /**
    * 工具栏按钮属性
    */
@@ -120,33 +120,28 @@ export default class MeterList extends ListPageVxe<MeterDto, string> {
   created() {
     this.columns = [
       {
-        title: "挂接表号",
-        field: "addressCode",
-        width: 120,
+        title: "DMA分区名称",
+        field: "areaName",
+        width: 300,
       },
       {
-        title: "监测点名称",
-        field: "meterName",
-        width: 200,
+        title: "分区编码",
+        field: "areaCode",
+        width: 150,
       },
       {
-        title: "监测点编码",
-        field: "meterCode",
-        width: 100,
+        title: "分区级别",
+        field: "areaGrade",
+        width: 150,
       },
       {
-        title: "管径直径",
-        field: "diameter",
-        width: 100,
+        title: "建设年代",
+        field: "constructionYear",
+        width: 150,
       },
       {
-        title: "管线材质",
-        field: "material",
-        width: 100,
-      },
-      {
-        title: "安装地址",
-        field: "installAddress",
+        title: "创建时间",
+        field: "createTime",
       },
     ];
     this.getPagination.pageSize = 10;
@@ -232,7 +227,7 @@ export default class MeterList extends ListPageVxe<MeterDto, string> {
   /**
    * 删除选择项
    */
-  private onDeleteItem(row: MeterDto) {
+  private onDeleteItem(row: AreaDto) {
     api.delete(row.id).then((res) => {
       this.$message.success({ content: "删除成功~" });
       this.queryList();

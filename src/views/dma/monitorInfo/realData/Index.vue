@@ -1,34 +1,65 @@
 <template>
-  <page-header-wrapper class="compact-page" hide-title-bar>
+  <page-header-wrapper hide-title-bar>
     <div class="compact-page-wrapper">
       <advanced-search-panel
         :showInput="false"
         v-model="searchModel"
         :fields="searchFields"
+        :dropdownWidth="350"
+        :layoutColumn="1"
         :inputStyle="{ placeholder: '请输入关键词', style: { width: '150px' } }"
         @search="onSearch"
       >
-        <div slot="actions">
+        <template slot="actions">
           <a-button-group>
-            <a-button @click="defaultHandleCreate()" icon="plus">新增</a-button>
             <a-button
-              icon="edit"
+              @click="queryList"
+              icon="sync"
+            >刷新</a-button>
+            <a-button
+              @click="defaultHandleCreate()"
+              v-auth="{ action: 'Create' }"
+              icon="plus"
+            >新增
+            </a-button>
+            <a-button
               :disabled="!currentRow"
               @click.stop="defaultHandleUpdate(currentRow)"
-              >修改</a-button
+              v-auth="{ action: 'Update' }"
+            >编辑
+            </a-button>
+            <a-popconfirm
+              title="确定要删除当前数据吗？"
+              @confirm.stop="onDeleteItem(currentRow)"
             >
+              <a-button
+                type="danger"
+                v-auth="{ action: 'Delete' }"
+                :disabled="!currentRow"
+              >删除
+              </a-button>
+            </a-popconfirm>
           </a-button-group>
-        </div>
+        </template>
       </advanced-search-panel>
       <div class="compact-page-table">
         <vxe-table
+          id="vxeTable"
           :data="dataSource"
           :loading="loading"
-          border
           highlight-current-row
           highlight-hover-row
           @cell-click="onTableCellClick"
+          border
+          height="auto"
+          :seq-config="{ startIndex: getSkipCount }"
+          :custom-config="{ storage: true }"
         >
+          <vxe-table-column
+            type="seq"
+            width="40"
+            align="center"
+          ></vxe-table-column>
           <vxe-table-column
             v-bind="col"
             v-for="(col, index) in columns"
@@ -36,6 +67,7 @@
           ></vxe-table-column>
         </vxe-table>
       </div>
+
       <div class="table-pagination">
         <a-pagination
           v-bind="pagination"
@@ -59,15 +91,16 @@
 <script lang="ts">
 import { Component, Vue, Watch, Prop } from "vue-property-decorator";
 import { SortedInfo, ToolbarActionItem, ListPageVxe } from "@cr/types";
-import { ArmRealDataDto } from "@/api/dma/types";
-import armRealDataApi from "@/api/dma/generatorApis/armRealData";
-// import FormView from "./Form.vue";
-// import { dictionaryConstants } from "@/plugins/dictionary";
-import moment from "moment";
-@Component({
-  name: "realData"
+import { PaginationConfig } from "ant-design-vue/types/list/list";
+import api from "@/api/dma/generatorApis/armRealData";
+import { AreaDto, ArmRealDataDto } from "@/api/dma/types"; 
+import FormView from "./Form.vue";
+
+@Component<RealDataList>({
+  name: "RealDataList",
+  components: { FormView },
 })
-export default class extends ListPageVxe<ArmRealDataDto, string> {
+export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
   /**
    * 工具栏按钮属性
    */
@@ -86,25 +119,44 @@ export default class extends ListPageVxe<ArmRealDataDto, string> {
    */
   created() {
     this.columns = [
-      { field: "AddressCode", title: "代码" },
-      { field: "RealValue", title: "名称"}
-    ];
-    this.searchFields = [
+       {
+        title: "挂接表号",
+        field: "addressCode",
+        width: 120,
+      },
       {
-        name: "Name",
-        label: "名称",
-        input: "a-input",
-        props: { placeholder: "请输入名称" },
+        title: "分区编码",
+        field: "areaCode",
+        width: 150,
+      },
+      {
+        title: "分区级别",
+        field: "areaGrade",
+        width: 150,
+      },
+      {
+        title: "建设年代",
+        field: "constructionYear",
+        width: 150,
+      },
+      {
+        title: "创建时间",
+        field: "createTime",
       },
     ];
     this.getPagination.pageSize = 10;
+    this.searchFields = [
+      {
+        name: "Keyword",
+        label: "关键字",
+        input: "a-input",
+        props: {
+          placeholder: "请输入编号/名称",
+        },
+      },
+    ];
   }
-  /**
-   * 选中当前
-   */
-  private onTableCellClick({ row }: any) {
-    this.currentRow = row;
-  }
+
   /**
    * 组件挂载成功
    */
@@ -116,6 +168,7 @@ export default class extends ListPageVxe<ArmRealDataDto, string> {
    * 查询方法
    */
   private onSearch() {
+    this.getPagination.current = 1;
     //处理其它查询条件逻辑。。。。
     this.queryList();
   }
@@ -124,6 +177,7 @@ export default class extends ListPageVxe<ArmRealDataDto, string> {
    * 分页查询列表
    */
   private queryList() {
+    let page = this.getPagination;
     /**
      * 查询条件
      */
@@ -135,12 +189,20 @@ export default class extends ListPageVxe<ArmRealDataDto, string> {
       this.searchModel
     );
 
-    armRealDataApi.getQueryList(queryModel).then((res: any) => {
+    api.getPageList(queryModel).then((res) => {
       this.loading = false;
       this.dataSource = res.items;
       this.getPagination.total = res.totalCount;
     });
+    this.currentRow = null;
     this.loading = true;
+  }
+
+  /**
+   * 表格事件
+   */
+  private onTableCellClick({ row }: any) {
+    this.currentRow = row;
   }
 
   /**
@@ -152,6 +214,9 @@ export default class extends ListPageVxe<ArmRealDataDto, string> {
     this.queryList();
   }
 
+  /**
+   * 分页组件改变分页大小事件
+   */
   private onShowSizeChange(current: number, size: number) {
     this.getPagination.current = current;
     this.getPagination.pageSize = size;
@@ -160,13 +225,17 @@ export default class extends ListPageVxe<ArmRealDataDto, string> {
   }
 
   /**
-   * 删除项
+   * 删除选择项
    */
-  private onDeleteItem(item: any) {
-    armRealDataApi.delete(item.id).then((res) => {
+  private onDeleteItem(row: AreaDto) {
+    api.delete(row.id).then((res) => {
+      this.$message.success({ content: "删除成功~" });
       this.queryList();
     });
   }
+
+  /** 批量删除 */
+  private deleteSelectedItems() {}
 
   /**
    * 表格选择行事件
@@ -174,6 +243,13 @@ export default class extends ListPageVxe<ArmRealDataDto, string> {
    */
   private onTableSelectChange(selectedRowKeys: Array<any>) {
     this.selectedRowKeys = selectedRowKeys;
+    this.columns = [{ field: "", title: "", width: "", align: "center" }];
   }
 }
 </script>
+
+<style scoped>
+.vxetable {
+  height: calc(100vh - 100px);
+}
+</style>

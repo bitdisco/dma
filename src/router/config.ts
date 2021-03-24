@@ -51,27 +51,28 @@ export const indexRoutes: RouteConfig[] = [
     },
     children: [
       {
+        path: "area",
+        name: "area",
+        meta: {
+          keepAlive: true,
+          permissionCode: "DMA.Area",
+          allowAnonymous: false,
+          title: "分区管理",
+        },
+        component: () => import("@/views/dma/baseInfo/area/Index.vue"),
+      },
+      {
         path: "meter",
         name: "meter",
         meta: {
           keepAlive: true,
           permissionCode: "DMA.Meter",
           allowAnonymous: false,
-          title: "首监测点配置页",
+          title: "监测点管理",
         },
         component: () => import("@/views/dma/baseInfo/meter/Index.vue"),
       },
-      {
-        path: "about",
-        name: "about",
-        meta: {
-          permissionCode: "",
-          allowAnonymous: false,
-          title: "关于我们",
-        },
-        component: () => import("@/views/dashboard/About.vue"),
-      },
-    ],
+    ]
   }
 ];
 
