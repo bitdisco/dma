@@ -57,7 +57,7 @@
         >
           <vxe-table-column
             type="seq"
-            width="40"
+            width="50"
             align="center"
           ></vxe-table-column>
           <vxe-table-column

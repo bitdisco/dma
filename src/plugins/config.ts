@@ -62,7 +62,7 @@ export const requestBaseUrls = function(gateway: string) {
   let devPath = isDotnet ? "/serverApi.dotnet" : "/serverApi.dev";
   let path = isProduction ? "/serverApi" : devPath;
   const url = gateway + path;
-  // console.log("baseUrl", url);
+   console.log("baseUrl", url);
   return api.get(url);
 };
 
