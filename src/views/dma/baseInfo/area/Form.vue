@@ -20,7 +20,17 @@
                   label="父级分区"
                   prop="parentId"
                 >
-                  <a-input v-model="model.parentId"></a-input>
+                  <a-tree-select
+                    v-model="model.parentId"
+                    style="width: 100%"
+                    :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
+                    :tree-data="treeData"
+                    placeholder="Please select"
+                    :replaceFields="replaceFields"
+                    @select="onSelect"
+                  >
+                  </a-tree-select>
+                  <!-- <a-input v-model="model.parentId"></a-input> -->
                 </a-form-model-item>
               </a-col>
               <a-col :span="12">
@@ -30,7 +40,7 @@
                   label="分区级别"
                   prop="areaGrade"
                 >
-                  <a-input v-model="model.areaGrade"></a-input>
+                  <a-input v-model="model.areaGrade" disabled></a-input>
                 </a-form-model-item>
               </a-col>
             </a-row>
@@ -46,7 +56,12 @@
                 </a-form-model-item>
               </a-col>
               <a-col :span="12">
-                <a-form-model-item v-bind="formLayoutInput" has-feedback label="分区编号" prop="areaCode">
+                <a-form-model-item
+                  v-bind="formLayoutInput"
+                  has-feedback
+                  label="分区编号"
+                  prop="areaCode"
+                >
                   <a-input v-model="model.areaCode"></a-input>
                 </a-form-model-item>
               </a-col>
@@ -85,17 +100,17 @@
                 </a-form-model-item>
               </a-col>
               <a-col :span="12">
-                      <a-form-model-item
+                <a-form-model-item
                   v-bind="formLayoutInput"
                   has-feedback
                   label="是否通水"
                   prop="noWater"
                 >
-                    <a-switch v-model="model.noWater" />
+                  <a-switch v-model="model.noWater" />
                 </a-form-model-item>
               </a-col>
             </a-row>
-         
+
             <a-row>
               <a-col :span="12">
                 <a-form-model-item
@@ -137,48 +152,82 @@
           <div class="tab-paneBox">
             <a-row>
               <a-col :span="12">
-                <a-form-model-item v-bind="formLayoutInput" has-feedback label="大用户夜间用水量" prop="enterpriseWaterDemand">
+                <a-form-model-item
+                  v-bind="formLayoutInput"
+                  has-feedback
+                  label="大用户夜间用水量"
+                  prop="enterpriseWaterDemand"
+                >
                   <a-input v-model="model.enterpriseWaterDemand"></a-input>
                 </a-form-model-item>
               </a-col>
               <a-col :span="12">
-                <a-form-model-item v-bind="formLayoutInput" has-feedback label="夜间平均压力" prop="averageNightPressure">
+                <a-form-model-item
+                  v-bind="formLayoutInput"
+                  has-feedback
+                  label="夜间平均压力"
+                  prop="averageNightPressure"
+                >
                   <a-input v-model="model.averageNightPressure"></a-input>
                 </a-form-model-item>
               </a-col>
             </a-row>
             <a-row>
               <a-col :span="12">
-                <a-form-model-item v-bind="formLayoutInput" has-feedback label="居民用户数量" prop="residentNumber">
+                <a-form-model-item
+                  v-bind="formLayoutInput"
+                  has-feedback
+                  label="居民用户数量"
+                  prop="residentNumber"
+                >
                   <a-input v-model="model.residentNumber"></a-input>
                 </a-form-model-item>
               </a-col>
               <a-col :span="12">
-                <a-form-model-item v-bind="formLayoutInput" has-feedback label="主干管道长度" prop="mainPipeLength">
+                <a-form-model-item
+                  v-bind="formLayoutInput"
+                  has-feedback
+                  label="主干管道长度"
+                  prop="mainPipeLength"
+                >
                   <a-input v-model="model.mainPipeLength"></a-input>
                 </a-form-model-item>
               </a-col>
             </a-row>
             <a-row>
               <a-col :span="12">
-                <a-form-model-item v-bind="formLayoutInput" has-feedback label="私有管道平均长度" prop="subPipeLength">
+                <a-form-model-item
+                  v-bind="formLayoutInput"
+                  has-feedback
+                  label="私有管道平均长度"
+                  prop="subPipeLength"
+                >
                   <a-input v-model="model.subPipeLength"></a-input>
                 </a-form-model-item>
               </a-col>
               <a-col :span="12">
-                <a-form-model-item v-bind="formLayoutInput" has-feedback label="私有管道数量" prop="subPipeNumber">
+                <a-form-model-item
+                  v-bind="formLayoutInput"
+                  has-feedback
+                  label="私有管道数量"
+                  prop="subPipeNumber"
+                >
                   <a-input v-model="model.subPipeNumber"></a-input>
                 </a-form-model-item>
               </a-col>
             </a-row>
             <a-row>
               <a-col :span="12">
-                <a-form-model-item v-bind="formLayoutInput" has-feedback label="ICF因子" prop="iCF">
+                <a-form-model-item
+                  v-bind="formLayoutInput"
+                  has-feedback
+                  label="ICF因子"
+                  prop="iCF"
+                >
                   <a-input v-model="model.iCF"></a-input>
                 </a-form-model-item>
               </a-col>
-              <a-col :span="12">
-              </a-col>
+              <a-col :span="12"> </a-col>
             </a-row>
           </div>
         </a-tab-pane>
@@ -187,22 +236,26 @@
   </cr-modal>
 </template>
 <script lang="ts">
-import { Component, Watch } from "vue-property-decorator";
-import {
-  FormPageVue,
-  ISelectOptionItem,
-  ITreeOptionItem,
-  ITreeOptions,
-} from "@cr/types";
+import { Component, Watch, Prop } from "vue-property-decorator";
+import { FormPageVue, ISelectOptionItem, ITreeOptionItem, ITreeOptions } from "@cr/types";
 import api from "@/api/dma/generatorApis/area";
 
-import { FormModel } from "ant-design-vue";
+import { FormModel, List } from "ant-design-vue";
 import { FormLayoutInfo } from "@cr/types/app/form";
 
 @Component<AreaFormPage>({ name: "AreaFormPage" })
 export default class AreaFormPage extends FormPageVue<any, string> {
+  @Prop({ default: () => [] }) public treeData!: Array<any>;
+
+  private replaceFields: any = {
+    children: "children",
+    key: "id",
+    value: "id",
+    title: "areaName",
+  };
+
   protected formLayoutInput: FormLayoutInfo = {
-    labelCol: { span: 6 },
+    labelCol: { span: 8 },
     labelAlign: "right",
     wrapperCol: { span: 16 },
   };
@@ -221,25 +274,73 @@ export default class AreaFormPage extends FormPageVue<any, string> {
   }
 
   created() {
+    this.model = {
+      enterpriseWaterDemand: 0,
+      averageNightPressure: 30,
+      residentNumber: 1500,
+      mainPipeLength: 2000,
+      subPipeLength: 2,
+      subPipeNumber: 1500,
+      iCF: 4,
+    };
     this.rules = {
-      areaGrade: [{ required: true, type:"number",defaultField: 1}],
-      areaName: [{ required: true, message: "请输入DMA分区名称~" }],
-      areaCode: [{ required: true, message: "请输入DMA分区编码~" }],
+      // areaGrade: [{ required: true, type: "number", defaultField: 1 }],
+      areaName: [{ required: true, message: "请输入DMA分区名称~", trigger: "blur" }],
+      areaCode: [{ required: true, message: "请输入DMA分区编码~", trigger: "blur" }],
 
       //大用户夜间用水量
-      enterpriseWaterDemand: [{ required: true,type:"number", defaultField: 0 }],              
+      enterpriseWaterDemand: [
+        { required: true, type: "number", message: "请输入用水量", trigger: "blur" },
+      ],
       //夜间平均压力
-      averageNightPressure: [{ required: true, type:"number",defaultField: 30 }],      
+      averageNightPressure: [
+        {
+          required: true,
+          type: "number",
+          message: "请输入夜间平均压力",
+          trigger: "blur",
+        },
+      ],
       //居民用户数量
-      residentNumber: [{ required: true, type:"number",defaultField: 1500 }],
+      residentNumber: [
+        {
+          required: true,
+          type: "number",
+          message: "请输入居民用户数量",
+          trigger: "blur",
+        },
+      ],
       //主干管道长度
-      mainPipeLength: [{ required: true, type:"number",defaultField: 2000 }],
+      mainPipeLength: [
+        {
+          required: true,
+          type: "number",
+          message: "请输入主干管道长度",
+          trigger: "blur",
+        },
+      ],
       //私有管道平均长度
-      subPipeLength: [{ required: true, type:"number",defaultField: 2 }],
+      subPipeLength: [
+        {
+          required: true,
+          type: "number",
+          message: "请输入私有管道平均长度",
+          trigger: "blur",
+        },
+      ],
       //私有管道数量
-      subPipeNumber: [{ required: true, type:"number",defaultField: 1500 }],
+      subPipeNumber: [
+        {
+          required: true,
+          type: "number",
+          message: "请输入私有管道数量",
+          trigger: "blur",
+        },
+      ],
       //ICF因子
-      iCF: [{ required: true, type:"number",defaultField: 4 }],
+      iCF: [
+        { required: true, type: "number", message: "请输入ICF因子", trigger: "blur" },
+      ],
     };
     this.formLayout = {
       layout: "horizontal",
@@ -253,12 +354,24 @@ export default class AreaFormPage extends FormPageVue<any, string> {
     await this.loadData();
   }
 
+  private treeNodeFilter(data: any) {
+    let list = data.map((item: any) => {
+      if (item.children.length === 0 || !item.children) {
+        delete item.children;
+        return item;
+      } else {
+        this.treeNodeFilter(item.children);
+        return item;
+      }
+    });
+    return list;
+  }
+
   /**
    * 加载数据
    */
   private async loadData() {
     if (!this.isEdit) {
-      this.model = {};
       return;
     }
     if (this.item) {
@@ -271,6 +384,11 @@ export default class AreaFormPage extends FormPageVue<any, string> {
       this.model = res;
     });
     this.loading = true;
+  }
+
+  onSelect(selectedKeys: any, { dataRef }: any) {
+    this.getModel.areaGrade = dataRef.areaGrade;
+    console.log("selected", selectedKeys, dataRef);
   }
 
   /**
@@ -325,4 +443,3 @@ export default class AreaFormPage extends FormPageVue<any, string> {
   }
 }
 </script>
-

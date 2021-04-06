@@ -1,5 +1,5 @@
 <template>
-  <page-header-wrapper hide-title-bar>
+  <page-header-wrapper class="compact-page" hide-title-bar>
     <div class="compact-page-wrapper">
       <advanced-search-panel
         :showInput="false"
@@ -12,21 +12,18 @@
       >
         <template slot="actions">
           <a-button-group>
-            <a-button
-              @click="queryList"
-              icon="sync"
-            >刷新</a-button>
+            <a-button @click="queryList" icon="sync">刷新</a-button>
             <a-button
               @click="defaultHandleCreate()"
               v-auth="{ action: 'Create' }"
               icon="plus"
-            >新增
+              >新增
             </a-button>
             <a-button
               :disabled="!currentRow"
               @click.stop="defaultHandleUpdate(currentRow)"
               v-auth="{ action: 'Update' }"
-            >编辑
+              >编辑
             </a-button>
             <a-popconfirm
               title="确定要删除当前数据吗？"
@@ -36,7 +33,7 @@
                 type="danger"
                 v-auth="{ action: 'Delete' }"
                 :disabled="!currentRow"
-              >删除
+                >删除
               </a-button>
             </a-popconfirm>
           </a-button-group>
@@ -51,14 +48,17 @@
           highlight-hover-row
           @cell-click="onTableCellClick"
           border
+          size="small"
           height="auto"
           :seq-config="{ startIndex: getSkipCount }"
           :custom-config="{ storage: true }"
+          :tree-config="{ children: 'children',expandAll: true }"
         >
           <vxe-table-column
-            type="seq"
-            width="50"
-            align="center"
+            title="DMA分区名称"
+            field="areaName"
+            width="400"
+            tree-node
           ></vxe-table-column>
           <vxe-table-column
             v-bind="col"
@@ -66,14 +66,6 @@
             :key="index"
           ></vxe-table-column>
         </vxe-table>
-      </div>
-
-      <div class="table-pagination">
-        <a-pagination
-          v-bind="pagination"
-          @showSizeChange="onShowSizeChange"
-          @change="onPageChanged"
-        ></a-pagination>
       </div>
     </div>
     <!--添加修改模块-->
@@ -84,6 +76,7 @@
       :id="popupModel.id"
       :item="popupModel.data"
       @success="queryList"
+      :treeData="dataSource"
     />
   </page-header-wrapper>
 </template>
@@ -114,16 +107,13 @@ export default class AreaList extends ListPageVxe<AreaDto, string> {
     },
   ];
 
+  private treeData: any = [];
+
   /**
    * 组件创建时执行
    */
   created() {
     this.columns = [
-      {
-        title: "DMA分区名称",
-        field: "areaName",
-        width: 300,
-      },
       {
         title: "分区编码",
         field: "areaCode",
@@ -141,10 +131,9 @@ export default class AreaList extends ListPageVxe<AreaDto, string> {
       },
       {
         title: "创建时间",
-        field: "createTime",
+        field: "creationTime",
       },
     ];
-    this.getPagination.pageSize = 10;
     this.searchFields = [
       {
         name: "Keyword",
@@ -168,34 +157,47 @@ export default class AreaList extends ListPageVxe<AreaDto, string> {
    * 查询方法
    */
   private onSearch() {
-    this.getPagination.current = 1;
     //处理其它查询条件逻辑。。。。
     this.queryList();
   }
 
   /**
-   * 分页查询列表
+   * 查询列表
    */
   private queryList() {
-    let page = this.getPagination;
     /**
      * 查询条件
      */
     let queryModel = Object.assign(
       {
-        MaxResultCount: this.getMaxResultCount,
+        // MaxResultCount: this.getMaxResultCount,
+        MaxResultCount: 1000,
         SkipCount: this.getSkipCount,
       },
       this.searchModel
     );
 
-    api.getPageList(queryModel).then((res) => {
+    api.getPageList(queryModel).then((res: any) => {
       this.loading = false;
-      this.dataSource = res.items;
-      this.getPagination.total = res.totalCount;
+      this.dataSource = this.createDataSource(res.items) || [];
     });
     this.currentRow = null;
     this.loading = true;
+  }
+  /**
+   * 表格数据处理
+   */
+  protected createDataSource(items: Array<any>, parentId?: string): Array<any> {
+    let list = items
+      .filter((x) => {
+        return (!parentId && !x.parentId) || x.parentId == parentId;
+      })
+      .map((x) => {
+        let item = { ...x };
+        item.children = this.createDataSource(items, item.id);
+        return item;
+      });
+    return list;
   }
 
   /**
@@ -203,25 +205,6 @@ export default class AreaList extends ListPageVxe<AreaDto, string> {
    */
   private onTableCellClick({ row }: any) {
     this.currentRow = row;
-  }
-
-  /**
-   * 表格分页事件
-   */
-  private onPageChanged(current: number) {
-    this.getPagination.current = current;
-    this.pagination = this.getPagination;
-    this.queryList();
-  }
-
-  /**
-   * 分页组件改变分页大小事件
-   */
-  private onShowSizeChange(current: number, size: number) {
-    this.getPagination.current = current;
-    this.getPagination.pageSize = size;
-    this.pagination = this.getPagination;
-    this.queryList();
   }
 
   /**

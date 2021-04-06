@@ -1,5 +1,5 @@
 <template>
-  <page-header-wrapper hide-title-bar>
+  <page-header-wrapper class="compact-page" hide-title-bar>
     <div class="compact-page-wrapper">
       <advanced-search-panel
         :showInput="false"
