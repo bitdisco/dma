@@ -106,7 +106,7 @@
                   label="是否通水"
                   prop="noWater"
                 >
-                  <a-switch v-model="model.noWater" />
+                  <a-switch v-model="noWater" @change="noWaterChange" />
                 </a-form-model-item>
               </a-col>
             </a-row>
@@ -129,7 +129,7 @@
                   label="有效标志"
                   prop="enabledMark"
                 >
-                  <a-switch v-model="model.enabledMark" />
+                  <a-switch v-model="enabledMark" @change="enabledMarkChange" />
                 </a-form-model-item>
               </a-col>
             </a-row>
@@ -222,9 +222,9 @@
                   v-bind="formLayoutInput"
                   has-feedback
                   label="ICF因子"
-                  prop="iCF"
+                  prop="icfFactor"
                 >
-                  <a-input v-model="model.iCF"></a-input>
+                  <a-input v-model="model.icfFactor"></a-input>
                 </a-form-model-item>
               </a-col>
               <a-col :span="12"> </a-col>
@@ -247,6 +247,8 @@ import { FormLayoutInfo } from "@cr/types/app/form";
 export default class AreaFormPage extends FormPageVue<any, string> {
   @Prop({ default: () => [] }) public treeData!: Array<any>;
 
+  private enabledMark: boolean = false;
+  private noWater: boolean = false;
   private replaceFields: any = {
     children: "children",
     key: "id",
@@ -281,7 +283,9 @@ export default class AreaFormPage extends FormPageVue<any, string> {
       mainPipeLength: 2000,
       subPipeLength: 2,
       subPipeNumber: 1500,
-      iCF: 4,
+      icfFactor: 4,
+      enabledMark: false,
+      noWater: false,
     };
     this.rules = {
       // areaGrade: [{ required: true, type: "number", defaultField: 1 }],
@@ -338,7 +342,7 @@ export default class AreaFormPage extends FormPageVue<any, string> {
         },
       ],
       //ICF因子
-      iCF: [
+      icfFactor: [
         { required: true, type: "number", message: "请输入ICF因子", trigger: "blur" },
       ],
     };
@@ -374,21 +378,40 @@ export default class AreaFormPage extends FormPageVue<any, string> {
     if (!this.isEdit) {
       return;
     }
-    if (this.item) {
-      this.onItemChanged();
+    // if (this.item) {
+    //   this.onItemChanged();
 
-      return;
-    }
+    //   return;
+    // }
     api.get(this.id).then((res: any) => {
       this.loading = false;
       this.model = res;
+      this.noWater = res.noWater ? true : false;
+      this.enabledMark = res.enabledMark ? true : false;
+      this.getModel.areaGrade = res.areaGrade + "级分区";
     });
     this.loading = true;
   }
 
+  /**
+   *分区选择事件
+   */
   onSelect(selectedKeys: any, { dataRef }: any) {
-    this.getModel.areaGrade = dataRef.areaGrade;
-    console.log("selected", selectedKeys, dataRef);
+    this.getModel.areaGrade = dataRef.areaGrade + 1 + "级分区";
+  }
+
+  /**
+   *通水滑块事件
+   */
+  noWaterChange(e: any) {
+    this.getModel.noWater = e ? 1 : 0;
+  }
+
+  /**
+   * 有效标志滑块事件
+   */
+  enabledMarkChange(e: any) {
+    this.getModel.enabledMark = e ? 1 : 0;
   }
 
   /**
@@ -396,8 +419,9 @@ export default class AreaFormPage extends FormPageVue<any, string> {
    */
   private onSubmit() {
     let form = this.$refs.form as FormModel;
+
+    this.getModel.areaGrade = this.getModel.areaGrade.slice(0, 1);
     form.validate((isValid: boolean, model: any) => {
-      console.log("isValid", isValid, model, this.getModel);
       if (isValid) {
         if (this.isEdit) {
           this.submitUpdate();
@@ -429,6 +453,8 @@ export default class AreaFormPage extends FormPageVue<any, string> {
    * 修改
    */
   private submitUpdate() {
+    this.getModel.noWater = this.getModel.noWater ? 1 : 0;
+    this.getModel.enabledMark = this.getModel.enabledMark ? 1 : 0;
     this.submitLoading = true;
     api
       .update(this.getModel.id, this.getModel)
