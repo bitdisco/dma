@@ -1,17 +1,8 @@
 <template>
   <tree-layout-page-wrapper :treeWidth="260">
     <template slot="tree">
-      <!-- <a-card> -->
-      <a-tree
-        :replaceFields="replaceFields"
-        :expanded-keys="expandedKeys"
-        :auto-expand-parent="autoExpandParent"
-        :selected-keys="selectedKeys"
-        :tree-data="treeData"
-        @expand="onExpand"
-        @select="onSelect"
-      />
-      <!-- </a-card> -->
+      <!-- <address-tree :checkable="true" @getTreeNode="getTreeNode"/> -->
+      <monitor-tree @getTreeNode="getTreeNode"/>
     </template>
     <div class="compact-page-wrapper">
       <advanced-search-panel
@@ -72,10 +63,14 @@ import { SortedInfo, ToolbarActionItem, ListPageVxe } from "@cr/types";
 import { PaginationConfig } from "ant-design-vue/types/list/list";
 import api from "@/api/dma/generatorApis/armRealData";
 import AreaApi from "@/api/dma/generatorApis/area";
+import AddressTree from "@/components/Tree/AddressTree.vue"
+import MonitorTree from "@/components/Tree/MonitorTree.vue"
+import AreaTree from "@/components/Tree/AreaTree.vue"
 import { ArmRealDataDto } from "@/api/dma/types";
 
 @Component<RealDataList>({
   name: "RealDataList",
+  components:{AddressTree, AreaTree, MonitorTree}
 })
 export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
   //#region 树控件相关
@@ -258,6 +253,15 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
     });
     this.currentRow = null;
     this.loading = true;
+  }
+
+  /*树点击事件*/
+  private getTreeNode(val:any){
+    console.log("点击树信息",val);
+    this.searchModel.AreaName = val.areaName;
+    this.searchModel.AreaCode = val.areaCode;
+    this.searchModel.AreaGrade = val.areaGrade;
+    this.queryList();
   }
 
   /**

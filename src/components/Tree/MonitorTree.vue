@@ -4,10 +4,10 @@
  * @Author: 李星
  * @Date: 2021-03-21 14:42:23
  * @LastEditors: 张小凡
- * @LastEditTime: 2021-04-08 10:26:19
+ * @LastEditTime: 2021-04-08 16:04:23
 -->
 <template>
-  <div class="tree-aside">
+  <div>
     <div class="tree-aside-header">
         <div class="header-search">
           <a-input-search
@@ -21,12 +21,6 @@
             <a-button @click="clearSelectItem">清除已选</a-button>
           </div>
         </div>
-        <nav class="navbar lable-type">
-          <div class="lable-box">
-            <span class="should-write"><i style="background-color: #00D099;"></i>应抄月 </span>
-            <span><i style="background-color: #B0B0B0;"></i>非抄月 </span>
-          </div>
-        </nav>
       </div>
       <div class="tree-aside-wrapper">
         <div class="example" v-if="isLoadingBooks">
@@ -35,36 +29,13 @@
         <a-tree 
            v-if="!isLoadingBooks"
           :treeData="treeData" 
+          :checkable="checkable"
           :replaceFields="replaceFields" 
           @select="onSelect" 
           :expandedKeys="expandedKeys"
           :autoExpandParent="autoExpandParent"
-          :load-data="onLoadData" 
+          :load-data="onLoadData"
           @expand="onExpand">
-          <div class="books" slot="books" slot-scope="{ name, expanded }">
-            <template v-if="expanded">
-              <a-icon type="folder-open" style="margin-right: 5px;" />{{ name }} 
-            </template>
-            <template v-else>
-              <a-icon type="folder" style="margin-right: 5px;" />{{ name }}
-            </template>
-          </div>
-          <div class="book" style="display: flex;" slot="book" slot-scope="{ bookName, bookCode, orderNo, nextWriteMon }">
-            <span 
-              style="
-              overflow: hidden;
-              display: inline-block;
-              white-space: nowrap;
-              padding-right: 10px;
-              width: 150px;
-              text-overflow: ellipsis;"
-              :title="bookName" 
-            ><a-icon type="file" style="margin-right: 5px;" />{{ bookName }}</span>
-            <span style="display: inline-block;width: 80px;">({{ bookCode }})</span>
-            <span class="book-or-no" :style="{
-              background: nextWriteMon > 0 ? '#00D099' : '#B0B0B0',
-            }">{{ orderNo || 1 }}</span>
-          </div>
         </a-tree>
       </div>
   </div>
@@ -72,11 +43,13 @@
 <script lang="ts">
 import { Component, Vue, Watch, Prop } from "vue-property-decorator";
 import OwnsOrginzesApi from "@/api/platform/config";
-import AreaApi from "@/api/dma/generatorApis/area";
+import AreaMeterApi from "@/api/dma/generatorApis/areaMeter";
 import { UserModule } from "@cr/utils";
 
 @Component<Tree>({ name: "Tree", components: {  } })
 export default class Tree extends Vue {
+  @Prop({ default: false }) private checkable!: boolean;
+
   protected treeSearchKey: string = "";
   private treeItems: Array<any> = [];
   private isLoadingBooks: boolean = false;
@@ -99,8 +72,12 @@ export default class Tree extends Vue {
    * 组件挂载成功
    */
   mounted() {
-    this.getOwnsOrginzes();
-    this.getWriteBooks();
+    // this.getOwnsOrginzes();
+    this.$nextTick(()=>{
+      this.queryAreaTree();
+    })
+    
+    // this.getWriteBooks();
   }
 
   /**
@@ -109,8 +86,7 @@ export default class Tree extends Vue {
   private onSearchChanged() {
     let vm:any = this;
     //如果搜索值为空，则不展开任何项，expandedKeys置为空
-    //如果搜索值不位空，则expandedKeys的值要为搜索值的父亲及其所有祖先
-    console.log("搜索项",vm.treeSearchKey);
+    //如果搜索值不为空，则expandedKeys的值要为搜索值的父亲及其所有祖先
     if(vm.treeSearchKey === ''){
       vm.expandedKeys = [];
     } else {
@@ -119,7 +95,6 @@ export default class Tree extends Vue {
       vm.backupsExpandedKeys = [];
       //获取所有存在searchValue的节点
       let candidateKeysList = vm.getkeyList(vm.treeSearchKey,vm.treeData,[]);
-      console.log("获取所有节点",candidateKeysList);
       //遍历满足条件的所有节点
       candidateKeysList.map(
         (item:any)=>{
@@ -229,114 +204,33 @@ export default class Tree extends Vue {
    * 树型节点展开事件
    */
   private onExpand(expandedKeys:any, {expanded, node}:any) {
-    // console.log(expandedKeys, expanded, node)
     //用户点击展开时，取消自动展开效果
     this.expandedKeys = expandedKeys;
     this.autoExpandParent = false;
   }
-  
-  /**
-   * 加载组织数据（本用户），组装基本树数据
+
+   /**
+   * 加载地区，组装基本树数据
    */
-  private getOwnsOrginzes() {
-    this.treeData = [];
-    OwnsOrginzesApi.getOwnsOrginzes().then((res) => {
-      console.log("右侧原始树结构",res);
-      if (res?.length) {
-        let parentId:string = '';
-        let node1Obj:any = {};
-        res.forEach((node1:any, index1:any) => {
-          if (node1.type === 0) {
-            parentId = node1.id;
-
-            // node1Obj.title = node1.name;
-            // node1Obj.key = node1.id;
-            // node1Obj.encode = node1.encode;
-            // node1Obj.type = node1.type;
-            // node1Obj.scopedSlots = { title: "books", };
-            // node1Obj.children = [];
-
-            this.treeData.push(node1);
-            this.$set(this.treeData[0], 'children', []);
-            this.$set(this.treeData[0], 'scopedSlots', { title: "books", icon: 'folder' });
-          }
-          if (node1.type === 1 && node1.parentId === parentId) {
-            
-            // let node2Obj:any = {
-            //   title: node1.name, 
-            //   key: node1.id,
-            //   type: node1.type,
-            //   encode: node1.encode,
-            //   children: [],
-            //   scopedSlots: { title: "books", icon: 'database' }
-            // };
-            // node1Obj.children.push(node2Obj)
-
-            this.treeData[0].children.push(node1);
-            this.treeData[0].children.map((item:any) => {
-              if (!item.children) {
-                this.$set(item, 'children', []);
-                this.$set(item, 'scopedSlots', { title: "books", icon: 'folder' });
-              }
-            })
-          }
-        }); 
-        console.log("树结构",this.treeData);
-        
-        // if (node1Obj.children) {
-        //   if (node1Obj.children?.length) {
-        //     node1Obj.children.map((item:any)=>{
-        //       res.map((it:any)=>{
-        //         if (item.key === it.parentId) {
-        //           let node3Obj:any = {
-        //             title: it.name, 
-        //             key: it.id,
-        //             type: it.type,
-        //             encode: it.encode,
-        //             children: [],
-        //             scopedSlots: { title: "books", icon: 'database' }
-        //           };
-        //           item.children.push(node3Obj);
-        //         }
-        //       })
-        //     })
-        //   }
-        // }
-        // this.treeData.push(node1Obj);
-
-        if (this.treeData.length>0) {
-          if (this.treeData[0].children && this.treeData[0].children.length>0) {
-            this.treeData[0].children.map((item:any) => {
-              res.map((val:any)=>{
-                if (item.id === val.parentId) {
-                  item.children.push(val);
-                }
-              })
-              if (item.children.length>0) {
-                item.children.map((it:any) => {
-                  this.$set(it, 'children', []);
-                  this.$set(it, 'scopedSlots', { title: "books", icon: 'folder' });
-                })
-              }
-            })
-          } 
-        }
-      }
+  private queryAreaTree() {
+    AreaMeterApi.tree({}).then((res) => {
+      this.treeData = res;
+      this.expandedKeys.push(res[0].id);
     });
   }
 
   /**
    * 表册树数据
    */
-  private getWriteBooks() {
-    // this.isLoadingBooks = true;
-    AreaApi.getAreaTree({UserId: UserModule().userId}).then((res) => {
-      this.treeItems = res;
-      // setTimeout(() => {
-      //   this.isLoadingBooks = false;
-      // }, 300);
-    });
-  }
+  // private getWriteBooks() {
+  //   // this.isLoadingBooks = true;
+  //   AreaMeterApi.getAreaTree({UserId: UserModule().userId}).then((res) => {
+  //     this.treeItems = res;
+  //     // setTimeout(() => {
+  //     //   this.isLoadingBooks = false;
+  //     // }, 300);
+  //   });
+  // }
 
   /**
    * 清除树节点选中
@@ -350,7 +244,6 @@ export default class Tree extends Vue {
    * 树型节点点击事件
    */
   private onSelect(selectedKeys: any, info: any) {
-    // console.log(info)
     this.$emit('getTreeNode', info.node.dataRef)
   }
   
