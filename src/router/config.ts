@@ -75,6 +75,30 @@ export const indexRoutes: RouteConfig[] = [
     ]
   },
   {
+    path: "/leakAnanalysis",
+    name: "leakAnanalysis",
+    component: Layout,
+    redirect: "/sortAnalyze",
+    meta: {
+      permissionCode: "",
+      allowAnonymous: false,
+      title: "漏损分析",
+    },
+    children: [
+      {
+        path: "sortAnalyze",
+        name: "sortAnalyze",
+        meta: {
+          keepAlive: true,
+          permissionCode: "DMA.LeakageSortAnalyze",
+          allowAnonymous: false,
+          title: "漏损排行榜",
+        },
+        component: () => import("@/views/dma/leakAnanalysis/sortAnalyze/Index.vue"),
+      }
+    ]
+  },
+  {
     path: "/baseInfo",
     name: "baseInfo",
     component: Layout,
