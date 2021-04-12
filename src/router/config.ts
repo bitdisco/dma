@@ -131,6 +131,17 @@ export const indexRoutes: RouteConfig[] = [
         },
         component: () => import("@/views/dma/baseInfo/meter/Index.vue"),
       },
+      {
+        path: "areaMeter",
+        name: "areaMeter",
+        meta: {
+          keepAlive: true,
+          permissionCode: "DMA.AreaMeter",
+          allowAnonymous: false,
+          title: "设备挂接",
+        },
+        component: () => import("@/views/dma/baseInfo/areaMeter/Index.vue"),
+      },
     ]
   }
 ];
