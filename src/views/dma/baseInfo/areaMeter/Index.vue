@@ -14,17 +14,20 @@
           <a-button-group>
             <a-button @click="queryList" icon="sync">刷新</a-button>
             <a-button
-              @click="defaultHandleCreate()"
+              @click="handleCreate(currentRow, 0)"
               v-auth="{ action: 'Create' }"
               icon="plus"
-              >新增
+              :disabled="!currentRow"
+              >挂接出水口
             </a-button>
             <a-button
+              @click="handleCreate(currentRow, 1)"
+              v-auth="{ action: 'Create' }"
+              icon="plus"
               :disabled="!currentRow"
-              @click.stop="defaultHandleUpdate(currentRow)"
-              v-auth="{ action: 'Update' }"
-              >编辑
+              >挂接进水口
             </a-button>
+
             <a-popconfirm
               title="确定要删除当前数据吗？"
               @confirm.stop="onDeleteItem(currentRow)"
@@ -52,11 +55,11 @@
           height="auto"
           :seq-config="{ startIndex: getSkipCount }"
           :custom-config="{ storage: true }"
-          :tree-config="{ children: 'children',expandAll: true }"
+          :tree-config="{ children: 'children', expandAll: true }"
         >
           <vxe-table-column
-            title="DMA分区名称"
-            field="areaName"
+            title="名称"
+            field="name"
             width="400"
             tree-node
           ></vxe-table-column>
@@ -69,15 +72,15 @@
       </div>
     </div>
     <!--添加修改模块-->
-    <form-view
-      v-if="popupModel.visible"
-      :action="popupModel.action"
-      v-model="popupModel.visible"
-      :id="popupModel.id"
-      :item="popupModel.data"
-      @success="queryList"
-      :treeData="dataSource"
-    />
+    <cr-popup-table
+      v-if="popupVisible"
+      :visible="popupVisible"
+      :dialogOptions="dialogOptions"
+      :tableOptions="tableOptions"
+      @success="onAreaPopupSuccess"
+      @close="popupVisible = false"
+      :emptyMessage="emptyMessage"
+    ></cr-popup-table>
   </page-header-wrapper>
 </template>
 
@@ -85,15 +88,17 @@
 import { Component, Vue, Watch, Prop } from "vue-property-decorator";
 import { SortedInfo, ToolbarActionItem, ListPageVxe } from "@cr/types";
 import { PaginationConfig } from "ant-design-vue/types/list/list";
-import api from "@/api/dma/generatorApis/area";
-import { AreaDto } from "@/api/dma/types";
+import api from "@/api/dma/generatorApis/areaMeter";
+import { AreaMeterDto } from "@/api/dma/types";
 // import FormView from "./Form.vue";
+import { CrPopupTable } from "@cr/components/index";
+import MeterInfoUrl from "@/api/dma/generatorUrls";
 
 @Component<AreaList>({
   name: "AreaList",
-//   components: { FormView },
+  components: { CrPopupTable },
 })
-export default class AreaList extends ListPageVxe<AreaDto, string> {
+export default class AreaList extends ListPageVxe<AreaMeterDto, string> {
   /**
    * 工具栏按钮属性
    */
@@ -106,8 +111,76 @@ export default class AreaList extends ListPageVxe<AreaDto, string> {
       },
     },
   ];
+  private popupVisible: boolean = false;
+  private direction: number = 0;
+  private areaId: string = "";
+  private emptyMessage: string = "请选择需要保存的监测点！";
 
-  private treeData: any = [];
+  private modelData: any = [];
+  private dialogOptions: any = {
+    title: "添加",
+    centered: true,
+    maskClosable: false,
+    keyboard: false,
+    width: 1000,
+    height: 500,
+  };
+  private tableOptions: any = {
+    columns: [
+      {
+        title: "监测点编码",
+        field: "meterCode",
+        width: 100,
+      },
+      {
+        title: "监测点名称",
+        field: "meterName",
+        width: 200,
+      },
+
+      {
+        title: "管径直径",
+        field: "diameter",
+        width: 100,
+      },
+      {
+        title: "管线材质",
+        field: "material",
+        width: 100,
+      },
+      {
+        title: "安装地址",
+        field: "installAddress",
+      },
+    ],
+    remote: {
+      url: MeterInfoUrl.meter.getQueryList,
+    },
+    showSearch: true,
+    multiple: true,
+    searchFields: [
+      {
+        name: "Name",
+        label: "管道类型",
+        input: "a-select",
+        props: {
+          options: [
+            { text: "出水口", value: 0 },
+            { text: "进水口", value: 1 },
+          ],
+        },
+      },
+      {
+        name: "Keyword",
+        label: "关键字",
+        input: "a-input",
+        props: {
+          placeholder: "输入监测点名称、监测点编码、挂接表号关键词进行模糊搜索",
+        },
+      },
+    ],
+    showPagination: true,
+  };
 
   /**
    * 组件创建时执行
@@ -115,23 +188,27 @@ export default class AreaList extends ListPageVxe<AreaDto, string> {
   created() {
     this.columns = [
       {
-        title: "分区编码",
-        field: "areaCode",
+        title: "编码",
+        field: "code",
         width: 150,
       },
       {
-        title: "分区级别",
-        field: "areaGrade",
+        title: "类型",
+        field: "title",
         width: 150,
       },
       {
-        title: "建设年代",
-        field: "constructionYear",
+        title: "标题",
+        field: "type",
         width: 150,
+        align: "center",
+        cellRender: {
+          name: "area-meter-tag",
+        },
       },
       {
         title: "创建时间",
-        field: "creationTime",
+        field: "addTime",
       },
     ];
     this.searchFields = [
@@ -177,9 +254,10 @@ export default class AreaList extends ListPageVxe<AreaDto, string> {
       this.searchModel
     );
 
-    api.getPageList(queryModel).then((res: any) => {
+    api.tree(queryModel).then((res: any) => {
       this.loading = false;
-      this.dataSource = this.createDataSource(res.items) || [];
+      //   this.dataSource = this.createDataSource(res) || [];
+      this.dataSource = res;
     });
     this.currentRow = null;
     this.loading = true;
@@ -194,6 +272,7 @@ export default class AreaList extends ListPageVxe<AreaDto, string> {
       })
       .map((x) => {
         let item = { ...x };
+
         item.children = this.createDataSource(items, item.id);
         return item;
       });
@@ -210,14 +289,48 @@ export default class AreaList extends ListPageVxe<AreaDto, string> {
   /**
    * 删除选择项
    */
-  private onDeleteItem(row: AreaDto) {
+  private onDeleteItem(row: AreaMeterDto) {
     api.delete(row.id).then((res) => {
       this.$message.success({ content: "删除成功~" });
       this.queryList();
     });
   }
 
-  /** 批量删除 */
+  private handleCreate(row: any, type: number) {
+    this.direction = type;
+    this.areaId = row.id;
+    if (row.title == "DMA分区") {
+      this.popupVisible = true;
+    } else {
+      this.$message.warning({
+        content: "设备挂接请选择需要配置的【DMA分区】！",
+      });
+    }
+  }
+
+  private onAreaPopupSuccess(currentRow: any) {
+    if (currentRow.length) {
+      console.log(currentRow, "currentRow");
+      let params:any={
+          areaId:this.areaId,
+          direction:this.direction,
+          data:currentRow
+      }
+
+        // api
+        //   .create(params)
+        //   .then((res) => {
+        //     this.submitLoading = false;
+        //     this.$emit("input", false);
+        //     this.$emit("success");
+        //   })
+        //   .catch((err: any) => {
+        //     this.submitLoading = false;
+        //   });
+    }
+  }
+
+  /** 删除 */
   private deleteSelectedItems() {}
 
   /**
