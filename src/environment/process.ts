@@ -29,4 +29,4 @@ export const isDotnet = environment === "dotnet";
  * 开发时默认配置文件
  */
 export const devBaseConfigUrl =
-  "http://139.224.255.200:3011/config/DMA/config.dev.json";
+  "http://36.133.33.128:3011/config/DMA/config.dev.json";
