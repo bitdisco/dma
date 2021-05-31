@@ -5,7 +5,7 @@ import api from "@/api";
  * OIDC设置
  */
 export const oidcSettings: IOidcDefine = {
-  authority: "http://139.224.255.200:3010",
+  authority: "http://36.133.33.128:3010",
   clientId: "platform-vue",
   redirectUri: "http://localhost:8088/#/oidc-callback",
   silentRedirectUri: "http://localhost:8088/#/oidc-callback",

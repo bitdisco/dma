@@ -13,6 +13,7 @@ export default {
   /**
    * 获取系统配置
    * @param moduleCode
+   *
    */
   getSystemConfig(moduleCode?: string) {
     moduleCode =
