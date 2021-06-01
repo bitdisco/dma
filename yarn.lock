@@ -972,7 +972,7 @@
 
 "@types/echarts@^4.9.2":
   version "4.9.2"
-  resolved "http://139.224.255.200:4873/@types%2fecharts/-/echarts-4.9.2.tgz#305d250aabf3cb4c47e26ef6b335aab5354339f6"
+  resolved "http://36.133.33.128:4873/@types%2fecharts/-/echarts-4.9.2.tgz#305d250aabf3cb4c47e26ef6b335aab5354339f6"
   integrity sha1-MF0lCqvzy0xH4m72szWqtTVDOfY=
   dependencies:
     "@types/zrender" "*"
@@ -1047,7 +1047,7 @@
 
 "@types/node@^14.0.11":
   version "14.14.16"
-  resolved "http://139.224.255.200:4873/@types%2fnode/-/node-14.14.16.tgz#3cc351f8d48101deadfed4c9e4f116048d437b4b"
+  resolved "http://36.133.33.128:4873/@types%2fnode/-/node-14.14.16.tgz#3cc351f8d48101deadfed4c9e4f116048d437b4b"
   integrity sha1-PMNR+NSBAd6t/tTJ5PEWBI1De0s=
 
 "@types/normalize-package-data@^2.4.0":
@@ -1139,7 +1139,7 @@
 
 "@types/zrender@*":
   version "4.0.0"
-  resolved "http://139.224.255.200:4873/@types%2fzrender/-/zrender-4.0.0.tgz#a6806f12ec4eccaaebd9b0d816f049aca6188fbd"
+  resolved "http://36.133.33.128:4873/@types%2fzrender/-/zrender-4.0.0.tgz#a6806f12ec4eccaaebd9b0d816f049aca6188fbd"
   integrity sha1-poBvEuxOzKrr2bDYFvBJrKYYj70=
 
 "@vue/babel-helper-vue-jsx-merge-props@^1.2.1":
@@ -1309,7 +1309,7 @@
 
 "@vue/cli-plugin-vuex@^4.1.0", "@vue/cli-plugin-vuex@^4.5.9":
   version "4.5.9"
-  resolved "http://139.224.255.200:4873/@vue%2fcli-plugin-vuex/-/cli-plugin-vuex-4.5.9.tgz#5ae8f1500c7e29406b02fac82cceaeab86c1e83a"
+  resolved "http://36.133.33.128:4873/@vue%2fcli-plugin-vuex/-/cli-plugin-vuex-4.5.9.tgz#5ae8f1500c7e29406b02fac82cceaeab86c1e83a"
   integrity sha1-WujxUAx+KUBrAvrILM6uq4bB6Do=
 
 "@vue/cli-service@^4.5.0":
@@ -2677,7 +2677,7 @@ compressible@~2.0.16:
 
 compression-webpack-plugin@^7.1.0:
   version "7.1.0"
-  resolved "http://139.224.255.200:4873/compression-webpack-plugin/-/compression-webpack-plugin-7.1.0.tgz#83fd43f0a5edefc55e1aab0fa1d8bb820a9d66c2"
+  resolved "http://36.133.33.128:4873/compression-webpack-plugin/-/compression-webpack-plugin-7.1.0.tgz#83fd43f0a5edefc55e1aab0fa1d8bb820a9d66c2"
   integrity sha1-g/1D8KXt78VeGqsPodi7ggqdZsI=
   dependencies:
     schema-utils "^3.0.0"
@@ -2764,7 +2764,7 @@ cookie@0.4.0:
 
 copy-anything@^2.0.1:
   version "2.0.1"
-  resolved "http://139.224.255.200:4873/copy-anything/-/copy-anything-2.0.1.tgz#2afbce6da684bdfcbec93752fa762819cb480d9a"
+  resolved "http://36.133.33.128:4873/copy-anything/-/copy-anything-2.0.1.tgz#2afbce6da684bdfcbec93752fa762819cb480d9a"
   integrity sha1-KvvObaaEvfy+yTdS+nYoGctIDZo=
   dependencies:
     is-what "^3.7.1"
@@ -2850,7 +2850,7 @@ cosmiconfig@^6.0.0:
 
 cr-antdv@^1.0.0:
   version "1.0.0"
-  resolved "http://139.224.255.200:4873/cr-antdv/-/cr-antdv-1.0.0.tgz#66e437cf8c46aa93fd407ab29f8ba33f1a024b3a"
+  resolved "http://36.133.33.128:4873/cr-antdv/-/cr-antdv-1.0.0.tgz#66e437cf8c46aa93fd407ab29f8ba33f1a024b3a"
   integrity sha512-dUP16gXyDNtdhRejUcJYAqSpvhVkJrVsGrSSt6cERkgLMK9YFGxHa1e9CQd8N9smABcmH1bDyTda+x4RAdgyHA==
   dependencies:
     "@types/node" "^14.0.11"
@@ -2860,7 +2860,7 @@ cr-antdv@^1.0.0:
 
 cr-server@^1.0.0:
   version "1.0.0"
-  resolved "http://139.224.255.200:4873/cr-server/-/cr-server-1.0.0.tgz#044d219a98c0c84145d4bb9f1af2c998abfec085"
+  resolved "http://36.133.33.128:4873/cr-server/-/cr-server-1.0.0.tgz#044d219a98c0c84145d4bb9f1af2c998abfec085"
   integrity sha512-8fBZYAzLKUymaNgibnPj4mAgE7rYm8s8cCGXh8O+YBOCrMf0YfWXRlEHVeN4nT/GVtrHZomlnU+8AQI5tKuk3g==
   dependencies:
     "@types/node" "^14.0.11"
@@ -2947,7 +2947,7 @@ crypto-browserify@^3.11.0:
 
 crypto-js@^3.1.9-1:
   version "3.3.0"
-  resolved "http://139.224.255.200:4873/crypto-js/-/crypto-js-3.3.0.tgz#846dd1cce2f68aacfa156c8578f926a609b7976b"
+  resolved "http://36.133.33.128:4873/crypto-js/-/crypto-js-3.3.0.tgz#846dd1cce2f68aacfa156c8578f926a609b7976b"
   integrity sha1-hG3RzOL2iqz6FWyFePkmpgm3l2s=
 
 css-color-names@0.0.4, css-color-names@^0.0.4:
@@ -3438,7 +3438,7 @@ ecc-jsbn@~0.1.1:
 
 echarts@^4.9.0:
   version "4.9.0"
-  resolved "http://139.224.255.200:4873/echarts/-/echarts-4.9.0.tgz#a9b9baa03f03a2a731e6340c55befb57a9e1347d"
+  resolved "http://36.133.33.128:4873/echarts/-/echarts-4.9.0.tgz#a9b9baa03f03a2a731e6340c55befb57a9e1347d"
   integrity sha1-qbm6oD8Doqcx5jQMVb77V6nhNH0=
   dependencies:
     zrender "4.3.2"
@@ -4322,7 +4322,7 @@ hash-sum@^2.0.0:
 
 hash.js@^1.0.0, hash.js@^1.0.3:
   version "1.1.7"
-  resolved "http://139.224.255.200:4873/hash.js/-/hash.js-1.1.7.tgz#0babca538e8d4ee4a0f8988d68866537a003cf42"
+  resolved "http://36.133.33.128:4873/hash.js/-/hash.js-1.1.7.tgz#0babca538e8d4ee4a0f8988d68866537a003cf42"
   integrity sha1-C6vKU46NTuSg+JiNaIZlN6ADz0I=
   dependencies:
     inherits "^2.0.3"
@@ -4948,7 +4948,7 @@ is-typedarray@~1.0.0:
 
 is-what@^3.7.1:
   version "3.12.0"
-  resolved "http://139.224.255.200:4873/is-what/-/is-what-3.12.0.tgz#f4405ce4bd6dd420d3ced51a026fb90e03705e55"
+  resolved "http://36.133.33.128:4873/is-what/-/is-what-3.12.0.tgz#f4405ce4bd6dd420d3ced51a026fb90e03705e55"
   integrity sha1-9EBc5L1t1CDTztUaAm+5DgNwXlU=
 
 is-windows@^1.0.2:
@@ -5195,7 +5195,7 @@ less-loader@^5.0.0:
 
 less@^3.0.4:
   version "3.13.1"
-  resolved "http://139.224.255.200:4873/less/-/less-3.13.1.tgz#0ebc91d2a0e9c0c6735b83d496b0ab0583077909"
+  resolved "http://36.133.33.128:4873/less/-/less-3.13.1.tgz#0ebc91d2a0e9c0c6735b83d496b0ab0583077909"
   integrity sha1-DryR0qDpwMZzW4PUlrCrBYMHeQk=
   dependencies:
     copy-anything "^2.0.1"
@@ -5950,7 +5950,7 @@ obuf@^1.0.0, obuf@^1.1.2:
 
 oidc-client@^1.10.1:
   version "1.10.1"
-  resolved "http://139.224.255.200:4873/oidc-client/-/oidc-client-1.10.1.tgz#fe67ae54924fc1c338062f3fd733be362026192c"
+  resolved "http://36.133.33.128:4873/oidc-client/-/oidc-client-1.10.1.tgz#fe67ae54924fc1c338062f3fd733be362026192c"
   integrity sha1-/meuVJJPwcM4Bi8/1zO+NiAmGSw=
   dependencies:
     base64-js "^1.3.0"
@@ -7179,7 +7179,7 @@ schema-utils@^2.0.0, schema-utils@^2.5.0, schema-utils@^2.6.5, schema-utils@^2.6
 
 schema-utils@^3.0.0:
   version "3.0.0"
-  resolved "http://139.224.255.200:4873/schema-utils/-/schema-utils-3.0.0.tgz#67502f6aa2b66a2d4032b4279a2944978a0913ef"
+  resolved "http://36.133.33.128:4873/schema-utils/-/schema-utils-3.0.0.tgz#67502f6aa2b66a2d4032b4279a2944978a0913ef"
   integrity sha1-Z1AvaqK2ai1AMrQnmilEl4oJE+8=
   dependencies:
     "@types/json-schema" "^7.0.6"
@@ -7248,7 +7248,7 @@ serialize-javascript@^4.0.0:
 
 serialize-javascript@^5.0.1:
   version "5.0.1"
-  resolved "http://139.224.255.200:4873/serialize-javascript/-/serialize-javascript-5.0.1.tgz#7886ec848049a462467a97d3d918ebb2aaf934f4"
+  resolved "http://36.133.33.128:4873/serialize-javascript/-/serialize-javascript-5.0.1.tgz#7886ec848049a462467a97d3d918ebb2aaf934f4"
   integrity sha1-eIbshIBJpGJGepfT2Rjrsqr5NPQ=
   dependencies:
     randombytes "^2.1.0"
@@ -8349,7 +8349,7 @@ vue@^2.6.11:
 
 vuex-module-decorators@^1.0.1:
   version "1.0.1"
-  resolved "http://139.224.255.200:4873/vuex-module-decorators/-/vuex-module-decorators-1.0.1.tgz#d34dafb5428a3636f1c26d3d014c15fc9659ccd0"
+  resolved "http://36.133.33.128:4873/vuex-module-decorators/-/vuex-module-decorators-1.0.1.tgz#d34dafb5428a3636f1c26d3d014c15fc9659ccd0"
   integrity sha1-002vtUKKNjbxwm09AUwV/JZZzNA=
 
 vuex@^3.4.0:
@@ -8490,7 +8490,7 @@ webpack-merge@^4.2.2:
 
 webpack-sources@*:
   version "2.2.0"
-  resolved "http://139.224.255.200:4873/webpack-sources/-/webpack-sources-2.2.0.tgz#058926f39e3d443193b6c31547229806ffd02bac"
+  resolved "http://36.133.33.128:4873/webpack-sources/-/webpack-sources-2.2.0.tgz#058926f39e3d443193b6c31547229806ffd02bac"
   integrity sha1-BYkm8549RDGTtsMVRyKYBv/QK6w=
   dependencies:
     source-list-map "^2.0.1"
@@ -8715,5 +8715,5 @@ yorkie@^2.0.0:
 
 zrender@4.3.2:
   version "4.3.2"
-  resolved "http://139.224.255.200:4873/zrender/-/zrender-4.3.2.tgz#ec7432f9415c82c73584b6b7b8c47e1b016209c6"
+  resolved "http://36.133.33.128:4873/zrender/-/zrender-4.3.2.tgz#ec7432f9415c82c73584b6b7b8c47e1b016209c6"
   integrity sha1-7HQy+UFcgsc1hLa3uMR+GwFiCcY=

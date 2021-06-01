@@ -1,3 +1,10 @@
+/*
+ * @Description: 
+ * @Autor: 朱海良
+ * @Date: 2021-03-16 14:20:47
+ * @LastEditors: 朱海良
+ * @LastEditTime: 2021-06-01 14:15:54
+ */
 import api from "@/api";
 import { AppModule } from "@/store";
 export default {

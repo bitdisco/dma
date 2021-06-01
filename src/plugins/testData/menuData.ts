@@ -1,7 +1,7 @@
 export default [{
     name: "主界面",
     iconName: "cr-jiekou",
-    url: "http://139.224.255.200:3014/#/main",
+    url: "http://36.133.33.128:3014/#/main",
     enCode: "Module.Main",
     enable: true,
     displayOrder: 0,
@@ -20,7 +20,7 @@ export default [{
 }, {
     name: "息锋县综合管理平台",
     iconName: "cr-zhuye",
-    url: "http://139.224.255.200:3041",
+    url: "http://36.133.33.128:3041",
     enCode: "Module.Home",
     enable: true,
     displayOrder: 0,
@@ -39,7 +39,7 @@ export default [{
 }, {
     name: "水务一体化",
     iconName: "cr-pingtaiguanli",
-    url: "http://139.224.255.200:3014",
+    url: "http://36.133.33.128:3014",
     enCode: "Module.Platform",
     enable: true,
     displayOrder: 1,
@@ -58,7 +58,7 @@ export default [{
 }, {
     name: "新版营收",
     iconName: "ion",
-    url: "http://139.224.255.200:30143",
+    url: "http://36.133.33.128:30143",
     enCode: "Module.Charge",
     enable: true,
     displayOrder: 2,
@@ -77,7 +77,7 @@ export default [{
 }, {
     name: "营收系统",
     iconName: "cr-yingshouxitong",
-    url: "http://139.224.255.200:3043",
+    url: "http://36.133.33.128:3043",
     enCode: "Module.Charge",
     enable: true,
     displayOrder: 2,
@@ -96,7 +96,7 @@ export default [{
 }, {
     name: "仓储管理系统",
     iconName: "cr-cailiao",
-    url: "http://139.224.255.200:3016",
+    url: "http://36.133.33.128:3016",
     enCode: "Module.Material",
     enable: true,
     displayOrder: 3,
@@ -115,7 +115,7 @@ export default [{
 }, {
     name: "设备管理系统",
     iconName: "cr-shebeiguanli",
-    url: "http://139.224.255.200:3015",
+    url: "http://36.133.33.128:3015",
     enCode: "Module.Equipment",
     enable: true,
     displayOrder: 4,
@@ -134,7 +134,7 @@ export default [{
 }, {
     name: "省级平台",
     iconName: "cr-shengjipingtai",
-    url: "http://139.224.255.200:3027",
+    url: "http://36.133.33.128:3027",
     enCode: "Module.ProvinceCockpit",
     enable: true,
     displayOrder: 4,
@@ -153,7 +153,7 @@ export default [{
 }, {
     name: "驾驶舱",
     iconName: "cr-shuiyuandi",
-    url: "http://139.224.255.200:3014/#/cockpit",
+    url: "http://36.133.33.128:3014/#/cockpit",
     enCode: "Module.Cockpit",
     enable: true,
     displayOrder: 5,
@@ -172,7 +172,7 @@ export default [{
 }, {
     name: "GIS平台",
     iconName: "cr-GIS",
-    url: "http://139.224.255.200:3017",
+    url: "http://36.133.33.128:3017",
     enCode: "Module.GIS",
     enable: true,
     displayOrder: 5,
@@ -191,7 +191,7 @@ export default [{
 }, {
     name: "生产管理系统",
     iconName: "cr-OA",
-    url: "http://139.224.255.200:3037",
+    url: "http://36.133.33.128:3037",
     enCode: "Module.WiseWaterMonitor",
     enable: true,
     displayOrder: 5,
@@ -210,7 +210,7 @@ export default [{
 }, {
     name: "视频服务系统",
     iconName: "cr-SCADAcaiji",
-    url: "http://139.224.255.200:3038",
+    url: "http://36.133.33.128:3038",
     enCode: "Module.Video",
     enable: true,
     displayOrder: 6,
@@ -229,7 +229,7 @@ export default [{
 }, {
     name: "DMA系统",
     iconName: "cr-DMA",
-    url: "http://139.224.255.200:3044",
+    url: "http://36.133.33.128:3044",
     enCode: "Module.DMA",
     enable: true,
     displayOrder: 6,
@@ -248,7 +248,7 @@ export default [{
 }, {
     name: "综合生产运行",
     iconName: "cr-jiekou",
-    url: "http://139.224.255.200:3036",
+    url: "http://36.133.33.128:3036",
     enCode: "Module.MonitorPanel",
     enable: true,
     displayOrder: 7,
@@ -267,7 +267,7 @@ export default [{
 }, {
     name: "微信公众号",
     iconName: "cr-weixin",
-    url: "http://139.224.255.200:3031",
+    url: "http://36.133.33.128:3031",
     enCode: "Module.WeiXin",
     enable: true,
     displayOrder: 7,
@@ -286,7 +286,7 @@ export default [{
 }, {
     name: "填报系统",
     iconName: "cr-jiekou",
-    url: "http://139.224.255.200:3023",
+    url: "http://36.133.33.128:3023",
     enCode: "Module.DataDeliverySystem",
     enable: true,
     displayOrder: 8,
@@ -305,7 +305,7 @@ export default [{
 }, {
     name: "工作流程管理",
     iconName: "cr-dashuju",
-    url: "http://139.224.255.200:3025",
+    url: "http://36.133.33.128:3025",
     enCode: "Module.WorkFlow",
     enable: true,
     displayOrder: 8,
@@ -324,7 +324,7 @@ export default [{
 }, {
     name: "表务系统",
     iconName: "cr-shuiwuxitong",
-    url: "http://139.224.255.200:3021",
+    url: "http://36.133.33.128:3021",
     enCode: "Module.MeterManagement",
     enable: true,
     displayOrder: 9,
@@ -343,7 +343,7 @@ export default [{
 }, {
     name: "报装系统",
     iconName: "cr-shengchantiaodu",
-    url: "http://139.224.255.200:3040",
+    url: "http://36.133.33.128:3040",
     enCode: "Module.Install",
     enable: true,
     displayOrder: 99,
@@ -362,7 +362,7 @@ export default [{
 }, {
     name: "文件管理系统",
     iconName: "cr-kefu",
-    url: "http://139.224.255.200:3042",
+    url: "http://36.133.33.128:3042",
     enCode: "Module.File",
     enable: true,
     displayOrder: 99,
@@ -381,7 +381,7 @@ export default [{
 }, {
     name: "集中抄表管理",
     iconName: "cr-shuiyuandi",
-    url: "http://139.224.255.200:3039",
+    url: "http://36.133.33.128:3039",
     enCode: "Module.WaterWrite",
     enable: true,
     displayOrder: 99,
@@ -400,7 +400,7 @@ export default [{
 }, {
     name: "工单系统",
     iconName: "cr-gongdan",
-    url: "http://139.224.255.200:3033",
+    url: "http://36.133.33.128:3033",
     enCode: "Module.Work",
     enable: true,
     displayOrder: 99,
@@ -419,7 +419,7 @@ export default [{
 }, {
     name: "党建平台官网",
     iconName: "cr-dashuju",
-    url: "http://139.224.255.200:3051",
+    url: "http://36.133.33.128:3051",
     enCode: "Module.PartyBuilding",
     enable: true,
     displayOrder: 200,
@@ -438,7 +438,7 @@ export default [{
 }, {
     name: "党建平台后台管理",
     iconName: "cr-pingtaiguanli",
-    url: "http://139.224.255.200:3050",
+    url: "http://36.133.33.128:3050",
     enCode: "Module.PartyBuilding",
     enable: true,
     displayOrder: 201,

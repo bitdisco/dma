@@ -9,9 +9,9 @@
  * swagger文档接口地址
  */
 const swaggerUrls = {
-    // platform: "http://139.224.255.200:4000/swagger/v1/swagger.json",
+    // platform: "http://36.133.33.128:4000/swagger/v1/swagger.json",
     dma: "http://localhost:44333/swagger/v1/swagger.json",
-    // message: "http://139.224.255.200:3026/swagger/v1/swagger.json"
+    // message: "http://36.133.33.128:3026/swagger/v1/swagger.json"
 };
 
 /**
@@ -92,7 +92,7 @@ const generateConfig = {
 /**
  * 枚举接口地址
  */
-const enumUrl = "http://139.224.255.200:4006/api/utils/enum";
+const enumUrl = "http://36.133.33.128:4006/api/utils/enum";
 
 
 /**
@@ -102,7 +102,7 @@ const dictionaryUrl = {
     /**
      * 接口地址
      */
-    url: "http://139.224.255.200:4000/api/dictionary/dictionaryItems",
+    url: "http://36.133.33.128:4000/api/dictionary/dictionaryItems",
     /**
      * 要生成的模块名
      */
