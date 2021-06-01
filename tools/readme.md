@@ -12,8 +12,8 @@
 
 ```js
 const swaggerUrls = {
-  platform: "http://139.224.255.200:4000/swagger/v1/swagger.json",
-  message: "http://139.224.255.200:3026/swagger/v1/swagger.json"
+  platform: "http://36.133.33.128:4000/swagger/v1/swagger.json",
+  message: "http://36.133.33.128:3026/swagger/v1/swagger.json"
 };
 
 /**
@@ -114,8 +114,8 @@ src/api/{systemName}/generatorApis/\*.ts 接口 API 调用方法代码文件
 
 ```js
 const swaggerUrls = {
-  platform: "http://139.224.255.200:4000/swagger/v1/swagger.json",
-  message: "http://139.224.255.200:3026/swagger/v1/swagger.json"
+  platform: "http://36.133.33.128:4000/swagger/v1/swagger.json",
+  message: "http://36.133.33.128:3026/swagger/v1/swagger.json"
 };
 ```
 
@@ -156,7 +156,7 @@ src/config/generator*{systemName}\_menu.ts 测试菜单文件
 1. 修改 config.js 文件，将对应远程枚举信息调用接口定义地址配置到变量 enumUrl 值上,代码如下
 
 ```js
-const enumUrl = "http://139.224.255.200:4000/api/utils/enum";
+const enumUrl = "http://36.133.33.128:4000/api/utils/enum";
 ```
 
 2. 执行生成
@@ -192,7 +192,7 @@ const dictionaryUrl = {
   /**
    * 接口地址
    */
-  url: "http://139.224.255.200:4000/api/dictionary/dictionaryItems",
+  url: "http://36.133.33.128:4000/api/dictionary/dictionaryItems",
   /**
    * 要生成的模块名
    */
