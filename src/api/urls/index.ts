@@ -17,7 +17,7 @@ const urls = {
    * websocket服务
    */
   websocket: {
-    message: "http://139.224.255.200:3026/messasing-hub" // 消息通知服务
+    message: "http://36.133.33.128:3026/messasing-hub" // 消息通知服务
   },
   /**
    * 平台管理

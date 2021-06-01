@@ -4,6 +4,6 @@ import { oidcSettings } from "./request";
  */
 export const defaultBaseConfig = {
   moduleCode: "Module.Platform",
-  gateway: "http://139.224.255.200:3011",
+  gateway: "http://36.133.33.128:3011",
   oidc: oidcSettings,
 };
