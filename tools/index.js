@@ -3,13 +3,23 @@
  * @Autor: 胡涛
  * @Date: 2021-02-20 11:43:06
  * @LastEditors: 胡涛
- * @LastEditTime: 2021-03-17 09:43:58
+ * @LastEditTime: 2021-03-24 18:50:26
  */
 
 const config = require("./config.js");
 const { swaggerUrls, enumUrl, dictionaryUrl, generateConfig } = config;
-const { apiGenertor, vueGenertor, enumGenertor, dictionaryGenertor, startServer } = require("@cr/tools");
+const { typesGenertor, apiGenertor, vueGenertor, enumGenertor, dictionaryGenertor, startServer } = require("@cr/tools");
 
+
+/**
+ * 生成API
+ */
+const creatTypes = function () {
+    for (var systemName in swaggerUrls) {
+        let swaggerUrl = swaggerUrls[systemName];
+        typesGenertor(systemName, swaggerUrl);
+    }
+}
 
 /**
  * 生成API
@@ -92,7 +102,9 @@ const checkArgument = function (arguments, action) {
 const genertorCode = function () {
     var arguments = process.argv.splice(2);
 
-    if (checkArgument(arguments, "api")) {
+    if (checkArgument(arguments, "types")) {
+        creatTypes();
+    } if (checkArgument(arguments, "api")) {
         createApi();
     }
     if (checkArgument(arguments, "vue")) {
