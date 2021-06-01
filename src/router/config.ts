@@ -142,6 +142,41 @@ export const indexRoutes: RouteConfig[] = [
         },
         component: () => import("@/views/dma/baseInfo/areaMeter/Index.vue"),
       },
+      {
+        path: "dmaAlarm",
+        name: "dmaAlarm",
+        meta: {
+          keepAlive: true,
+          permissionCode: "DMA.AreaMeter",
+          allowAnonymous: false,
+          title: "告警配置",
+        },
+        component: () => import("@/views/dma/baseInfo/dmaAlarm/Index.vue"),
+      }
+    ]
+  },
+  {
+    path: "/waterSupply",
+    name: "waterSupply",
+    component: Layout,
+    redirect: "/meter",
+    meta: {
+      permissionCode: "DMA.WaterSupply",
+      allowAnonymous: false,
+      title: "供水量分析",
+    },
+    children: [
+      {
+        path: "leakageHour",
+        name: "leakageHour",
+        meta: {
+          keepAlive: true,
+          permissionCode: "DMA.LeakageHour",
+          allowAnonymous: false,
+          title: "分区日供水",
+        },
+        component: () => import("@/views/dma/waterSupply/leakageHour/Index.vue"),
+      }
     ]
   }
 ];

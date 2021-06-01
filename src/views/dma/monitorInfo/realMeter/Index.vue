@@ -1,5 +1,5 @@
 <template>
-  <page-header-wrapper hide-title-bar>
+  <page-header-wrapper class="compact-page" hide-title-bar>
     <div class="compact-page-wrapper">
       <advanced-search-panel
         :showInput="false"
@@ -67,7 +67,6 @@
           ></vxe-table-column>
         </vxe-table>
       </div>
-
       <div class="table-pagination">
         <a-pagination
           v-bind="pagination"

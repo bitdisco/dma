@@ -3,15 +3,19 @@
  * @Autor: 胡涛
  * @Date: 2021-02-20 11:43:06
  * @LastEditors: 朱海良
- * @LastEditTime: 2021-03-17 22:00:54
+ * @LastEditTime: 2021-06-01 14:43:51
  */
 /**
  * swagger文档接口地址
  */
 const swaggerUrls = {
-    // platform: "http://139.224.255.200:4000/swagger/v1/swagger.json",
+<<<<<<< HEAD
+    // platform: "http://36.133.33.128:4000/swagger/v1/swagger.json",
     dma: "http://localhost:44333/swagger/v1/swagger.json",
-    // message: "http://139.224.255.200:3026/swagger/v1/swagger.json"
+    // message: "http://36.133.33.128:3026/swagger/v1/swagger.json"
+=======
+    dma: "http://36.133.33.128:4003/swagger/v1/swagger.json"
+>>>>>>> 75c65563b4ea9aecc8272867f6ab3293bf254bf0
 };
 
 /**
@@ -27,11 +31,11 @@ const generateConfig = {
         /**
          * 是否生成全部模块
          */
-        generateAll: true,
+        generateAll: false,
         /**
          * 生成所有带控制器注解的模块
          */
-        allAnnotation: false,
+        allAnnotation: true,
         /**
          * 要排除生成的模块名配置集合（后端控制器名称）
          * 键值对格式，键名同swaggerUrls配置的键名称一致及
@@ -40,7 +44,7 @@ const generateConfig = {
             /**
           * 营业系统
           */
-            charge: [],
+            charge: ['Enum', 'AbpApiDefinition', 'Stat', 'AbpApplicationConfiguration','AbpTenant','AuditLogging','DictionaryItem','DictionaryItemDetail'],
             /**
              * 平台管理
              */
@@ -59,7 +63,7 @@ const generateConfig = {
             /**
              * 营业系统
              */
-            charge: [],
+            charge: ['BadLoansReport','PayHisReport'],
             /**
              * 平台管理
              */
@@ -67,7 +71,9 @@ const generateConfig = {
             /**
              * 消息服务
              */
-            message: []
+            message: [],
+
+            meterManagement: ['Manufacturer']
         }
     },
     /**
@@ -92,7 +98,11 @@ const generateConfig = {
 /**
  * 枚举接口地址
  */
-const enumUrl = "http://139.224.255.200:4006/api/utils/enum";
+<<<<<<< HEAD
+const enumUrl = "http://36.133.33.128:4006/api/utils/enum";
+=======
+const enumUrl = "http://139.224.255.200:4002/api/utils/enum";
+>>>>>>> 75c65563b4ea9aecc8272867f6ab3293bf254bf0
 
 
 /**
@@ -102,7 +112,7 @@ const dictionaryUrl = {
     /**
      * 接口地址
      */
-    url: "http://139.224.255.200:4000/api/dictionary/dictionaryItems",
+    url: "http://36.133.33.128:4000/api/dictionary/dictionaryItems",
     /**
      * 要生成的模块名
      */
