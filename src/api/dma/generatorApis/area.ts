@@ -1,6 +1,6 @@
 /**
- * 分区管理相关 - 本文件由前端工具生成器自动生成
- * 生成日期：2021-6-1 14:43:46
+ * 分区管理 - 本文件由前端工具生成器自动生成
+ * 生成日期：2021-6-1 17:55:33
  * 接口生成地址：http://36.133.33.128:4003/swagger/v1/swagger.json
  */
 
@@ -11,7 +11,7 @@ import * as dtoTypes from "@/api/dma/types";
 const serviceName = 'dma';
 
 /**
- * 分区管理相关
+ * 分区管理
  */
 export default {
   /**

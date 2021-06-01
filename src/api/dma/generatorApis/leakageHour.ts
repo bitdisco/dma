@@ -1,14 +1,7 @@
-/*
- * @Description: 
- * @Autor: 朱海良
- * @Date: 2021-03-17 22:35:30
- * @LastEditors: 朱海良
- * @LastEditTime: 2021-06-01 14:47:32
- */
 /**
- *  - 本文件由前端工具生成器自动生成
- * 生成日期：2021-3-24 14:21:04
- * 接口生成地址：http://localhost:44333/swagger/v1/swagger.json
+ * 分区日数据 - 本文件由前端工具生成器自动生成
+ * 生成日期：2021-6-1 17:55:33
+ * 接口生成地址：http://36.133.33.128:4003/swagger/v1/swagger.json
  */
 
 import api from "@/api";
@@ -18,7 +11,7 @@ import * as dtoTypes from "@/api/dma/types";
 const serviceName = 'dma';
 
 /**
- * 
+ * 分区日数据
  */
 export default {
   /**
@@ -68,6 +61,6 @@ export default {
    * 获取分区供水量月
    * @params {object} params 查询参数
    */
-  getAreaWaterSupplyDay: (params: object): Promise<any> =>
+  getAreaWaterSupplyDay: (params: object): Promise<dtoTypes.ReportResultDto> =>
     api.get(api.getAbsoluteUrl(serviceName,"leakageHour/getAreaWaterSupplyDay"), params)
 };
