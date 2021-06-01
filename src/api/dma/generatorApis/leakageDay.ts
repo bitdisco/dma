@@ -89,6 +89,6 @@ export default {
    * 获取分区供水量月
    * @params {object} params 查询参数
    */
-  getAreaWaterSupplyMonth: (params: object): Promise<dtoTypes.DataTable> =>
+  getAreaWaterSupplyMonth: (params: object): Promise<any> =>
     api.get(api.getAbsoluteUrl(serviceName,"leakageDay/getAreaWaterSupplyMonth"), params)
 };

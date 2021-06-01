@@ -75,7 +75,7 @@ import FormView from "./Form.vue";
   name: "MeterList",
   components: { FormView },
 })
-export default class DMAAlarm extends ListPageVxe<MeterDto, string> {
+export default class DMAAlarm extends ListPageVxe<any, string> {
   //#region 工具栏按钮属性
   private toolbar_actions: Array<ToolbarActionItem> = [
     {

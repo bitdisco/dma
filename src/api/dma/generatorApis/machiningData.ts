@@ -1,3 +1,10 @@
+/*
+ * @Description: 
+ * @Autor: 朱海良
+ * @Date: 2021-03-17 22:35:30
+ * @LastEditors: 朱海良
+ * @LastEditTime: 2021-06-01 14:47:47
+ */
 /**
  *  - 本文件由前端工具生成器自动生成
  * 生成日期：2021-3-24 14:21:04
@@ -61,13 +68,13 @@ export default {
    * 获取日分析 瞬时流量:RealValue、正向累计:ForValue、反向累计:RevValue、管道压力:PressValue、液位:FuelLevel、温度：Temperature
    * @params {object} params 查询参数
    */
-  getDayAnalyse: (params: object): Promise<dtoTypes.DataTable> =>
+  getDayAnalyse: (params: object): Promise<any> =>
     api.get(api.getAbsoluteUrl(serviceName,"machiningData/getDayAnalyse"), params),
 
   /**
    * 获取日对比 瞬时流量:RealValue、正向累计:ForValue、反向累计:RevValue、管道压力:PressValue、液位:FuelLevel、温度：Temperature
    * @params {object} params 查询参数
    */
-  getDayContrast: (params: object): Promise<dtoTypes.DataTable> =>
+  getDayContrast: (params: object): Promise<any> =>
     api.get(api.getAbsoluteUrl(serviceName,"machiningData/getDayContrast"), params)
 };

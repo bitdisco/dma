@@ -1,3 +1,10 @@
+/*
+ * @Description: 
+ * @Autor: 朱海良
+ * @Date: 2021-03-17 22:35:30
+ * @LastEditors: 朱海良
+ * @LastEditTime: 2021-06-01 14:47:32
+ */
 /**
  *  - 本文件由前端工具生成器自动生成
  * 生成日期：2021-3-24 14:21:04
@@ -61,6 +68,6 @@ export default {
    * 获取分区供水量月
    * @params {object} params 查询参数
    */
-  getAreaWaterSupplyDay: (params: object): Promise<dtoTypes.DataTable> =>
+  getAreaWaterSupplyDay: (params: object): Promise<any> =>
     api.get(api.getAbsoluteUrl(serviceName,"leakageHour/getAreaWaterSupplyDay"), params)
 };
