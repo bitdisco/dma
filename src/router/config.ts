@@ -75,6 +75,30 @@ export const indexRoutes: RouteConfig[] = [
     ]
   },
   {
+    path: "/leakAnanalysis",
+    name: "leakAnanalysis",
+    component: Layout,
+    redirect: "/sortAnalyze",
+    meta: {
+      permissionCode: "",
+      allowAnonymous: false,
+      title: "漏损分析",
+    },
+    children: [
+      {
+        path: "sortAnalyze",
+        name: "sortAnalyze",
+        meta: {
+          keepAlive: true,
+          permissionCode: "DMA.LeakageSortAnalyze",
+          allowAnonymous: false,
+          title: "漏损排行榜",
+        },
+        component: () => import("@/views/dma/leakAnanalysis/sortAnalyze/Index.vue"),
+      }
+    ]
+  },
+  {
     path: "/baseInfo",
     name: "baseInfo",
     component: Layout,
@@ -107,6 +131,28 @@ export const indexRoutes: RouteConfig[] = [
         },
         component: () => import("@/views/dma/baseInfo/meter/Index.vue"),
       },
+      {
+        path: "areaMeter",
+        name: "areaMeter",
+        meta: {
+          keepAlive: true,
+          permissionCode: "DMA.AreaMeter",
+          allowAnonymous: false,
+          title: "设备挂接",
+        },
+        component: () => import("@/views/dma/baseInfo/areaMeter/Index.vue"),
+      },
+      {
+        path: "dmaAlarm",
+        name: "dmaAlarm",
+        meta: {
+          keepAlive: true,
+          permissionCode: "DMA.AreaMeter",
+          allowAnonymous: false,
+          title: "告警配置",
+        },
+        component: () => import("@/views/dma/baseInfo/dmaAlarm/Index.vue"),
+      }
     ]
   },
   {

@@ -6,11 +6,12 @@
 
 import api from "@/api";
 import * as dtoTypes from "@/api/platform/types";
+const serviceName = 'platform';
 
 export default {
   /**
    * 获取统计数据，缓存1分钟
    */
   stats: (): Promise<any> =>
-    api.get(api.getUrl("stat/stats")),
+    api.get(api.getAbsoluteUrl(serviceName,"stat/stats")),
 };
