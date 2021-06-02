@@ -158,11 +158,11 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
         field: "celVal",
         width: 80,
       },
-      {
-        title: "管道压力",
-        field: "pressValue",
-        width: 80,
-      },
+      // {
+      //   title: "管道压力",
+      //   field: "pressValue",
+      //   width: 80,
+      // },
       {
         title: "创建时间",
         field: "createTime",
@@ -247,6 +247,7 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
     );
 
     api.getQueryList(queryModel).then((res) => {
+      console.log("数据",res);
       this.loading = false;
       this.dataSource = res.items;
       this.getPagination.total = res.totalCount;
