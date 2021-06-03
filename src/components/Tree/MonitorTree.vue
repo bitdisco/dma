@@ -4,7 +4,7 @@
  * @Author: 李星
  * @Date: 2021-03-21 14:42:23
  * @LastEditors: 张小凡
- * @LastEditTime: 2021-06-03 09:52:40
+ * @LastEditTime: 2021-06-03 14:53:09
 -->
 <template>
   <div class="tree-cont">
@@ -57,7 +57,7 @@ export default class Tree extends Vue {
   private backupsExpandedKeys: Array<any> = [];
   private autoExpandParent: boolean = false;
   private replaceFields: any = {
-    children:'children', key:'id', title:'name',
+    key:'id', title:'name',isLeaf:'isLeaf'
   }
 
   /**
@@ -213,9 +213,35 @@ export default class Tree extends Vue {
    */
   private queryAreaTree() {
     AreaMeterApi.tree({}).then((res) => {
+      // this.clearDeep(res);
+      // console.log("结果",res);
       this.treeData = res;
       this.expandedKeys.push(res[0].id);
     });
+  }
+
+
+  private clearDeep(obj:any) {
+    if (!obj) return
+    const keys = Object.keys(obj)
+    for (var key of keys) {
+      const val = obj[key]
+      if (
+        typeof val === 'undefined' ||
+        ((typeof val === 'object' || typeof val === 'string') && !val)
+      ) {
+        // 如属性值为null或undefined或''，则将该属性删除
+        delete obj[key]
+      } else if (typeof val === 'object') {
+        // 属性值为对象，递归调用
+        this.clearDeep(obj[key])
+ 
+        if (Object.keys(obj[key]).length === 0) {
+          // 如某属性的值为不包含任何属性的独享，则将该属性删除
+          delete obj[key]
+        }
+      }
+    }
   }
 
   /**

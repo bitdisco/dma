@@ -4,7 +4,7 @@
  * @Author: 李星
  * @Date: 2021-03-21 14:42:23
  * @LastEditors: 张小凡
- * @LastEditTime: 2021-06-03 10:01:25
+ * @LastEditTime: 2021-06-03 14:52:53
 -->
 <template>
   <div class="tree-cont">
@@ -58,7 +58,7 @@ export default class Tree extends Vue {
   private backupsExpandedKeys: Array<any> = [];
   private autoExpandParent: boolean = false;
   private replaceFields: any = {
-    children:'children', key:'id', title:'areaName',
+    children:'children', key:'id', title:'areaName',isLeaf:'isLeaf'
   }
 
   /**
