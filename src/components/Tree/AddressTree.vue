@@ -4,10 +4,10 @@
  * @Author: 李星
  * @Date: 2021-03-21 14:42:23
  * @LastEditors: 张小凡
- * @LastEditTime: 2021-04-08 15:09:48
+ * @LastEditTime: 2021-06-03 10:01:25
 -->
 <template>
-  <div>
+  <div class="tree-cont">
     <div class="tree-aside-header">
         <div class="header-search">
           <a-input-search

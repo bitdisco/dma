@@ -4,10 +4,10 @@
  * @Author: 李星
  * @Date: 2021-03-21 14:42:23
  * @LastEditors: 张小凡
- * @LastEditTime: 2021-04-09 09:18:13
+ * @LastEditTime: 2021-06-03 09:52:40
 -->
 <template>
-  <div>
+  <div class="tree-cont">
     <div class="tree-aside-header">
         <div class="header-search">
           <a-input-search
@@ -20,23 +20,23 @@
             <a-button @click="clearSelectItem">清除已选</a-button>
           </div>
         </div>
+    </div>
+    <div class="tree-aside-wrapper">
+      <div class="example" v-if="isLoadingBooks">
+        <a-spin />
       </div>
-      <div class="tree-aside-wrapper">
-        <div class="example" v-if="isLoadingBooks">
-          <a-spin />
-        </div>
-        <a-tree 
-           v-if="!isLoadingBooks"
-          :treeData="treeData" 
-          :checkable="checkable"
-          :replaceFields="replaceFields" 
-          @select="onSelect" 
-          :expandedKeys="expandedKeys"
-          :autoExpandParent="autoExpandParent"
-          :load-data="onLoadData"
-          @expand="onExpand">
-        </a-tree>
-      </div>
+      <a-tree 
+          v-if="!isLoadingBooks"
+        :treeData="treeData" 
+        :checkable="checkable"
+        :replaceFields="replaceFields" 
+        @select="onSelect" 
+        :expandedKeys="expandedKeys"
+        :autoExpandParent="autoExpandParent"
+        :load-data="onLoadData"
+        @expand="onExpand">
+      </a-tree>
+    </div>
   </div>
 </template>
 <script lang="ts">

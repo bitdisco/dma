@@ -3,7 +3,7 @@
  * @Autor: 张小凡
  * @Date: 2021-04-09 10:31:07
  * @LastEditors: 张小凡
- * @LastEditTime: 2021-06-01 17:28:49
+ * @LastEditTime: 2021-06-01 17:45:39
 -->
 <template>
   <tree-layout-page-wrapper :treeWidth="260">
@@ -90,6 +90,7 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
 
   private queryAreaTree() {
     AreaApi.getAreaTree({}).then((res) => {
+      console.log("进来了",res);
       this.treeData = res;
       this.expandedKeys.push(res[0].id);
     });
@@ -152,11 +153,11 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
         field: "revValue",
         width: 100,
       },
-      {
-        title: "管道压力",
-        field: "pressValue",
-        width: 80,
-      },
+      // {
+      //   title: "管道压力",
+      //   field: "pressValue",
+      //   width: 80,
+      // },
       {
         title: "电池电压",
         field: "celVal",
@@ -234,7 +235,7 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
       },
       this.searchModel
     );
-
+   console.log("进来了");
     api.getQueryList(queryModel).then((res) => {
       this.loading = false;
       this.dataSource = res.items;

@@ -1,7 +1,7 @@
 /**
- *  - 本文件由前端工具生成器自动生成
- * 生成日期：2021-3-24 14:21:04
- * 接口生成地址：http://localhost:44333/swagger/v1/swagger.json
+ * 分区监测点关联项 - 本文件由前端工具生成器自动生成
+ * 生成日期：2021-6-1 17:55:33
+ * 接口生成地址：http://36.133.33.128:4003/swagger/v1/swagger.json
  */
 
 import api from "@/api";
@@ -11,7 +11,7 @@ import * as dtoTypes from "@/api/dma/types";
 const serviceName = 'dma';
 
 /**
- * 
+ * 分区监测点关联项
  */
 export default {
   /**
@@ -27,6 +27,13 @@ export default {
    */
   getPageList: (params: object): Promise<dtoTypes.PagedResultDto<dtoTypes.AreaMeterDto>> =>
     api.get(api.getAbsoluteUrl(serviceName,"areaMeter/getPageList"), params),
+
+  /**
+   * 添加
+   * @params {dtoTypes.BatchAddAreaMeterDto} data 参数
+   */
+  batchAddAsync: (data: dtoTypes.BatchAddAreaMeterDto): Promise<any> =>
+    api.post(api.getAbsoluteUrl(serviceName,"areaMeter/batchAddAsync"), data),
 
   /**
    * 删除
