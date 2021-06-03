@@ -159,7 +159,7 @@ export const indexRoutes: RouteConfig[] = [
     path: "/flowAnanalysis",
     name: "flowAnanalysis",
     component: Layout,
-    redirect: "/dayFlowQoq",
+    redirect: "/dayAnalyseRealValue",
     meta: {
       permissionCode: "",
       allowAnonymous: false,
@@ -167,48 +167,26 @@ export const indexRoutes: RouteConfig[] = [
     },
     children: [
       {
-        path: "dayAreaFlowQoq",
-        name: "dayAreaFlowQoq",
+        path: "dayAnalyseRealValue",
+        name: "dayAnalyseRealValue",
         meta: {
           keepAlive: true,
-          permissionCode: "DMA.Area",
+          permissionCode: "DMA.DayAnalyseRealValue",
           allowAnonymous: false,
-          title: "日分区流量环比",
+          title: "瞬时流量日分析",
         },
-        component: () => import("@/views/dma/baseInfo/area/Index.vue"),
+        component: () => import("@/views/dma/flowAnanalysis/dayAnalyseRealValue/Index.vue"),
       },
       {
-        path: "monthAreaFlowQoq",
-        name: "monthAreaFlowQoq",
+        path: "dayAnalyseForValue",
+        name: "dayAnalyseForValue",
         meta: {
           keepAlive: true,
-          permissionCode: "DMA.Meter",
+          permissionCode: "DMA.DayAnalyseForValue",
           allowAnonymous: false,
-          title: "月分区流量环比",
+          title: "正向累计日分析",
         },
-        component: () => import("@/views/dma/baseInfo/meter/Index.vue"),
-      },
-      {
-        path: "dayAreaFlow",
-        name: "dayAreaFlow",
-        meta: {
-          keepAlive: true,
-          permissionCode: "DMA.AreaMeter",
-          allowAnonymous: false,
-          title: "日分区流量分析",
-        },
-        component: () => import("@/views/dma/baseInfo/areaMeter/Index.vue"),
-      },
-      {
-        path: "monthAreaFlow",
-        name: "monthAreaFlow",
-        meta: {
-          keepAlive: true,
-          permissionCode: "DMA.AreaMeter",
-          allowAnonymous: false,
-          title: "月分区流量分析",
-        },
-        component: () => import("@/views/dma/baseInfo/dmaAlarm/Index.vue"),
+        component: () => import("@/views/dma/flowAnanalysis/dayAnalyseForValue/Index.vue"),
       }
     ],
   },
