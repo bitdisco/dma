@@ -17,18 +17,12 @@
         <template slot="actions">
           <a-button-group>
             <a-button @click="queryList" icon="sync">刷新</a-button>
-            <a-button @click="defaultHandleCreate()" v-auth="{ action: 'Create' }" icon="plus">新增</a-button>
-            <a-button
-              :disabled="!currentRow"
-              @click.stop="defaultHandleUpdate(currentRow)"
-              v-auth="{ action: 'Update' }"
-            >编辑</a-button>
-            <a-popconfirm title="确定要删除当前数据吗？" @confirm.stop="onDeleteItem(currentRow)">
-              <a-button type="danger" v-auth="{ action: 'Delete' }" :disabled="!currentRow">删除</a-button>
-            </a-popconfirm>
+            <a-button @click="createTab" icon="ordered-list">生成报表</a-button>
+            <a-button icon="bar-chart">生成图表</a-button>
           </a-button-group>
         </template>
       </advanced-search-panel>
+
       <div class="compact-page-table">
         <vxe-table
           id="vxeTable"
@@ -67,6 +61,7 @@ import AddressTree from "@/components/Tree/AddressTree.vue"
 import MonitorTree from "@/components/Tree/MonitorTree.vue"
 import AreaTree from "@/components/Tree/AreaTree.vue"
 import { ArmRealDataDto } from "@/api/dma/types";
+import moment from "moment";
 
 @Component<RealDataList>({
   name: "RealDataList",
@@ -174,7 +169,7 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
       {
         name: "Keyword",
         label: "关键字",
-        input: "a-input",
+        input: "a-date-picker",
         props: {
           placeholder: "输入监测点名称、监测点编码、挂接表号关键词进行模糊搜索",
         },
@@ -224,12 +219,25 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
   //#region 查询方法
 
   private onSearch() {
+    let selectDate = "";
+    let today = moment().format("YYYY-MM-DD");
+    this.searchModel.countDate? selectDate = this.searchModel.countDate : selectDate = today;
+    this.searchModel.StartTime = selectDate+' 00:00';
+    this.searchModel.EndTime = selectDate+' 23:59';
     this.getPagination.current = 1;
     //处理其它查询条件逻辑。。。。
     this.queryList();
   }
   //#endregion
   //#region 表格控件相关
+
+  private createTab(){
+    if(!this.searchModel.AreaIds){
+      this.$message.error("请先选择分区~");
+    }else{
+      this.queryList();
+    }
+  }
   /**
    * 分页查询列表
    */
@@ -289,19 +297,6 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
     this.pagination = this.getPagination;
     this.queryList();
   }
-
-  /**
-   * 删除选择项
-   */
-  private onDeleteItem(row: ArmRealDataDto) {
-    api.delete(row.id).then((res) => {
-      this.$message.success({ content: "删除成功~" });
-      this.queryList();
-    });
-  }
-
-  /** 批量删除 */
-  private deleteSelectedItems() {}
 
   /**
    * 表格选择行事件
