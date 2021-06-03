@@ -153,7 +153,64 @@ export const indexRoutes: RouteConfig[] = [
         },
         component: () => import("@/views/dma/baseInfo/dmaAlarm/Index.vue"),
       }
-    ]
+    ],
+  },
+  {
+    path: "/flowAnanalysis",
+    name: "flowAnanalysis",
+    component: Layout,
+    redirect: "/dayFlowQoq",
+    meta: {
+      permissionCode: "",
+      allowAnonymous: false,
+      title: "流量分析",
+    },
+    children: [
+      {
+        path: "dayAreaFlowQoq",
+        name: "dayAreaFlowQoq",
+        meta: {
+          keepAlive: true,
+          permissionCode: "DMA.Area",
+          allowAnonymous: false,
+          title: "日分区流量环比",
+        },
+        component: () => import("@/views/dma/baseInfo/area/Index.vue"),
+      },
+      {
+        path: "monthAreaFlowQoq",
+        name: "monthAreaFlowQoq",
+        meta: {
+          keepAlive: true,
+          permissionCode: "DMA.Meter",
+          allowAnonymous: false,
+          title: "月分区流量环比",
+        },
+        component: () => import("@/views/dma/baseInfo/meter/Index.vue"),
+      },
+      {
+        path: "dayAreaFlow",
+        name: "dayAreaFlow",
+        meta: {
+          keepAlive: true,
+          permissionCode: "DMA.AreaMeter",
+          allowAnonymous: false,
+          title: "日分区流量分析",
+        },
+        component: () => import("@/views/dma/baseInfo/areaMeter/Index.vue"),
+      },
+      {
+        path: "monthAreaFlow",
+        name: "monthAreaFlow",
+        meta: {
+          keepAlive: true,
+          permissionCode: "DMA.AreaMeter",
+          allowAnonymous: false,
+          title: "月分区流量分析",
+        },
+        component: () => import("@/views/dma/baseInfo/dmaAlarm/Index.vue"),
+      }
+    ],
   },
   {
     path: "/waterSupply",
