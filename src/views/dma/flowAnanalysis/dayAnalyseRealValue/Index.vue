@@ -37,7 +37,7 @@
           :custom-config="{ storage: true }"
         >
           <vxe-table-column type="seq" width="50" align="center"></vxe-table-column>
-          <vxe-table-column v-bind="col" v-for="(col, index) in columns" :key="index"></vxe-table-column>
+          <vxe-table-column v-bind="col" v-for="(col, index) in tableColumns" :key="index"></vxe-table-column>
         </vxe-table>
       </div>
       <div class="table-pagination">
@@ -247,6 +247,8 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
         column.push({title:value.headerName,...value})
       });
       console.log('column', column);
+
+      this.tableColumns = column;
 
       this.loading = false;
       this.dataSource = res.items;
