@@ -55,13 +55,14 @@
 import { Component, Vue, Watch, Prop } from "vue-property-decorator";
 import { SortedInfo, ToolbarActionItem, ListPageVxe } from "@cr/types";
 import { PaginationConfig } from "ant-design-vue/types/list/list";
-import api from "@/api/dma/generatorApis/armRealData";
+import MachApi from "@/api/dma/generatorApis/machiningData";
 import AreaApi from "@/api/dma/generatorApis/area";
 import AddressTree from "@/components/Tree/AddressTree.vue"
 import MonitorTree from "@/components/Tree/MonitorTree.vue"
 import AreaTree from "@/components/Tree/AreaTree.vue"
 import { ArmRealDataDto } from "@/api/dma/types";
 import moment from "moment";
+
 
 @Component<RealDataList>({
   name: "RealDataList",
@@ -77,7 +78,40 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
     key: "id",
     title: "areaName",
   };
-  private treeData: any[] = [];
+  private treeData: Array<any> = [];
+
+  //获取查询信息
+  private searchData: Object = {
+    AreaName: '',
+    AreaGrade: '',
+    AreaCode: '',
+    MeterName: '',
+    MeterCode: '',
+    MeterType: '',
+    MeterNumber: '',
+    StartTime: '2021-02-07',
+    EndTime: '2021-02-09',
+    AddressCode: '',
+    AddressCodes: [28006982],
+    CreateTime: null,
+    QueryType: 0,
+    keyWord: '',
+    IsPage: false,
+    Sorting: '',
+  };
+
+  // 获取列表参数
+  private tableColumns: Array<any> = [];
+
+  //首次加载页面表单数据传参
+  private querySearchData() {
+    this.searchModel = this.searchData;
+    // let selectDate = "";
+    // let today = moment().format("YYYY-MM-DD");
+    // this.searchModel.countDate? selectDate = this.searchModel.countDate : selectDate = today;
+    // this.searchModel.StartTime = selectDate+' 00:00';
+    // this.searchModel.EndTime = selectDate+' 23:59';
+  }
 
   private queryAreaTree() {
     AreaApi.getAreaTree({}).then((res) => {
@@ -93,7 +127,7 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
   private onSelect(selectedKeys: any, info: any) {
     //console.log("onSelect " + selectedKeys, info);
     this.selectedKeys = selectedKeys;
-    this.searchModel.AreaId = selectedKeys[0];
+    // this.AreaId = selectedKeys[0];
     this.queryList();
   }
   //#endregion
@@ -112,58 +146,7 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
   //#endregion
   //#region 组件创建时执行
   created() {
-    this.columns = [
-      {
-        title: "挂接表号",
-        field: "addressCode",
-        width: 120,
-      },
-      {
-        title: "监测点名称",
-        field: "meterName",
-        width: 200,
-      },
-      {
-        title: "监测点编码",
-        field: "meterCode",
-        width: 100,
-      },
-      {
-        title: "瞬时流量",
-        field: "realValue",
-        width: 80,
-      },
-      {
-        title: "正向累计",
-        field: "forValue",
-        width: 100,
-      },
-      {
-        title: "反向累计",
-        field: "revValue",
-        width: 100,
-      },
-      {
-        title: "管道压力",
-        field: "pressValue",
-        width: 80,
-      },
-      {
-        title: "电池电压",
-        field: "celVal",
-        width: 80,
-      },
-      {
-        title: "管道压力",
-        field: "pressValue",
-        width: 80,
-      },
-      {
-        title: "创建时间",
-        field: "createTime",
-        width: 145,
-      },
-    ];
+    this.columns = [];
     this.getPagination.pageSize = 10;
     this.searchFields = [
       {
@@ -213,6 +196,7 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
 
   mounted() {
     this.queryAreaTree();
+    this.querySearchData();
     this.queryList();
   }
   //#endregion
@@ -254,7 +238,16 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
       this.searchModel
     );
 
-    api.getQueryList(queryModel).then((res) => {
+    console.log('queryModel',queryModel);
+
+    MachApi.getDayContrast(queryModel).then((res:any) => {
+      console.log('MachApi', res);
+      let column: Array<any> = [];
+      res.columns.forEach((value:any,key:any) => {
+        column.push({title:value.headerName,...value})
+      });
+      console.log('column', column);
+
       this.loading = false;
       this.dataSource = res.items;
       this.getPagination.total = res.totalCount;
