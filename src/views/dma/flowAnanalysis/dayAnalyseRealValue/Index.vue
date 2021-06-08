@@ -37,7 +37,7 @@
           :custom-config="{ storage: true }"
         >
           <vxe-table-column type="seq" width="50" align="center"></vxe-table-column>
-          <vxe-table-column v-bind="col" v-for="(col, index) in tableColumns" :key="index"></vxe-table-column>
+          <vxe-table-column v-bind="col" v-for="(col, index) in columns" :key="index"></vxe-table-column>
         </vxe-table>
       </div>
       <div class="table-pagination">
@@ -101,7 +101,8 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
   };
 
   // 获取列表参数
-  private tableColumns: Array<any> = [];
+  // private tableColumns: Array<any> = [];
+  private columns: Array<any> = [];
 
   //首次加载页面表单数据传参
   private querySearchData() {
@@ -242,20 +243,20 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
 
     MachApi.getDayContrast(queryModel).then((res:any) => {
       console.log('MachApi', res);
-      let column: Array<any> = [];
+      // let column: Array<any> = [];
       res.columns.forEach((value:any,key:any) => {
-        column.push({title:value.headerName,...value})
+        this.columns.push({title:value.headerName,...value})
       });
-      console.log('column', column);
-
-      this.tableColumns = column;
-
+      // console.log('column', column);
+      // this.columns = column;
       this.loading = false;
       this.dataSource = res.items;
       this.getPagination.total = res.totalCount;
     });
     this.currentRow = null;
     this.loading = true;
+    debugger
+    console.log('this.columns',this.columns);
   }
 
   /*树点击事件*/
