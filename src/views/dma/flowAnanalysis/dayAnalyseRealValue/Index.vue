@@ -64,11 +64,11 @@ import { ArmRealDataDto } from "@/api/dma/types";
 import moment from "moment";
 
 
-@Component<RealDataList>({
-  name: "RealDataList",
+@Component<DayAnalyseRealValue>({
+  name: "DayAnalyseRealValue",
   components:{AddressTree, AreaTree, MonitorTree}
 })
-export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
+export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, string> {
   //#region 树控件相关
   private expandedKeys: string[] = [];
   private autoExpandParent: boolean = true;
@@ -250,12 +250,11 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
       // console.log('column', column);
       // this.columns = column;
       this.loading = false;
-      this.dataSource = res.items;
+      this.dataSource = res.data.items;
       this.getPagination.total = res.totalCount;
     });
     this.currentRow = null;
     this.loading = true;
-    debugger
     console.log('this.columns',this.columns);
   }
 
