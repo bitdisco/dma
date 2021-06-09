@@ -126,7 +126,6 @@ export default class <%=model.className %> extends ListPageVue<<%=model.dtoType%
    * 查询方法
    */
   private onSearch() {
-    this.getPagination.current=1;
     //处理其它查询条件逻辑。。。。
     this.queryList();
   }

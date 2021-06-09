@@ -29,7 +29,7 @@ import { FormModel } from "ant-design-vue";
 @Component({})
 export default class extends FormPageVue<
    <%=model.formDtoType %>,
-  <%=model.idType %>
+   <%=model.idType %>
 > {
   /**
    * 填报类型下拉数据源
@@ -105,7 +105,7 @@ export default class extends FormPageVue<
    */
   private submitUpdate() {
     this.submitLoading = true;
-    api.update(this.getModel.id, this.getModel).then((res) => {
+    api.update(this.id, this.getModel).then((res) => {
       this.submitLoading = false;
       this.$emit("input", false);
       this.$emit("success");

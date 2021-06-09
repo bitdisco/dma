@@ -72,86 +72,138 @@
                 </a-button></a-button-group
               >
             </div>
-            <div class="params-bar" v-if="activeIndex==0">
-              <div><span> 远程swagger地址：</span></div>
-              <div>
-                <a-select
-                  placeholder="请选择Swagger地址"
-                  v-model="selectedSystemName"
-                  @change="onSystemChanged"
-                  style="flex:1"
-                >
-                  <a-select-option
-                    v-for="(item,index) in swaggerUrls"
-                    :key="index"
-                    :value="item.name"
+            <template v-if="activeIndex==0">
+              <div class="params-bar">
+                <div><span> 远程swagger地址：</span></div>
+                <div>
+                  <a-select
+                    placeholder="请选择Swagger地址"
+                    v-model="selectedSystemName"
+                    @change="onSystemChanged"
+                    style="flex:1"
                   >
-                    {{ item.name }} - {{ item.value }}
-                  </a-select-option>
-                  <a-select-option key="-" value="">其它地址</a-select-option>
-                </a-select>
-              </div>
+                    <a-select-option
+                      v-for="(item,index) in swaggerUrls"
+                      :key="index"
+                      :value="item.name"
+                    >
+                      {{ item.name }} - {{ item.value }}
+                    </a-select-option>
+                    <a-select-option key="-" value="">其它地址</a-select-option>
+                  </a-select>
+                </div>
 
-              <div class="input-view" v-show="selectedSystemName===''">
-                <div class="system-name">
-                  <a-input class="input" placeholder="请输入模块名称"></a-input>
+                <div class="input-view" v-show="selectedSystemName===''">
+                  <div class="system-name">
+                    <a-input
+                      class="input"
+                      v-model="systemName"
+                      placeholder="请输入模块名称"
+                    ></a-input>
+                  </div>
+                  <div class="swagger-url">
+                    <a-input
+                      placeholder="请输入远程swagger接口信息地址"
+                      type="text"
+                      class="input"
+                      v-model="swaggerUrl"
+                    ></a-input>
+                  </div>
                 </div>
-                <div class="swagger-url">
-                  <a-input
-                    placeholder="请输入远程swagger接口信息地址"
-                    type="text"
-                    class="input"
-                    v-model="swaggerUrl"
-                  ></a-input>
-                </div>
-              </div>
-              <div>
-                <!-- <a-button type="primary" @click="getSwaggerInfo">获取</a-button> -->
-                <a-button type="primary" @click="createSwaggerApi"
-                  >生成API</a-button
-                >
-              </div>
-            </div>
-            <div class="params-bar" v-if="activeIndex==1">
-              <div><span> 远程swagger地址：</span></div>
-              <div>
-                <a-select
-                  placeholder="请选择Swagger地址"
-                  v-model="selectedSystemName"
-                  @change="onSystemChanged"
-                  style="flex:1"
-                >
-                  <a-select-option
-                    v-for="(item,index) in swaggerUrls"
-                    :key="index"
-                    :value="item.name"
+                <div>
+                  <a-button type="primary" @click="getSwaggerInfo"
+                    >获取</a-button
                   >
-                    {{ item.name }} - {{ item.value }}
-                  </a-select-option>
-                  <a-select-option key="-" value="">其它地址</a-select-option>
-                </a-select>
+                </div>
               </div>
+              <template v-if="swaggerInfo">
+                <div class="action-bar">
+                  <a-checkbox @change="onCheckAllChanged" v-model="selectAll"
+                    >全选/取消</a-checkbox
+                  >
+                </div>
+                <div class="workarea">
+                  <a-checkbox-group v-model="selectedGroups">
+                    <div v-for="(item,index) in swaggerInfo.data" :key="index">
+                      <a-checkbox :value="item.name">
+                        {{ item.name }} - {{ item.description }}
+                      </a-checkbox>
+                    </div>
+                  </a-checkbox-group>
+                </div>
+                <div class="action-bar">
+                  <a-button type="primary" @click="createSwaggerApi"
+                    >生成API</a-button
+                  >
+                </div>
+              </template>
+            </template>
+            <template v-if="activeIndex==1">
+              <div class="params-bar">
+                <div><span> 远程swagger地址：</span></div>
+                <div>
+                  <a-select
+                    placeholder="请选择Swagger地址"
+                    v-model="selectedSystemName"
+                    @change="onSystemChanged"
+                    style="flex:1"
+                  >
+                    <a-select-option
+                      v-for="(item,index) in swaggerUrls"
+                      :key="index"
+                      :value="item.name"
+                    >
+                      {{ item.name }} - {{ item.value }}
+                    </a-select-option>
+                    <a-select-option key="-" value="">其它地址</a-select-option>
+                  </a-select>
+                </div>
 
-              <div class="input-view" v-show="selectedSystemName===''">
-                <div class="system-name">
-                  <a-input class="input" placeholder="请输入模块名称"></a-input>
+                <div class="input-view" v-show="selectedSystemName===''">
+                  <div class="system-name">
+                    <a-input
+                      class="input"
+                      placeholder="请输入模块名称"
+                    ></a-input>
+                  </div>
+                  <div class="swagger-url">
+                    <a-input
+                      placeholder="请输入远程swagger接口信息地址"
+                      type="text"
+                      class="input"
+                      v-model="swaggerUrl"
+                    ></a-input>
+                  </div>
                 </div>
-                <div class="swagger-url">
-                  <a-input
-                    placeholder="请输入远程swagger接口信息地址"
-                    type="text"
-                    class="input"
-                    v-model="swaggerUrl"
-                  ></a-input>
+                <div>
+                  <a-button type="primary" @click="getSwaggerInfo"
+                    >获取</a-button
+                  >
                 </div>
               </div>
-              <div>
-                <!-- <a-button type="primary" @click="getSwaggerInfo">获取</a-button> -->
-                <a-button type="primary" @click="createSwaggerVue"
-                  >生成页面</a-button
-                >
-              </div>
-            </div>
+              <template v-if="swaggerInfo">
+                <div class="action-bar">
+                  <a-checkbox @change="onCheckAllChanged" v-model="selectAll"
+                    >全选/取消</a-checkbox
+                  >
+                </div>
+                <div class="workarea">
+                  <a-checkbox-group v-model="selectedGroups">
+                    <div v-for="(item,index) in swaggerInfo.data" :key="index">
+                      <a-checkbox :value="item.name">
+                        {{ item.name }} - {{ item.description }}
+                      </a-checkbox>
+                    </div>
+                  </a-checkbox-group>
+                </div>
+                <div class="action-bar">
+                  <a-button type="primary" @click="createSwaggerVue"
+                    >生成页面</a-button
+                  >
+                </div>
+              </template>
+            </template>
+
             <div class="params-bar" v-if="activeIndex==2">
               <div v-if="activeIndex===2">
                 <span> 枚举接口地址：</span>

@@ -2,8 +2,8 @@
  * @Description: 
  * @Autor: 胡涛
  * @Date: 2021-02-20 11:43:06
- * @LastEditors: 胡涛
- * @LastEditTime: 2021-03-24 18:50:26
+ * @LastEditors: 朱海良
+ * @LastEditTime: 2021-06-09 14:38:32
  */
 
 const config = require("./config.js");
@@ -27,21 +27,16 @@ const creatTypes = function () {
 const createApi = function () {
     for (var systemName in swaggerUrls) {
         let swaggerUrl = swaggerUrls[systemName];
-        let excludes = generateConfig.api.excludes[systemName];
-        if (generateConfig.api.allAnnotation) {
-            //生成所有带控制器注解的方法(排除项除外)
-            apiGenertor(systemName, swaggerUrl, null, excludes, true);
-        } else if (generateConfig.api.generateAll) {
-            //生成所有控制器注解的方法(排除项除外)
-            apiGenertor(systemName, swaggerUrl, null, excludes);
-        } else {
-            //根据匹配项和排队项生成
-            let includes = generateConfig.api.includes[systemName];
-            if (!includes || includes.length === 0) {
-                console.log(`配置错误：当参数generateAll=false,必须配置includes.${systemName}参数`)
-                return;
-            }
+        let excludes = generateConfig.api.excludes;
+        let includes = generateConfig.api.includes;
+        if (includes && includes.length > 0) {
+            console.log("生成指定的接口");
             apiGenertor(systemName, swaggerUrl, includes, excludes);
+        }
+        else {
+            //生成所有带控制器注解的方法(排除项除外)
+            console.log("生成所有带控制器注解的方法(排除项除外)");
+            apiGenertor(systemName, swaggerUrl, null, excludes, true);
         }
     }
 }
@@ -52,21 +47,16 @@ const createApi = function () {
 const createVue = function () {
     for (var systemName in swaggerUrls) {
         let swaggerUrl = swaggerUrls[systemName];
-        let excludes = generateConfig.api.excludes[systemName];
-        if (generateConfig.vue.allAnnotation) {
+        let excludes = generateConfig.vue.excludes;
+        let includes = generateConfig.vue.includes;
+        if (includes && includes.length > 0) {
+            console.log("生成指定的页面");
+            vueGenertor(systemName, swaggerUrl, includes, excludes);
+        }
+        else {
             //生成所有带控制器注解的方法(排除项除外)
+            console.log("生成所有带控制器注解的方法(排除项除外)");
             vueGenertor(systemName, swaggerUrl, null, excludes, true);
-        } else if (generateConfig.vue.generateAll) {
-            //生成所有控制器注解的方法(排除项除外)
-            vueGenertor(systemName, swaggerUrl, null, excludes, false);
-        } else {
-            //根据匹配项和排队项生成
-            let includes = generateConfig.vue.includes[systemName];
-            if (!includes || includes.length === 0) {
-                console.log(`配置错误：当参数generateConfig.api.generateAll=false,必须配置generateConfig.api.includes.${systemName}参数`)
-                return;
-            }
-            vueGenertor(systemName, swaggerUrl, includes, excludes, false);
         }
     }
 }
