@@ -1,8 +1,8 @@
 <template>
-  <tree-layout-page-wrapper :treeWidth="260">
+  <tree-layout-page-wrapper hide-title-bar :treeWidth="260">
     <template slot="tree">
       <!-- <address-tree :checkable="true" @getTreeNode="getTreeNode"/> -->
-      <monitor-tree @getTreeNode="getTreeNode"/>
+      <monitor-tree @getTreeNode="getTreeNode" />
     </template>
     <div class="compact-page-wrapper">
       <advanced-search-panel
@@ -17,14 +17,28 @@
         <template slot="actions">
           <a-button-group>
             <a-button @click="queryList" icon="sync">刷新</a-button>
-            <a-button @click="defaultHandleCreate()" v-auth="{ action: 'Create' }" icon="plus">新增</a-button>
+            <a-button
+              @click="defaultHandleCreate()"
+              v-auth="{ action: 'Create' }"
+              icon="plus"
+              >新增</a-button
+            >
             <a-button
               :disabled="!currentRow"
               @click.stop="defaultHandleUpdate(currentRow)"
               v-auth="{ action: 'Update' }"
-            >编辑</a-button>
-            <a-popconfirm title="确定要删除当前数据吗？" @confirm.stop="onDeleteItem(currentRow)">
-              <a-button type="danger" v-auth="{ action: 'Delete' }" :disabled="!currentRow">删除</a-button>
+              >编辑</a-button
+            >
+            <a-popconfirm
+              title="确定要删除当前数据吗？"
+              @confirm.stop="onDeleteItem(currentRow)"
+            >
+              <a-button
+                type="danger"
+                v-auth="{ action: 'Delete' }"
+                :disabled="!currentRow"
+                >删除</a-button
+              >
             </a-popconfirm>
           </a-button-group>
         </template>
@@ -43,7 +57,11 @@
           :custom-config="{ storage: true }"
         >
           <vxe-table-column type="seq" width="50" align="center"></vxe-table-column>
-          <vxe-table-column v-bind="col" v-for="(col, index) in columns" :key="index"></vxe-table-column>
+          <vxe-table-column
+            v-bind="col"
+            v-for="(col, index) in columns"
+            :key="index"
+          ></vxe-table-column>
         </vxe-table>
       </div>
       <div class="table-pagination">
@@ -63,14 +81,14 @@ import { SortedInfo, ToolbarActionItem, ListPageVxe } from "@cr/types";
 import { PaginationConfig } from "ant-design-vue/types/list/list";
 import api from "@/api/dma/generatorApis/armRealData";
 import AreaApi from "@/api/dma/generatorApis/area";
-import AddressTree from "@/components/Tree/AddressTree.vue"
-import MonitorTree from "@/components/Tree/MonitorTree.vue"
-import AreaTree from "@/components/Tree/AreaTree.vue"
+import AddressTree from "@/components/Tree/AddressTree.vue";
+import MonitorTree from "@/components/Tree/MonitorTree.vue";
+import AreaTree from "@/components/Tree/AreaTree.vue";
 import { ArmRealDataDto } from "@/api/dma/types";
 
 @Component<RealDataList>({
   name: "RealDataList",
-  components:{AddressTree, AreaTree, MonitorTree}
+  components: { AddressTree, AreaTree, MonitorTree },
 })
 export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
   //#region 树控件相关
@@ -247,7 +265,7 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
     );
 
     api.getQueryList(queryModel).then((res) => {
-      console.log("数据",res);
+      console.log("数据", res);
       this.loading = false;
       this.dataSource = res.items;
       this.getPagination.total = res.totalCount;
@@ -257,8 +275,8 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
   }
 
   /*树点击事件*/
-  private getTreeNode(val:any){
-    console.log("点击树信息",val);
+  private getTreeNode(val: any) {
+    console.log("点击树信息", val);
     this.searchModel.AreaName = val.areaName;
     this.searchModel.AreaCode = val.areaCode;
     this.searchModel.AreaGrade = val.areaGrade;
