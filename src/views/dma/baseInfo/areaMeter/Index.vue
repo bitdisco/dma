@@ -80,6 +80,7 @@
       @success="onAreaPopupSuccess"
       @close="popupVisible = false"
       :emptyMessage="emptyMessage"
+      :submitLoading="submitLoading"
     ></cr-popup-table>
   </page-header-wrapper>
 </template>
@@ -112,6 +113,7 @@ export default class AreaList extends ListPageVxe<AreaMeterDto, string> {
     },
   ];
   private popupVisible: boolean = false;
+  private submitLoading: boolean = false;
   private direction: number = 0;
   private areaId: string = "";
   private emptyMessage: string = "请选择需要保存的监测点！";
@@ -256,7 +258,6 @@ export default class AreaList extends ListPageVxe<AreaMeterDto, string> {
 
     api.tree(queryModel).then((res: any) => {
       this.loading = false;
-      //   this.dataSource = this.createDataSource(res) || [];
       this.dataSource = res;
     });
     this.currentRow = null;
@@ -296,6 +297,9 @@ export default class AreaList extends ListPageVxe<AreaMeterDto, string> {
     });
   }
 
+  /**
+   *挂接
+   */
   private handleCreate(row: any, type: number) {
     this.direction = type;
     this.areaId = row.id;
@@ -308,38 +312,24 @@ export default class AreaList extends ListPageVxe<AreaMeterDto, string> {
     }
   }
 
+  /**
+   *挂接表格确认回调
+   */
   private onAreaPopupSuccess(currentRow: any) {
     if (currentRow.length) {
-      console.log(currentRow, "currentRow");
-      let params:any={
-          areaId:this.areaId,
-          direction:this.direction,
-          data:currentRow
-      }
+      let params: any = {
+        areaId: this.areaId,
+        direction: this.direction,
+        data: currentRow,
+      };
 
-        // api
-        //   .create(params)
-        //   .then((res) => {
-        //     this.submitLoading = false;
-        //     this.$emit("input", false);
-        //     this.$emit("success");
-        //   })
-        //   .catch((err: any) => {
-        //     this.submitLoading = false;
-        //   });
+      api.create(params).then((res) => {
+        this.$emit("input", false);
+        this.$emit("success");
+        this.$message.success("操作成功");
+      });
+      this.queryList();
     }
-  }
-
-  /** 删除 */
-  private deleteSelectedItems() {}
-
-  /**
-   * 表格选择行事件
-   * @param selectedRowKeys
-   */
-  private onTableSelectChange(selectedRowKeys: Array<any>) {
-    this.selectedRowKeys = selectedRowKeys;
-    this.columns = [{ field: "", title: "", width: "", align: "center" }];
   }
 }
 </script>
