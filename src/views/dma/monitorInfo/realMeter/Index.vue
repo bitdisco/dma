@@ -1,7 +1,6 @@
 <template>
   <tree-layout-page-wrapper hide-title-bar :treeWidth="260">
     <template slot="tree">
-      <!-- <address-tree :checkable="true" @getTreeNode="getTreeNode"/> -->
       <monitor-tree @getTreeNode="getTreeNode" />
     </template>
     <div class="compact-page-wrapper">
@@ -9,42 +8,19 @@
         :showInput="false"
         v-model="searchModel"
         :fields="searchFields"
-        :dropdownWidth="600"
-        :layoutColumn="2"
+        :dropdownWidth="350"
+        :layoutColumn="1"
         :inputStyle="{ placeholder: '请输入关键词', style: { width: '150px' } }"
         @search="onSearch"
       >
         <template slot="actions">
           <a-button-group>
             <a-button @click="queryList" icon="sync">刷新</a-button>
-            <a-button
-              @click="defaultHandleCreate()"
-              v-auth="{ action: 'Create' }"
-              icon="plus"
-              >新增</a-button
-            >
-            <a-button
-              :disabled="!currentRow"
-              @click.stop="defaultHandleUpdate(currentRow)"
-              v-auth="{ action: 'Update' }"
-              >编辑</a-button
-            >
-            <a-popconfirm
-              title="确定要删除当前数据吗？"
-              @confirm.stop="onDeleteItem(currentRow)"
-            >
-              <a-button
-                type="danger"
-                v-auth="{ action: 'Delete' }"
-                :disabled="!currentRow"
-                >删除</a-button
-              >
-            </a-popconfirm>
           </a-button-group>
         </template>
       </advanced-search-panel>
       <div class="compact-page-table">
-        <card-list :list="dataSource" />
+        <card-list :list="dataSource" :cardLoading="loading" />
       </div>
       <div class="table-pagination">
         <a-pagination
@@ -60,7 +36,6 @@
 <script lang="ts">
 import { Component, Vue, Watch, Prop } from "vue-property-decorator";
 import { SortedInfo, ToolbarActionItem, ListPageVxe } from "@cr/types";
-import { PaginationConfig } from "ant-design-vue/types/list/list";
 import api from "@/api/dma/generatorApis/armRealData";
 import AreaApi from "@/api/dma/generatorApis/area";
 import AddressTree from "@/components/Tree/AddressTree.vue";
@@ -72,7 +47,7 @@ import { Assembly } from "@/api/dma/types/assembly";
 
 @Component<RealDataList>({
   name: "RealDataList",
-  components: { AddressTree, AreaTree, MonitorTree,CardList },
+  components: { AddressTree, AreaTree, MonitorTree, CardList },
 })
 export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
   //#region 树控件相关
@@ -93,33 +68,18 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
     });
   }
   private onExpand(expandedKeys: any) {
-    //console.log("onExpand " + expandedKeys, expandedKeys);
     this.expandedKeys = expandedKeys;
     this.autoExpandParent = false;
   }
   private onSelect(selectedKeys: any, info: any) {
-    //console.log("onSelect " + selectedKeys, info);
     this.selectedKeys = selectedKeys;
     this.searchModel.AreaId = selectedKeys[0];
     this.queryList();
   }
-  //#endregion
-  //#region 工具栏按钮属性
 
-  private toolbar_actions: Array<ToolbarActionItem> = [
-    {
-      title: "刷新",
-      props: { icon: "sync" },
-      click: () => {
-        this.queryAreaTree();
-        this.queryList();
-      },
-    },
-  ];
   //#endregion
   //#region 组件创建时执行
   created() {
-    
     this.getPagination.pageSize = 10;
     this.searchFields = [
       {
@@ -128,38 +88,6 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
         input: "a-input",
         props: {
           placeholder: "输入监测点名称、监测点编码、挂接表号关键词进行模糊搜索",
-        },
-      },
-      {
-        name: "meterName",
-        label: "监测点名称",
-        input: "a-input",
-        props: {
-          placeholder: "请输入监测点名称",
-        },
-      },
-      {
-        name: "meterCode",
-        label: "监测点编码",
-        input: "a-input",
-        props: {
-          placeholder: "请输入监测点编码",
-        },
-      },
-      {
-        name: "addressCode",
-        label: "挂接表号",
-        input: "a-input",
-        props: {
-          placeholder: "请输入挂接表号",
-        },
-      },
-      {
-        name: "addressCode",
-        label: "挂接表号",
-        input: "a-input",
-        props: {
-          placeholder: "请输入挂接表号",
         },
       },
     ];
@@ -196,8 +124,9 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
       },
       this.searchModel
     );
+    console.log(queryModel, "qqq");
 
-    api.getQueryList(queryModel).then((res:any) => {
+    api.getQueryList(queryModel).then((res: any) => {
       console.log("数据", res);
       this.loading = false;
       this.dataSource = res.items;
@@ -210,9 +139,12 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
   /*树点击事件*/
   private getTreeNode(val: any) {
     console.log("点击树信息", val);
-    this.searchModel.AreaName = val.areaName;
-    this.searchModel.AreaCode = val.areaCode;
-    this.searchModel.AreaGrade = val.areaGrade;
+    let area: any = val.area;
+    if (area) {
+      this.searchModel.AreaName = area.areaName;
+      this.searchModel.AreaCode = area.areaCode;
+      this.searchModel.AreaGrade = area.areaGrade;
+    }
     this.queryList();
   }
 
@@ -267,7 +199,8 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+@import "~ant-design-vue/es/style/themes/default.less";
 .vxetable {
   height: calc(100vh - 100px);
 }

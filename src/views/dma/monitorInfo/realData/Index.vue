@@ -276,10 +276,12 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
 
   /*树点击事件*/
   private getTreeNode(val: any) {
-    console.log("点击树信息", val);
-    this.searchModel.AreaName = val.areaName;
-    this.searchModel.AreaCode = val.areaCode;
-    this.searchModel.AreaGrade = val.areaGrade;
+    let area: any = val.area;
+    if (area) {
+      this.searchModel.AreaName = area.areaName;
+      this.searchModel.AreaCode = area.areaCode;
+      this.searchModel.AreaGrade = area.areaGrade;
+    }
     this.queryList();
   }
 
