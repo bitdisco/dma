@@ -22,15 +22,21 @@
           </li>
           <li>
             <p class="label">瞬时流量</p>
-            <p class="value">{{ item.realValue }}吨/小时</p>
+            <p class="value">
+              {{ item.realValue }}吨/小时 <a-icon type="bar-chart" class="icon" @click="getChart"/>
+            </p>
           </li>
           <li>
             <p class="label">压力</p>
-            <p class="value">{{ item.pressValue }}MPa</p>
+            <p class="value">
+              {{ item.pressValue }}MPa <a-icon type="bar-chart" class="icon" @click="getChart"/>
+            </p>
           </li>
           <li>
             <p class="label">电池电压</p>
-            <p class="value">{{ item.celVal }}V</p>
+            <p class="value">
+              {{ item.celVal }}V <a-icon type="bar-chart" class="icon" @click="getChart"/>
+            </p>
           </li>
           <li>
             <p class="label">最后采集时间</p>
@@ -50,6 +56,11 @@ import { Component, Vue, Watch, Prop } from "vue-property-decorator";
 export default class CardList extends Vue {
   @Prop({ default: () => [] }) private list!: Array<any>;
   @Prop({ default: false }) private cardLoading!: boolean;
+
+
+  private getChart(){
+    
+  }
 }
 </script>
 <style lang="less" scoped>
@@ -119,6 +130,11 @@ export default class CardList extends Vue {
         }
         .value {
           letter-spacing: 1px;
+          .icon {
+            font-weight: 500;
+            font-size: 14px;
+            cursor: pointer;
+          }
         }
       }
     }
