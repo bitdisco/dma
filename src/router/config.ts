@@ -68,7 +68,7 @@ export const indexRoutes: RouteConfig[] = [
           keepAlive: true,
           permissionCode: "DMA.RealMeter",
           allowAnonymous: false,
-          title: "实时数据",
+          title: "监测设备卡片",
         },
         component: () => import("@/views/dma/monitorInfo/realMeter/Index.vue"),
       }

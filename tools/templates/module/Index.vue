@@ -1,62 +1,76 @@
 <template>
-  <page-header-wrapper>
-    <template slot="content">
-      <search-view-bar
-        :fields="searchFields"
-        canExpand
-        @search="onSearch"
+  <page-header-wrapper  class="compact-page" hide-title-bar>
+    <div class="compact-page-wrapper">
+      <advanced-search-panel
+        :showInput="false"
         v-model="searchModel"
-        :rules="searchRules"
-      />
-    </template>
-    <a-card>
-      <table-action-bar>
-        <template slot="right">
+        :fields="searchFields"
+        :dropdownWidth="350"
+        :layoutColumn="1"
+        :inputStyle="{ placeholder: '请输入关键词', style: { width: '150px' } }"
+        @search="onSearch"
+      >
+        <template slot="actions">
           <a-button-group>
             <a-button @click="queryList" icon="sync">刷新</a-button>
-            <a-button @click="onExport" icon="export" type="primary"
-              >导出</a-button
-            >
+            <a-button
+              @click="defaultHandleCreate()"
+              v-auth="{ action: 'Create' }"
+              icon="plus"
+              >新增
+            </a-button>
+            <a-button
+              :disabled="!currentRow"
+              @click.stop="defaultHandleUpdate(currentRow)"
+              v-auth="{ action: 'Update' }"
+              >编辑
+            </a-button>
             <a-popconfirm
-              title="确定要删除当前选择项的数据吗？"
-              @confirm="deleteSelectedItems"
-              :disabled="!hasSelected"
+              title="确定要删除当前数据吗？"
+              @confirm.stop="onDeleteItem(currentRow)"
             >
-              <a-button icon="delete" type="danger" :disabled="!hasSelected"
-                >删除选择</a-button
-              ></a-popconfirm
-            >
+              <a-button
+                type="danger"
+                v-auth="{ action: 'Delete' }"
+                :disabled="!currentRow"
+                >删除
+              </a-button>
+            </a-popconfirm>
           </a-button-group>
         </template>
-        <a-button type="primary" @click="defaultHandleCreate()">新增</a-button>
-      </table-action-bar>
-      <a-table
-        rowKey="id"
-        :loading="loading"
-        :columns="columns"
-        :data-source="dataSource"
-        :pagination="pagination"
-        bordered
-        size="small"
-        @change="onTableChanged"
-        :row-selection="{
-          selectedRowKeys: selectedRowKeys,
-          onChange: onTableSelectChange,
-        }"
-      >
-        <template slot="action" slot-scope="val, row">
-          <a-button type="link" size="small" @click="defaultHandleUpdate(row)"
-            >修改</a-button
-          >
-          <a-popconfirm
-            title="确定要删除当前选择行吗？"
-            @confirm="onDeleteItem(row)"
-          >
-            <a-button size="small" type="danger">删除</a-button>
-          </a-popconfirm>
-        </template>
-      </a-table>
-    </a-card>
+      </advanced-search-panel>
+      <div class="compact-page-table">
+      <vxe-table
+          :data="dataSource"
+          :loading="loading"
+          highlight-current-row
+          highlight-hover-row
+          @cell-click="onTableCellClick"
+          border
+          height="auto"
+          :seq-config="{ startIndex: getSkipCount }"
+          :custom-config="{ storage: true }"
+        >
+          <vxe-table-column
+            type="seq"
+            width="40"
+            align="center"
+          ></vxe-table-column>
+          <vxe-table-column
+            v-bind="col"
+            v-for="(col, index) in columns"
+            :key="index"
+          ></vxe-table-column>
+        </vxe-table>
+     </div>
+      <div class="table-pagination">
+        <a-pagination
+          v-bind="pagination"
+          @showSizeChange="onShowSizeChange"
+          @change="onPageChanged"
+        ></a-pagination>
+      </div>
+    </div>
     <!--添加修改模块-->
     <form-view
       v-if="popupModel.visible"
@@ -70,7 +84,7 @@
 </template>
 <script lang="ts">
 import { Component, Watch, Prop } from "vue-property-decorator";
-import {ListPageVue} from "@cr/types";
+import {ListPageVxe} from "@cr/types";
 import api from "@/api/<%=model.systemName %>/generatorApis/<%=model.apiModule %>";
 import { SortedInfo, ToolbarActionItem } from "@cr/types";
 import { PaginationConfig } from "ant-design-vue/types/list/list";
@@ -80,8 +94,8 @@ import FormView from "./Form.vue";
 /**
  * 列表页测试
  */
-@Component({ name: "<%=model.className %>", components: { FormView } })
-export default class <%=model.className %> extends ListPageVue<<%=model.dtoType%>, <%=model.idType%>> {
+@Component<<%=model.className %>>({ name: "<%=model.className %>", components: { FormView } })
+export default class <%=model.className %> extends ListPageVxe<<%=model.dtoType%>, <%=model.idType%>> {
   /**
    * 组件创建时执行
    */
@@ -89,22 +103,16 @@ export default class <%=model.className %> extends ListPageVue<<%=model.dtoType%
     this.getPagination.pageSize = 10;
     this.columns = [
       <% model.fields.forEach(function(item){ %>{
-        key: "<%=item.name%>",
-        dataIndex: "<%=item.name%>",
+        field: "<%=item.name%>",
+        width: "100",
         title: "<%=item.description%>"
       },
       <% }); %>
-      {
-        key: "action",
-        width: 180,
-        align: "center",
-        title: "操作",
-        scopedSlots: { customRender: "action" },
-      },
+     
     ];
 
     this.searchFields = [
-      <% model.searchFields.forEach(function(item){ %>{
+      <% model.fields.forEach(function(item){ %>{
         name: "<%=item.name %>",
         label: "<%=item.description || item.name %>",
         input: "<%=model.getInputType(item.type) %>",
@@ -126,7 +134,6 @@ export default class <%=model.className %> extends ListPageVue<<%=model.dtoType%
    * 查询方法
    */
   private onSearch() {
-    this.getPagination.current=1;
     //处理其它查询条件逻辑。。。。
     this.queryList();
   }
@@ -155,15 +162,27 @@ export default class <%=model.className %> extends ListPageVue<<%=model.dtoType%
     this.loading = true;
   }
 
+
+  /**
+   * 表格事件
+   */
+  private onTableCellClick({ row }: any) {
+    this.currentRow = row;
+  }
+
   /**
    * 表格分页事件
    */
-  private onTableChanged(
-    pagination: PaginationConfig,
-    filters: any,
-    sorter: SortedInfo
-  ) {
-    this.defaultHandlerTableChanged(pagination, filters, sorter);
+  private onPageChanged(current: number) {
+    this.getPagination.current = current;
+    this.pagination = this.getPagination;
+    this.queryList();
+  }
+
+  private onShowSizeChange(current: number, size: number) {
+    this.getPagination.current = current;
+    this.getPagination.pageSize = size;
+    this.pagination = this.getPagination;
     this.queryList();
   }
 
@@ -172,6 +191,7 @@ export default class <%=model.className %> extends ListPageVue<<%=model.dtoType%
    */
   private onDeleteItem(item: <%=model.dtoType%>) {
     api.delete(item.id).then((res) => {
+      this.$message.success({ content: "删除成功~" });
       this.queryList();
     });
   }

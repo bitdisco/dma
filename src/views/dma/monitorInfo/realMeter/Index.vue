@@ -1,5 +1,8 @@
 <template>
-  <page-header-wrapper class="compact-page" hide-title-bar>
+  <tree-layout-page-wrapper hide-title-bar :treeWidth="260">
+    <template slot="tree">
+      <monitor-tree @getTreeNode="getTreeNode" />
+    </template>
     <div class="compact-page-wrapper">
       <advanced-search-panel
         :showInput="false"
@@ -12,60 +15,12 @@
       >
         <template slot="actions">
           <a-button-group>
-            <a-button
-              @click="queryList"
-              icon="sync"
-            >刷新</a-button>
-            <a-button
-              @click="defaultHandleCreate()"
-              v-auth="{ action: 'Create' }"
-              icon="plus"
-            >新增
-            </a-button>
-            <a-button
-              :disabled="!currentRow"
-              @click.stop="defaultHandleUpdate(currentRow)"
-              v-auth="{ action: 'Update' }"
-            >编辑
-            </a-button>
-            <a-popconfirm
-              title="确定要删除当前数据吗？"
-              @confirm.stop="onDeleteItem(currentRow)"
-            >
-              <a-button
-                type="danger"
-                v-auth="{ action: 'Delete' }"
-                :disabled="!currentRow"
-              >删除
-              </a-button>
-            </a-popconfirm>
+            <a-button @click="queryList" icon="sync">刷新</a-button>
           </a-button-group>
         </template>
       </advanced-search-panel>
       <div class="compact-page-table">
-        <vxe-table
-          id="vxeTable"
-          :data="dataSource"
-          :loading="loading"
-          highlight-current-row
-          highlight-hover-row
-          @cell-click="onTableCellClick"
-          border
-          height="auto"
-          :seq-config="{ startIndex: getSkipCount }"
-          :custom-config="{ storage: true }"
-        >
-          <vxe-table-column
-            type="seq"
-            width="50"
-            align="center"
-          ></vxe-table-column>
-          <vxe-table-column
-            v-bind="col"
-            v-for="(col, index) in columns"
-            :key="index"
-          ></vxe-table-column>
-        </vxe-table>
+        <card-list :list="dataSource" :cardLoading="loading" />
       </div>
       <div class="table-pagination">
         <a-pagination
@@ -75,74 +30,56 @@
         ></a-pagination>
       </div>
     </div>
-    <!--添加修改模块-->
-    <form-view
-      v-if="popupModel.visible"
-      :action="popupModel.action"
-      v-model="popupModel.visible"
-      :id="popupModel.id"
-      :item="popupModel.data"
-      @success="queryList"
-    />
-  </page-header-wrapper>
+  </tree-layout-page-wrapper>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Watch, Prop } from "vue-property-decorator";
 import { SortedInfo, ToolbarActionItem, ListPageVxe } from "@cr/types";
-import { PaginationConfig } from "ant-design-vue/types/list/list";
-import api from "@/api/dma/generatorApis/area";
-import { AreaDto } from "@/api/dma/types";
-import FormView from "./Form.vue";
+import api from "@/api/dma/generatorApis/armRealData";
+import AreaApi from "@/api/dma/generatorApis/area";
+import AddressTree from "@/components/Tree/AddressTree.vue";
+import MonitorTree from "@/components/Tree/MonitorTree.vue";
+import AreaTree from "@/components/Tree/AreaTree.vue";
+import { ArmRealDataDto } from "@/api/dma/types";
+import CardList from "./components/CardList.vue";
+import { Assembly } from "@/api/dma/types/assembly";
 
-@Component<AreaList>({
-  name: "AreaList",
-  components: { FormView },
+@Component<RealDataList>({
+  name: "RealDataList",
+  components: { AddressTree, AreaTree, MonitorTree, CardList },
 })
-export default class AreaList extends ListPageVxe<AreaDto, string> {
-  /**
-   * 工具栏按钮属性
-   */
-  private toolbar_actions: Array<ToolbarActionItem> = [
-    {
-      title: "刷新",
-      props: { icon: "sync" },
-      click: () => {
-        this.queryList();
-      },
-    },
-  ];
+export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
+  //#region 树控件相关
+  private expandedKeys: string[] = [];
+  private autoExpandParent: boolean = true;
+  private selectedKeys: Array<string> = [];
+  private replaceFields: any = {
+    children: "children",
+    key: "id",
+    title: "areaName",
+  };
+  private treeData: any[] = [];
 
-  /**
-   * 组件创建时执行
-   */
+  private queryAreaTree() {
+    AreaApi.getAreaTree({}).then((res) => {
+      this.treeData = res;
+      this.expandedKeys.push(res[0].id);
+    });
+  }
+  private onExpand(expandedKeys: any) {
+    this.expandedKeys = expandedKeys;
+    this.autoExpandParent = false;
+  }
+  private onSelect(selectedKeys: any, info: any) {
+    this.selectedKeys = selectedKeys;
+    this.searchModel.AreaId = selectedKeys[0];
+    this.queryList();
+  }
+
+  //#endregion
+  //#region 组件创建时执行
   created() {
-    this.columns = [
-      {
-        title: "DMA分区名称",
-        field: "areaName",
-        width: 300,
-      },
-      {
-        title: "分区编码",
-        field: "areaCode",
-        width: 150,
-      },
-      {
-        title: "分区级别",
-        field: "areaGrade",
-        width: 150,
-      },
-      {
-        title: "建设年代",
-        field: "constructionYear",
-        width: 150,
-      },
-      {
-        title: "创建时间",
-        field: "createTime",
-      },
-    ];
     this.getPagination.pageSize = 10;
     this.searchFields = [
       {
@@ -150,28 +87,28 @@ export default class AreaList extends ListPageVxe<AreaDto, string> {
         label: "关键字",
         input: "a-input",
         props: {
-          placeholder: "请输入编号/名称",
+          placeholder: "输入监测点名称、监测点编码、挂接表号关键词进行模糊搜索",
         },
       },
     ];
   }
+  //#endregion
+  //#region 组件挂载成功后执行
 
-  /**
-   * 组件挂载成功
-   */
   mounted() {
+    this.queryAreaTree();
     this.queryList();
   }
+  //#endregion
+  //#region 查询方法
 
-  /**
-   * 查询方法
-   */
   private onSearch() {
     this.getPagination.current = 1;
     //处理其它查询条件逻辑。。。。
     this.queryList();
   }
-
+  //#endregion
+  //#region 表格控件相关
   /**
    * 分页查询列表
    */
@@ -187,14 +124,28 @@ export default class AreaList extends ListPageVxe<AreaDto, string> {
       },
       this.searchModel
     );
+    console.log(queryModel, "qqq");
 
-    api.getPageList(queryModel).then((res) => {
+    api.getQueryList(queryModel).then((res: any) => {
+      console.log("数据", res);
       this.loading = false;
       this.dataSource = res.items;
       this.getPagination.total = res.totalCount;
     });
     this.currentRow = null;
     this.loading = true;
+  }
+
+  /*树点击事件*/
+  private getTreeNode(val: any) {
+    console.log("点击树信息", val);
+    let area: any = val.area;
+    if (area) {
+      this.searchModel.AreaName = area.areaName;
+      this.searchModel.AreaCode = area.areaCode;
+      this.searchModel.AreaGrade = area.areaGrade;
+    }
+    this.queryList();
   }
 
   /**
@@ -226,7 +177,7 @@ export default class AreaList extends ListPageVxe<AreaDto, string> {
   /**
    * 删除选择项
    */
-  private onDeleteItem(row: AreaDto) {
+  private onDeleteItem(row: ArmRealDataDto) {
     api.delete(row.id).then((res) => {
       this.$message.success({ content: "删除成功~" });
       this.queryList();
@@ -244,10 +195,12 @@ export default class AreaList extends ListPageVxe<AreaDto, string> {
     this.selectedRowKeys = selectedRowKeys;
     this.columns = [{ field: "", title: "", width: "", align: "center" }];
   }
+  //#endregion
 }
 </script>
 
-<style scoped>
+<style lang="less" scoped>
+@import "~ant-design-vue/es/style/themes/default.less";
 .vxetable {
   height: calc(100vh - 100px);
 }

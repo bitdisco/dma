@@ -3,19 +3,13 @@
  * @Autor: 胡涛
  * @Date: 2021-02-20 11:43:06
  * @LastEditors: 朱海良
- * @LastEditTime: 2021-06-01 14:43:51
+ * @LastEditTime: 2021-06-09 16:36:44
  */
 /**
  * swagger文档接口地址
  */
 const swaggerUrls = {
-<<<<<<< HEAD
-    // platform: "http://36.133.33.128:4000/swagger/v1/swagger.json",
-    dma: "http://localhost:44333/swagger/v1/swagger.json",
-    // message: "http://36.133.33.128:3026/swagger/v1/swagger.json"
-=======
-    dma: "http://36.133.33.128:4003/swagger/v1/swagger.json"
->>>>>>> 75c65563b4ea9aecc8272867f6ab3293bf254bf0
+    material: "http://36.133.33.128:4001/swagger/v1/swagger.json",
 };
 
 /**
@@ -26,83 +20,38 @@ const generateConfig = {
      * 要生成的API模块
      */
     api: {
-
-
-        /**
-         * 是否生成全部模块
-         */
-        generateAll: false,
-        /**
-         * 生成所有带控制器注解的模块
-         */
-        allAnnotation: true,
         /**
          * 要排除生成的模块名配置集合（后端控制器名称）
          * 键值对格式，键名同swaggerUrls配置的键名称一致及
          */
-        excludes: {
-            /**
-          * 营业系统
-          */
-            charge: ['Enum', 'AbpApiDefinition', 'Stat', 'AbpApplicationConfiguration','AbpTenant','AuditLogging','DictionaryItem','DictionaryItemDetail'],
-            /**
-             * 平台管理
-             */
-            platform: ['Enum', 'AbpApiDefinition', 'Stat', 'AbpApplicationConfiguration'],
-            /**
-             * 消息服务
-             */
-            message: [],
-            meterManagement:['Enum', 'AbpApiDefinition', 'Stat', 'AbpApplicationConfiguration','AbpTenant','AuditLogging','DictionaryItem','DictionaryItemDetail']
-        },
+        excludes: ['Enum', 'AbpApiDefinition', 'Stat', 'AbpApplicationConfiguration','ApiResource','AbpTenant','AuditLogging','DictionaryItem','DictionaryItemDetail','PermissionDefine','Profile','IdentityResource','ClaimType'],
         /**
-         * 要包含生成的模块名配置集合（后端控制器名称）
+         * 指定生成控制器的集合（后端控制器名称）
          * 键值对格式，键名同swaggerUrls配置的键名称一致及
          */
-        includes: {
-            /**
-             * 营业系统
-             */
-            charge: ['BadLoansReport','PayHisReport'],
-            /**
-             * 平台管理
-             */
-            platform: [],
-            /**
-             * 消息服务
-             */
-            message: [],
-
-            meterManagement: ['Manufacturer']
-        }
+        includes: ['MaterialsCategory']
     },
     /**
      * 要生成的VUE模块
      */
     vue: {
-        generateAll: false,
-        allAnnotation: true,
-        excludes: {
-            charge: [],
-            platform: [],
-            message: []
-        },
-        includes: {
-            charge: ['ArchiveInfo'],
-            platform: [],
-            message: []
-        }
+        /**
+         * 要排除生成的模块名配置集合（后端控制器名称）
+         * 键值对格式，键名同swaggerUrls配置的键名称一致及
+         */
+         excludes: ['Enum', 'AbpApiDefinition', 'Stat', 'AbpApplicationConfiguration','ApiResource','AbpTenant','AuditLogging','DictionaryItem','DictionaryItemDetail','PermissionDefine','Profile','IdentityResource','ClaimType'],
+         /**
+          * 指定生成控制器的集合（后端控制器名称）
+          * 键值对格式，键名同swaggerUrls配置的键名称一致及
+          */
+         includes: ['Allcation','MaterialsCategory']
     }
 }
 
 /**
  * 枚举接口地址
  */
-<<<<<<< HEAD
-const enumUrl = "http://36.133.33.128:4006/api/utils/enum";
-=======
-const enumUrl = "http://139.224.255.200:4002/api/utils/enum";
->>>>>>> 75c65563b4ea9aecc8272867f6ab3293bf254bf0
+const enumUrl = "http://36.133.33.128:4002/api/utils/enum";
 
 
 /**
