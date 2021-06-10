@@ -1,7 +1,6 @@
 <template>
   <tree-layout-page-wrapper :treeWidth="260">
     <template slot="tree">
-      <!-- <address-tree :checkable="true" @getTreeNode="getTreeNode"/> -->
       <monitor-tree @getTreeNode="getTreeNode"/>
     </template>
     <div class="compact-page-wrapper">
@@ -15,6 +14,11 @@
         @search="onSearch"
       >
         <template slot="actions">
+          <a-button-group>
+            <a-button @click="queryList">今天</a-button>
+            <a-button @click="queryList">近7天</a-button>
+            <a-button @click="queryList">近1个月</a-button>
+          </a-button-group>
           <a-button-group>
             <a-button @click="queryList" icon="sync">刷新</a-button>
             <a-button @click="createTab" icon="ordered-list">生成报表</a-button>
@@ -63,7 +67,6 @@ import AreaTree from "@/components/Tree/AreaTree.vue"
 import { ArmRealDataDto } from "@/api/dma/types";
 import moment from "moment";
 
-
 @Component<DayAnalyseRealValue>({
   name: "DayAnalyseRealValue",
   components:{AddressTree, AreaTree, MonitorTree}
@@ -82,36 +85,21 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
 
   //获取查询信息
   private searchData: Object = {
-    AreaName: '',
-    AreaGrade: '',
-    AreaCode: '',
-    MeterName: '',
-    MeterCode: '',
-    MeterType: '',
-    MeterNumber: '',
-    StartTime: '2021-02-07',
-    EndTime: '2021-02-09',
-    AddressCode: '',
-    AddressCodes: [28006982],
     CreateTime: null,
-    QueryType: 0,
-    keyWord: '',
     IsPage: false,
-    Sorting: '',
   };
 
-  // 获取列表参数
-  // private tableColumns: Array<any> = [];
-  private columns: Array<any> = [];
-
-  //首次加载页面表单数据传参
-  private querySearchData() {
-    this.searchModel = this.searchData;
-    // let selectDate = "";
-    // let today = moment().format("YYYY-MM-DD");
-    // this.searchModel.countDate? selectDate = this.searchModel.countDate : selectDate = today;
-    // this.searchModel.StartTime = selectDate+' 00:00';
-    // this.searchModel.EndTime = selectDate+' 23:59';
+  //默认加载查询表单时间
+  private querySearchDate() {
+    let date = new Date();
+    let year = date.getFullYear();
+    let month = (date.getMonth()+1).toString().padStart(2,'0');
+    let day = date.getDate().toString().padStart(2,'0');
+    let endDay = (date.getDate()+7).toString().padStart(2,'0');
+    let startTime = year+'-'+month+'-'+day;
+    let endTime = year+'-'+month+'-'+endDay;
+    this.searchModel.startTime = startTime;
+    this.searchModel.endTime = endTime;
   }
 
   private queryAreaTree() {
@@ -151,54 +139,44 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
     this.getPagination.pageSize = 10;
     this.searchFields = [
       {
-        name: "Keyword",
-        label: "关键字",
+        name: "countDate",
+        label: "开始时间",
         input: "a-date-picker",
         props: {
-          placeholder: "输入监测点名称、监测点编码、挂接表号关键词进行模糊搜索",
+          format: "YYYY-MM-DD",
+          showTime: false,
+          valueFormat: "YYYY-MM-DD",
+          defaultValue: (this as any).defaultValue,
+          disabledDate: (this as any).disabledDate
         },
       },
       {
-        name: "meterName",
-        label: "监测点名称",
-        input: "a-input",
+        name: "countDate",
+        label: "结束时间",
+        input: "a-date-picker",
         props: {
-          placeholder: "请输入监测点名称",
-        },
-      },
-      {
-        name: "meterCode",
-        label: "监测点编码",
-        input: "a-input",
-        props: {
-          placeholder: "请输入监测点编码",
-        },
-      },
-      {
-        name: "addressCode",
-        label: "挂接表号",
-        input: "a-input",
-        props: {
-          placeholder: "请输入挂接表号",
-        },
-      },
-      {
-        name: "addressCode",
-        label: "挂接表号",
-        input: "a-input",
-        props: {
-          placeholder: "请输入挂接表号",
+          format: "YYYY-MM-DD",
+          showTime: false,
+          valueFormat: "YYYY-MM-DD",
+          defaultValue: (this as any).defaultValue,
+          disabledDate: (this as any).disabledDate
         },
       },
     ];
+    //searchModel外追加右侧列表查询参数
+    this.searchModel = {
+      startTime: '',
+      endTime: '',
+      queryType: 0,//默认为0
+      addressCodes: []//数组类型
+    }
   }
   //#endregion
   //#region 组件挂载成功后执行
 
   mounted() {
     this.queryAreaTree();
-    this.querySearchData();
-    this.queryList();
+    this.querySearchDate();
   }
   //#endregion
   //#region 查询方法
@@ -207,8 +185,6 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
     let selectDate = "";
     let today = moment().format("YYYY-MM-DD");
     this.searchModel.countDate? selectDate = this.searchModel.countDate : selectDate = today;
-    this.searchModel.StartTime = selectDate+' 00:00';
-    this.searchModel.EndTime = selectDate+' 23:59';
     this.getPagination.current = 1;
     //处理其它查询条件逻辑。。。。
     this.queryList();
@@ -227,10 +203,14 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
    * 分页查询列表
    */
   private queryList() {
-    let page = this.getPagination;
     /**
      * 查询条件
      */
+    //本页查询条件添加
+    if(!this.searchModel.addressCodes.length){
+      this.alertInfo();
+      return false
+    }
     let queryModel = Object.assign(
       {
         MaxResultCount: this.getMaxResultCount,
@@ -238,33 +218,32 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
       },
       this.searchModel
     );
-
     console.log('queryModel',queryModel);
 
     MachApi.getDayContrast(queryModel).then((res:any) => {
       console.log('MachApi', res);
-      // let column: Array<any> = [];
       res.columns.forEach((value:any,key:any) => {
         this.columns.push({title:value.headerName,...value})
       });
-      // console.log('column', column);
-      // this.columns = column;
       this.loading = false;
       this.dataSource = res.data.items;
       this.getPagination.total = res.totalCount;
     });
     this.currentRow = null;
     this.loading = true;
-    console.log('this.columns',this.columns);
   }
 
   /*树点击事件*/
   private getTreeNode(val:any){
     console.log("点击树信息",val);
-    this.searchModel.AreaName = val.areaName;
-    this.searchModel.AreaCode = val.areaCode;
-    this.searchModel.AreaGrade = val.areaGrade;
-    this.queryList();
+    if(val.addressCode){
+      if(!val.type){
+        val.type = 0
+      }
+      this.searchModel.addressCode = val.addressCode;
+      this.searchModel.queryType = val.type;
+      this.queryList();
+    }
   }
 
   /**
@@ -301,6 +280,11 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
     this.selectedRowKeys = selectedRowKeys;
     this.columns = [{ field: "", title: "", width: "", align: "center" }];
   }
+
+  // 错误提示弹出框
+  private alertInfo() {
+    this.$message.info('请先选择左侧子节点!');
+  };
   //#endregion
 }
 </script>
