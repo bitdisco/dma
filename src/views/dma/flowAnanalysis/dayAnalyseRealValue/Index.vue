@@ -15,9 +15,9 @@
       >
         <template slot="actions">
           <a-button-group>
-            <a-button @click="queryList">今天</a-button>
-            <a-button @click="queryList">近7天</a-button>
-            <a-button @click="queryList">近1个月</a-button>
+            <a-button @click="queryList(1)">今天</a-button>
+            <a-button @click="queryList(7)">近7天</a-button>
+            <a-button @click="queryList(30)">近1个月</a-button>
           </a-button-group>
           <a-button-group>
             <a-button @click="queryList" icon="sync">刷新</a-button>
@@ -90,12 +90,12 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
   };
 
   //默认加载查询表单时间
-  private querySearchDate() {
+  private querySearchDate(time:number) {
     let date = new Date();
     let year = date.getFullYear();
     let month = (date.getMonth()+1).toString().padStart(2,'0');
     let day = date.getDate().toString().padStart(2,'0');
-    let endDay = (date.getDate()+7).toString().padStart(2,'0');
+    let endDay = (date.getDate()+time).toString().padStart(2,'0');
     let startTime = year+'-'+month+'-'+day;
     let endTime = year+'-'+month+'-'+endDay;
     this.searchModel.startTime = startTime;
@@ -109,14 +109,11 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
     });
   }
   private onExpand(expandedKeys: any) {
-    //console.log("onExpand " + expandedKeys, expandedKeys);
     this.expandedKeys = expandedKeys;
     this.autoExpandParent = false;
   }
   private onSelect(selectedKeys: any, info: any) {
-    //console.log("onSelect " + selectedKeys, info);
     this.selectedKeys = selectedKeys;
-    // this.AreaId = selectedKeys[0];
     this.queryList();
   }
   //#endregion
@@ -149,6 +146,12 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
           defaultValue: (this as any).defaultValue,
           disabledDate: (this as any).disabledDate
         },
+        events:{
+          change:(data:any)=>{
+            console.log(data);
+            this.searchModel.startTime = data
+          }
+        },
       },
       {
         name: "countDate",
@@ -160,6 +163,12 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
           valueFormat: "YYYY-MM-DD",
           defaultValue: (this as any).defaultValue,
           disabledDate: (this as any).disabledDate
+        },
+        events:{
+          change:(data:any)=>{
+            console.log(data);
+            this.searchModel.endTime = data
+          }
         },
       },
     ];
@@ -176,7 +185,7 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
 
   mounted() {
     this.queryAreaTree();
-    this.querySearchDate();
+    this.querySearchDate(1);
   }
   //#endregion
   //#region 查询方法
@@ -202,7 +211,7 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
   /**
    * 分页查询列表
    */
-  private queryList() {
+  private queryList(time) {
     /**
      * 查询条件
      */
@@ -211,6 +220,9 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
       this.alertInfo();
       return false
     }
+    //点击日期判断
+    this.querySearchDate(time)
+
     let queryModel = Object.assign(
       {
         MaxResultCount: this.getMaxResultCount,
@@ -240,8 +252,10 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
       if(!val.type){
         val.type = 0
       }
-      this.searchModel.addressCode = val.addressCode;
-      this.searchModel.queryType = val.type;
+      this.searchModel.addressCodes = [];
+      this.searchModel.addressCodes.push(val.addressCode);
+      // this.searchModel.queryType = val.type;
+      console.log('queryType',this.searchModel.queryType);
       this.queryList();
     }
   }
