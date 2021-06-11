@@ -37,6 +37,7 @@
           @cell-click="onTableCellClick"
           border
           height="auto"
+          :empty-render="{name:'NotData'}"
           :seq-config="{ startIndex: getSkipCount }"
           :custom-config="{ storage: true }"
         >
@@ -167,6 +168,7 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
       endTime: '',
       queryType: 0,//默认为0
       addressCodes: [],//数组类型
+      isPage: false
     }
   }
   //#endregion
@@ -207,6 +209,7 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
     //本页查询条件添加
     if(!this.searchModel.addressCodes.length){
       this.alertInfo();
+      this.loading = false;
       return false
     }
 
@@ -221,7 +224,7 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
 
     MachApi.getDayContrast(queryModel).then((res:any) => {
       console.log('MachApi', res);
-      if(!res.columns){
+      if(!res){
         this.$message.info('暂无数据');
         return false
       }
