@@ -224,7 +224,6 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
     MachApi.getDayContrast(queryModel).then((res:any) => {
       console.log('MachApi', res);
       if(!res){
-        this.$message.info('暂无数据');
         this.loading = false;
         return false
       }
