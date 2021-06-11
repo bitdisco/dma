@@ -20,7 +20,10 @@
         </template>
       </advanced-search-panel>
       <div class="compact-page-table">
-        <card-list :list="dataSource" :cardLoading="loading" />
+        <card-list
+          :list="dataSource"
+          :cardLoading="loading"
+        />
       </div>
       <div class="table-pagination">
         <a-pagination
@@ -30,7 +33,6 @@
         ></a-pagination>
       </div>
 
-      <chart-modal />
     </div>
   </tree-layout-page-wrapper>
 </template>
@@ -45,11 +47,10 @@ import MonitorTree from "@/components/Tree/MonitorTree.vue";
 import AreaTree from "@/components/Tree/AreaTree.vue";
 import { ArmRealDataDto } from "@/api/dma/types";
 import CardList from "./components/CardList.vue";
-import ChartModal from "./components/ChartModal.vue";
 
 @Component<RealDataList>({
   name: "RealDataList",
-  components: { AddressTree, AreaTree, MonitorTree, CardList,ChartModal },
+  components: { AddressTree, AreaTree, MonitorTree, CardList },
 })
 export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
   //#region 树控件相关
