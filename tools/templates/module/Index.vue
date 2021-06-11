@@ -41,6 +41,7 @@
       </advanced-search-panel>
       <div class="compact-page-table">
       <vxe-table
+          id="vxeTable"
           :data="dataSource"
           :loading="loading"
           highlight-current-row
