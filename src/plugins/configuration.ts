@@ -93,17 +93,19 @@ export const initSites = async function(): Promise<boolean> {
   }
 };
 
+
 /**
  * 初始化字典数据
  */
-export const initDictionarys = async function(): Promise<boolean> {
+ export const initDictionarys = async function(): Promise<boolean> {
   const list = DataModule.allDictionaryList;
   if (list && list.length > 0) {
     return true;
   }
   // 加载字典数据
   try {
-    const dictionarys: IDictionaryData[] = await config.getAllDctionarys();
+  const moduleCode = await getModuleCode();
+  const dictionarys: IDictionaryData[] = await config.getAllDctionarys(moduleCode);
     if (dictionarys) {
       await DataModule.updateAllDictionaryList(dictionarys);
     }
@@ -114,6 +116,7 @@ export const initDictionarys = async function(): Promise<boolean> {
     return false;
   }
 };
+
 
 /**
  * 初始化组织机构数据
