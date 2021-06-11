@@ -1,5 +1,5 @@
 <template>
-  <tree-layout-page-wrapper :treeWidth="560">
+  <tree-layout-page-wrapper :treeWidth="560" hide-title-bar> 
     <template slot="tree">
       <div class="tree-left-box">
         <div class="search-box">

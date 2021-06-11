@@ -29,13 +29,15 @@
           @change="onPageChanged"
         ></a-pagination>
       </div>
+
+      <chart-modal />
     </div>
   </tree-layout-page-wrapper>
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch, Prop } from "vue-property-decorator";
-import { SortedInfo, ToolbarActionItem, ListPageVxe } from "@cr/types";
+import { Component } from "vue-property-decorator";
+import { ListPageVxe } from "@cr/types";
 import api from "@/api/dma/generatorApis/armRealData";
 import AreaApi from "@/api/dma/generatorApis/area";
 import AddressTree from "@/components/Tree/AddressTree.vue";
@@ -43,11 +45,11 @@ import MonitorTree from "@/components/Tree/MonitorTree.vue";
 import AreaTree from "@/components/Tree/AreaTree.vue";
 import { ArmRealDataDto } from "@/api/dma/types";
 import CardList from "./components/CardList.vue";
-import { Assembly } from "@/api/dma/types/assembly";
+import ChartModal from "./components/ChartModal.vue";
 
 @Component<RealDataList>({
   name: "RealDataList",
-  components: { AddressTree, AreaTree, MonitorTree, CardList },
+  components: { AddressTree, AreaTree, MonitorTree, CardList,ChartModal },
 })
 export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
   //#region 树控件相关
@@ -92,23 +94,23 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
       },
     ];
   }
-  //#endregion
-  //#region 组件挂载成功后执行
 
+  /**
+   * 组件挂载成功后执行
+   */
   mounted() {
     this.queryAreaTree();
     this.queryList();
   }
-  //#endregion
-  //#region 查询方法
 
+  /**
+   * 查询条件
+   */
   private onSearch() {
     this.getPagination.current = 1;
-    //处理其它查询条件逻辑。。。。
     this.queryList();
   }
-  //#endregion
-  //#region 表格控件相关
+
   /**
    * 分页查询列表
    */
@@ -174,33 +176,10 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
     this.queryList();
   }
 
-  /**
-   * 删除选择项
-   */
-  private onDeleteItem(row: ArmRealDataDto) {
-    api.delete(row.id).then((res) => {
-      this.$message.success({ content: "删除成功~" });
-      this.queryList();
-    });
-  }
-
-  /** 批量删除 */
-  private deleteSelectedItems() {}
-
-  /**
-   * 表格选择行事件
-   * @param selectedRowKeys
-   */
-  private onTableSelectChange(selectedRowKeys: Array<any>) {
-    this.selectedRowKeys = selectedRowKeys;
-    this.columns = [{ field: "", title: "", width: "", align: "center" }];
-  }
-  //#endregion
 }
 </script>
 
 <style lang="less" scoped>
-@import "~ant-design-vue/es/style/themes/default.less";
 .vxetable {
   height: calc(100vh - 100px);
 }

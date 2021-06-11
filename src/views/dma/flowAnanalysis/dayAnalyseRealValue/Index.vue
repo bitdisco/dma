@@ -15,9 +15,9 @@
       >
         <template slot="actions">
           <a-button-group>
-            <a-button @click="queryList(1)">今天</a-button>
-            <a-button @click="queryList(7)">近7天</a-button>
-            <a-button @click="queryList(30)">近1个月</a-button>
+            <a-button @click="querySearchDate('day')">今天</a-button>
+            <a-button @click="querySearchDate('week')">近7天</a-button>
+            <a-button @click="querySearchDate('month')">近1个月</a-button>
           </a-button-group>
           <a-button-group>
             <a-button @click="queryList" icon="sync">刷新</a-button>
@@ -83,23 +83,22 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
   };
   private treeData: Array<any> = [];
 
-  //获取查询信息
-  private searchData: Object = {
-    CreateTime: null,
-    IsPage: false,
-  };
-
   //默认加载查询表单时间
-  private querySearchDate(time:number) {
-    let date = new Date();
-    let year = date.getFullYear();
-    let month = (date.getMonth()+1).toString().padStart(2,'0');
-    let day = date.getDate().toString().padStart(2,'0');
-    let endDay = (date.getDate()+time).toString().padStart(2,'0');
-    let startTime = year+'-'+month+'-'+day;
-    let endTime = year+'-'+month+'-'+endDay;
-    this.searchModel.startTime = startTime;
-    this.searchModel.endTime = endTime;
+  private querySearchDate(time:string) {
+    const today = new Date();
+    if(time === 'day'){
+      this.searchModel.startTime = moment(today).format('YYYY-MM-DD');
+      this.searchModel.endTime = moment(today).format('YYYY-MM-DD');
+    }
+    if(time === 'week'){
+      this.searchModel.startTime = moment(today).format('YYYY-MM-DD');
+      this.searchModel.endTime = moment(today).add(1, 'weeks').format('YYYY-MM-DD');
+    }
+    if(time === 'month'){
+      this.searchModel.startTime = moment(today).format('YYYY-MM-DD');
+      this.searchModel.endTime = moment(today).add(1, 'months').format('YYYY-MM-DD');
+    }
+    this.queryList();
   }
 
   private queryAreaTree() {
@@ -107,14 +106,6 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
       this.treeData = res;
       this.expandedKeys.push(res[0].id);
     });
-  }
-  private onExpand(expandedKeys: any) {
-    this.expandedKeys = expandedKeys;
-    this.autoExpandParent = false;
-  }
-  private onSelect(selectedKeys: any, info: any) {
-    this.selectedKeys = selectedKeys;
-    this.queryList();
   }
   //#endregion
   //#region 工具栏按钮属性
@@ -148,7 +139,6 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
         },
         events:{
           change:(data:any)=>{
-            console.log(data);
             this.searchModel.startTime = data
           }
         },
@@ -166,7 +156,6 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
         },
         events:{
           change:(data:any)=>{
-            console.log(data);
             this.searchModel.endTime = data
           }
         },
@@ -177,7 +166,7 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
       startTime: '',
       endTime: '',
       queryType: 0,//默认为0
-      addressCodes: []//数组类型
+      addressCodes: [],//数组类型
     }
   }
   //#endregion
@@ -185,7 +174,7 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
 
   mounted() {
     this.queryAreaTree();
-    this.querySearchDate(1);
+    this.querySearchDate('day');
   }
   //#endregion
   //#region 查询方法
@@ -211,7 +200,7 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
   /**
    * 分页查询列表
    */
-  private queryList(time) {
+  private queryList() {
     /**
      * 查询条件
      */
@@ -220,8 +209,6 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
       this.alertInfo();
       return false
     }
-    //点击日期判断
-    this.querySearchDate(time)
 
     let queryModel = Object.assign(
       {
@@ -234,6 +221,10 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
 
     MachApi.getDayContrast(queryModel).then((res:any) => {
       console.log('MachApi', res);
+      if(!res.columns){
+        this.$message.info('暂无数据');
+        return false
+      }
       res.columns.forEach((value:any,key:any) => {
         this.columns.push({title:value.headerName,...value})
       });
@@ -254,8 +245,6 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
       }
       this.searchModel.addressCodes = [];
       this.searchModel.addressCodes.push(val.addressCode);
-      // this.searchModel.queryType = val.type;
-      console.log('queryType',this.searchModel.queryType);
       this.queryList();
     }
   }
