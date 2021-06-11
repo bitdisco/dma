@@ -209,7 +209,6 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
     //本页查询条件添加
     if(!this.searchModel.addressCodes.length){
       this.alertInfo();
-      this.loading = false;
       return false
     }
 
@@ -226,6 +225,7 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
       console.log('MachApi', res);
       if(!res){
         this.$message.info('暂无数据');
+        this.loading = false;
         return false
       }
       res.columns.forEach((value:any,key:any) => {
