@@ -22,12 +22,12 @@
           <a-button-group>
             <a-button @click="queryList" icon="sync">刷新</a-button>
             <a-button @click="createTab" icon="ordered-list">生成报表</a-button>
-            <a-button icon="bar-chart">生成图表</a-button>
+            <a-button @click="isEcharts" icon="bar-chart">生成图表</a-button>
           </a-button-group>
         </template>
       </advanced-search-panel>
 
-      <div class="compact-page-table">
+      <div class="compact-page-table" v-if="showTable">
         <vxe-table
           id="vxeTable"
           :data="dataSource"
@@ -45,7 +45,10 @@
           <vxe-table-column v-bind="col" v-for="(col, index) in columns" :key="index"></vxe-table-column>
         </vxe-table>
       </div>
-      <div class="table-pagination">
+      <div class="chart-container" v-if="showEcharts">
+        <area-chart ref="demoCharts" height="100%" width="100%"/>
+      </div>
+      <div class="table-pagination" v-if="showTable">
         <a-pagination
           v-bind="pagination"
           @showSizeChange="onShowSizeChange"
@@ -57,9 +60,8 @@
 </template>
 
 <script lang="ts">
-import { Component, Vue, Watch, Prop } from "vue-property-decorator";
-import { SortedInfo, ToolbarActionItem, ListPageVxe } from "@cr/types";
-import { PaginationConfig } from "ant-design-vue/types/list/list";
+import { Component } from "vue-property-decorator";
+import { ToolbarActionItem, ListPageVxe } from "@cr/types";
 import MachApi from "@/api/dma/generatorApis/machiningData";
 import AreaApi from "@/api/dma/generatorApis/area";
 import AddressTree from "@/components/Tree/AddressTree.vue"
@@ -67,24 +69,35 @@ import MonitorTree from "@/components/Tree/MonitorTree.vue"
 import AreaTree from "@/components/Tree/AreaTree.vue"
 import { ArmRealDataDto } from "@/api/dma/types";
 import moment from "moment";
+import AreaChart from "@/components/Charts/AreaChart.vue";
+import NewsApi from "@/api/platform/generatorApis/News";
 
 @Component<DayAnalyseRealValue>({
   name: "DayAnalyseRealValue",
-  components:{AddressTree, AreaTree, MonitorTree}
+  components:{AddressTree, AreaTree, MonitorTree,AreaChart}
 })
 export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, string> {
   //#region 树控件相关
   private expandedKeys: string[] = [];
-  private autoExpandParent: boolean = true;
-  private selectedKeys: Array<string> = [];
-  private replaceFields: any = {
-    children: "children",
-    key: "id",
-    title: "areaName",
-  };
+
   private treeData: Array<any> = [];
 
-  //默认加载查询表单时间
+  //控制显示表单或者图表
+  private showTable: boolean = true;
+  private showEcharts: boolean = false;
+
+  private isTable(){
+    this.showEcharts = false;
+    this.showTable = true;
+  }
+  private isEcharts(){
+    this.showTable = false;
+    this.showEcharts = true;
+    this.initialDate();
+    this.getStatData();
+  }
+
+  //根据时间加载列表或图表数据
   private querySearchDate(time:string) {
     const today = new Date();
     if(time === 'day'){
@@ -99,7 +112,12 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
       this.searchModel.startTime = moment(today).format('YYYY-MM-DD');
       this.searchModel.endTime = moment(today).add(1, 'months').format('YYYY-MM-DD');
     }
-    this.queryList();
+    //加载表单或者图表数据
+    if(this.showTable === true){
+      this.queryList();
+    } else {
+      this.getStatData();
+    }
   }
 
   private queryAreaTree() {
@@ -111,16 +129,6 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
   //#endregion
   //#region 工具栏按钮属性
 
-  private toolbar_actions: Array<ToolbarActionItem> = [
-    {
-      title: "刷新",
-      props: { icon: "sync" },
-      click: () => {
-        this.queryAreaTree();
-        this.queryList();
-      },
-    },
-  ];
   //#endregion
   //#region 组件创建时执行
   created() {
@@ -193,7 +201,6 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
     let today = moment().format("YYYY-MM-DD");
     this.searchModel.countDate? selectDate = this.searchModel.countDate : selectDate = today;
     this.getPagination.current = 1;
-    //处理其它查询条件逻辑。。。。
     this.queryList();
   }
   //#endregion
@@ -214,10 +221,8 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
      * 查询条件
      */
     //本页查询条件添加
-    console.log('searchModel',this.searchModel);
-    console.log(this.searchModel.addressCodes);
     if(!this.searchModel.addressCodes || !this.searchModel.addressCodes.length){
-      this.alertInfo();
+      // this.alertInfo();
       this.loading = false;
       return false
     }
@@ -229,10 +234,8 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
       },
       this.searchModel
     );
-    console.log('queryModel',queryModel);
 
     MachApi.getDayContrast(queryModel).then((res:any) => {
-      console.log('MachApi', res);
       if(!res){
         this.loading = false;
         return false
@@ -249,6 +252,7 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
     });
     this.currentRow = null;
     this.loading = true;
+    this.isTable();
   }
 
   /*树点击事件*/
@@ -290,19 +294,119 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
     this.queryList();
   }
 
-  /**
-   * 表格选择行事件
-   * @param selectedRowKeys
-   */
-  private onTableSelectChange(selectedRowKeys: Array<any>) {
-    this.selectedRowKeys = selectedRowKeys;
-    this.columns = [{ field: "", title: "", width: "", align: "center" }];
-  }
-
   // 错误提示弹出框
   private alertInfo() {
     this.$message.info('请先选择左侧子节点!');
   };
+
+  /**
+   * 获取echarts数据
+   * */
+  private getStatData() {
+    const postModel = {
+      beginTime: this.searchModel.startTime,
+      endTime: this.searchModel.endTime,
+    };
+    NewsApi.getStat(postModel).then((res: any) => {
+      console.log(res)
+      this.initCharts(res.xData, res.yData);
+    });
+  }
+
+  /**
+   * 初始化echarts
+   * */
+  private initCharts(xArry: any, data: any) {
+    const options = {
+      tooltip: {
+        trigger: "axis",
+      },
+      grid: {
+        containLabel: true,
+        left: "20",
+        right: "20",
+        bottom: "30",
+        top: "30",
+      },
+      xAxis: {
+        type: "category",
+        boundaryGap: false,
+        data: xArry,
+        axisTick: {
+          show: false,
+        },
+        axisLine: {
+          show: false,
+        },
+        axisLabel: {
+          textStyle: {
+            color: "#999",
+          },
+          rotate: 40,
+        },
+      },
+      yAxis: {
+        type: "value",
+        axisTick: {
+          show: false,
+        },
+        axisLine: {
+          show: false,
+        },
+        axisLabel: {
+          textStyle: {
+            color: "#999",
+          },
+        },
+        splitLine: {
+          show: true,
+          lineStyle: {
+            color: ["#eee"],
+            width: 1,
+            type: "solid",
+          },
+        },
+      },
+      series: [
+        {
+          data,
+          type: "line",
+          smooth: true,
+          itemStyle: {
+            borderWidth: 2,
+            color: "rgb(65, 196, 134,1)",
+          },
+          symbol: "emptyCircle", // 设定为实心点
+          symbolSize: 6,
+
+          areaStyle: {
+            normal: {
+              color: {
+                type: "linear", // 设置线性渐变
+                x: 0,
+                y: 0,
+                x2: 0,
+                y2: 1,
+                colorStops: [
+                  {
+                    offset: 0,
+                    color: "rgb(65, 196, 134,1)", // 0% 处的颜色
+                  },
+                  {
+                    offset: 1,
+                    color: "rgb(65, 196, 134,0.1)", // 100% 处的颜色
+                  },
+                ],
+                globalCoord: false, // 缺省为 false
+              },
+            },
+          },
+        },
+      ],
+    };
+    (this.$refs.demoCharts as any).initChart(options);
+  }
+
   //#endregion
 }
 </script>
@@ -310,5 +414,10 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
 <style scoped>
 .vxetable {
   height: calc(100vh - 100px);
+}
+
+chart-container {
+  width: 100%;
+  height: 100%;
 }
 </style>
