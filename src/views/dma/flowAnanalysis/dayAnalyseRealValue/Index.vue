@@ -128,7 +128,7 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
     this.getPagination.pageSize = 10;
     this.searchFields = [
       {
-        name: "countDate",
+        name: "startTime",
         label: "开始时间",
         input: "a-date-picker",
         props: {
@@ -145,7 +145,7 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
         },
       },
       {
-        name: "countDate",
+        name: "endTime",
         label: "结束时间",
         input: "a-date-picker",
         props: {
@@ -176,7 +176,15 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
 
   mounted() {
     this.queryAreaTree();
+    this.initialDate();
   }
+  //初始时间加载
+  private initialDate(){
+    const today = new Date();
+    this.searchModel.startTime = moment(today).format('YYYY-MM-DD');
+    this.searchModel.endTime = moment(today).format('YYYY-MM-DD');
+  }
+
   //#endregion
   //#region 查询方法
 
@@ -206,9 +214,11 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
      * 查询条件
      */
     //本页查询条件添加
+    console.log('searchModel',this.searchModel);
     console.log(this.searchModel.addressCodes);
-    if(!this.searchModel.addressCodes.length && !this.searchModel.addressCodes){
+    if(!this.searchModel.addressCodes || !this.searchModel.addressCodes.length){
       this.alertInfo();
+      this.loading = false;
       return false
     }
 
@@ -233,6 +243,9 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
       this.loading = false;
       this.dataSource = res.data.items;
       this.getPagination.total = res.totalCount;
+    }).catch((err:any) => {
+      alert(err);
+      this.loading = false;
     });
     this.currentRow = null;
     this.loading = true;
