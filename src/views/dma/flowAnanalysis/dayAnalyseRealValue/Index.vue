@@ -176,7 +176,6 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
 
   mounted() {
     this.queryAreaTree();
-    this.querySearchDate('day');
   }
   //#endregion
   //#region 查询方法
@@ -207,7 +206,8 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
      * 查询条件
      */
     //本页查询条件添加
-    if(!this.searchModel.addressCodes.length){
+    console.log(this.searchModel.addressCodes);
+    if(!this.searchModel.addressCodes.length && !this.searchModel.addressCodes){
       this.alertInfo();
       return false
     }
