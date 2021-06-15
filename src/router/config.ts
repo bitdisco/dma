@@ -180,6 +180,30 @@ export const indexRoutes: RouteConfig[] = [
     ],
   },
   {
+    path: "/produceSaleAnalyze",
+    name: "produceSaleAnalyze",
+    component: Layout,
+    redirect: "/areaStatisticalInput",
+    meta: {
+      permissionCode: "",
+      allowAnonymous: false,
+      title: "产销差分析",
+    },
+    children: [
+      {
+        path: "areaStatisticalInput",
+        name: "areaStatisticalInput",
+        meta: {
+          keepAlive: true,
+          permissionCode: "DMA.AreaStatisticalInput",	
+          allowAnonymous: false,
+          title: "分区统计项录入"
+        },
+        component: () => import("@/views/dma/produceSaleAnalyze/areaStatisticalInput/Index.vue"),
+      },
+    ],
+  },
+  {
     path: "/waterSupply",
     name: "waterSupply",
     component: Layout,

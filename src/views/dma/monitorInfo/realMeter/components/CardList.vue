@@ -1,6 +1,6 @@
 <template>
   <div class="card-module">
-    <div class="example" v-if="!cardLoading && list.length == 0">暂无数据</div>
+    <div class="example" v-if="!cardLoading && list.length == 0"><a-empty /></div>
 
     <div class="example" v-else-if="cardLoading">
       <a-spin />
@@ -23,19 +23,30 @@
           <li>
             <p class="label">瞬时流量</p>
             <p class="value">
-              {{ item.realValue }}吨/小时 <a-icon type="bar-chart" class="icon" @click="getChart"/>
+              {{ item.realValue }}吨/小时
+              <a-icon
+                type="bar-chart"
+                class="icon"
+                @click="getChart(item, 'realValue')"
+              />
             </p>
           </li>
           <li>
             <p class="label">压力</p>
             <p class="value">
-              {{ item.pressValue }}MPa <a-icon type="bar-chart" class="icon" @click="getChart"/>
+              {{ item.pressValue }}MPa
+              <a-icon
+                type="bar-chart"
+                class="icon"
+                @click="getChart(item, 'pressValue')"
+              />
             </p>
           </li>
           <li>
             <p class="label">电池电压</p>
             <p class="value">
-              {{ item.celVal }}V <a-icon type="bar-chart" class="icon" @click="getChart"/>
+              {{ item.celVal }}V
+              <a-icon type="bar-chart" class="icon" @click="getChart(item, 'celVal')" />
             </p>
           </li>
           <li>
@@ -45,21 +56,37 @@
         </div>
       </li>
     </div>
+    <chart-modal
+      v-if="isChartModal"
+      v-model="isChartModal"
+      :chartModalData="chartModalData"
+    />
   </div>
 </template>
 <script lang="ts">
 import { Component, Vue, Watch, Prop } from "vue-property-decorator";
+import ChartModal from "./ChartModal.vue";
 
 @Component<CardList>({
   name: "CardList",
+  components: { ChartModal },
 })
 export default class CardList extends Vue {
   @Prop({ default: () => [] }) private list!: Array<any>;
   @Prop({ default: false }) private cardLoading!: boolean;
 
+  private isChartModal: boolean = false;
+  private chartModalData: any = {};
 
-  private getChart(){
-    
+  /**
+   * 图表点击
+   */
+  private getChart(item: any, type: string) {
+    this.isChartModal = true;
+    this.chartModalData = {
+      item: item,
+      valueType: type,
+    };
   }
 }
 </script>
