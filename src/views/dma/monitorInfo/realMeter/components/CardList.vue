@@ -65,7 +65,6 @@
 </template>
 <script lang="ts">
 import { Component, Vue, Watch, Prop } from "vue-property-decorator";
-import moment from "moment";
 import ChartModal from "./ChartModal.vue";
 
 @Component<CardList>({

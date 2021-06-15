@@ -20,10 +20,7 @@
         </template>
       </advanced-search-panel>
       <div class="compact-page-table">
-        <card-list
-          :list="dataSource"
-          :cardLoading="loading"
-        />
+        <card-list :list="dataSource" :cardLoading="loading" />
       </div>
       <div class="table-pagination">
         <a-pagination
@@ -32,7 +29,6 @@
           @change="onPageChanged"
         ></a-pagination>
       </div>
-
     </div>
   </tree-layout-page-wrapper>
 </template>
@@ -80,8 +76,9 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
     this.queryList();
   }
 
-  //#endregion
-  //#region 组件创建时执行
+  /**
+   * 组件创建时执行
+   */
   created() {
     this.getPagination.pageSize = 10;
     this.searchFields = [
@@ -127,7 +124,6 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
       },
       this.searchModel
     );
-    console.log(queryModel, "qqq");
 
     api.getQueryList(queryModel).then((res: any) => {
       console.log("数据", res);
@@ -176,7 +172,6 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
     this.pagination = this.getPagination;
     this.queryList();
   }
-
 }
 </script>
 
