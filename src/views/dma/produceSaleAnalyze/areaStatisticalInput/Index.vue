@@ -21,6 +21,7 @@
               @click="defaultHandleCreate()"
               v-auth="{ action: 'Create' }"
               icon="plus"
+              :disabled="!selecteTreeData"
               >新增</a-button
             >
             <a-button
@@ -55,6 +56,7 @@
           height="auto"
           :seq-config="{ startIndex: getSkipCount }"
           :custom-config="{ storage: true }"
+          size="small"
         >
           <vxe-table-column type="seq" width="50" align="center"></vxe-table-column>
           <vxe-table-column
@@ -71,6 +73,15 @@
           @change="onPageChanged"
         ></a-pagination>
       </div>
+      <!--添加修改模块-->
+      <form-view
+        v-if="popupModel.visible"
+        :action="popupModel.action"
+        v-model="popupModel.visible"
+        :id="popupModel.id"
+        :item="popupModel.data"
+        @success="queryList"
+      />
     </div>
   </tree-layout-page-wrapper>
 </template>
@@ -85,10 +96,11 @@ import AddressTree from "@/components/Tree/AddressTree.vue";
 import MonitorTree from "@/components/Tree/MonitorTree.vue";
 import AreaTree from "@/components/Tree/AreaTree.vue";
 import { ArmRealDataDto } from "@/api/dma/types";
+import FormView from "./Form.vue";
 
 @Component<RealDataList>({
   name: "RealDataList",
-  components: { AddressTree, AreaTree, MonitorTree },
+  components: { AddressTree, AreaTree, MonitorTree, FormView },
 })
 export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
   //#region 树控件相关
@@ -101,6 +113,7 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
     title: "areaName",
   };
   private treeData: any[] = [];
+  private selecteTreeData: any = null;
 
   private queryAreaTree() {
     AreaApi.getAreaTree({}).then((res) => {
@@ -119,9 +132,10 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
     this.searchModel.AreaId = selectedKeys[0];
     this.queryList();
   }
-  //#endregion
-  //#region 工具栏按钮属性
 
+  /**
+   * 工具栏按钮属性
+   */
   private toolbar_actions: Array<ToolbarActionItem> = [
     {
       title: "刷新",
@@ -132,130 +146,140 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
       },
     },
   ];
-  //#endregion
-  //#region 组件创建时执行
+
+  /**
+   * 组件创建时执行
+   */
   created() {
     this.columns = [
       {
-        title: "挂接表号",
+        title: "分区名称",
+        field: "meterName",
+        width: 150,
+      },
+      {
+        title: "分区编号",
         field: "addressCode",
         width: 120,
       },
+
       {
-        title: "监测点名称",
-        field: "meterName",
-        width: 200,
-      },
-      {
-        title: "监测点编码",
+        title: "统计日期",
         field: "meterCode",
         width: 100,
       },
       {
-        title: "瞬时流量",
+        title: "计量售水量",
         field: "realValue",
+        width: 100,
+      },
+      {
+        title: "未计量售水量",
+        field: "forValue",
+        width: 120,
+      },
+      {
+        title: "计量免费售水量",
+        field: "revValue",
+        width: 120,
+      },
+      {
+        title: "未计量免费售水量",
+        field: "pressValue",
+        width: 125,
+      },
+      {
+        title: "失窃水量",
+        field: "celVal",
         width: 80,
       },
       {
-        title: "正向累计",
-        field: "forValue",
+        title: "计量误差水量",
+        field: "pressValue",
         width: 100,
       },
       {
-        title: "反向累计",
-        field: "revValue",
-        width: 100,
-      },
-      {
-        title: "管道压力",
+        title: "渗水量",
         field: "pressValue",
         width: 80,
       },
       {
-        title: "电池电压",
-        field: "celVal",
-        width: 80,
+        title: "其他耗损水量",
+        field: "pressValue",
+        width: 100,
       },
-      // {
-      //   title: "管道压力",
-      //   field: "pressValue",
-      //   width: 80,
-      // },
       {
-        title: "创建时间",
+        title: "创建日期",
         field: "createTime",
         width: 145,
+      },
+      {
+        title: "创建用户",
+        field: "createTim",
+        width: 85,
+      },
+      {
+        title: "备注",
+        field: "createTi",
+        width: 85,
       },
     ];
     this.getPagination.pageSize = 10;
     this.searchFields = [
-      {
-        name: "Keyword",
-        label: "关键字",
-        input: "a-input",
-        props: {
-          placeholder: "输入监测点名称、监测点编码、挂接表号关键词进行模糊搜索",
-        },
-      },
+      // {
+      //   name: "Keyword",
+      //   label: "关键字",
+      //   input: "a-input",
+      //   props: {
+      //     placeholder: "输入监测点名称、监测点编码、挂接表号关键词进行模糊搜索",
+      //   },
+      // },
       {
         name: "meterName",
-        label: "监测点名称",
+        label: "分区名称",
         input: "a-input",
         props: {
-          placeholder: "请输入监测点名称",
+          placeholder: "请输入分区名称",
         },
       },
       {
         name: "meterCode",
-        label: "监测点编码",
+        label: "分区编码",
         input: "a-input",
         props: {
-          placeholder: "请输入监测点编码",
+          placeholder: "请输入分区编码",
         },
       },
       {
-        name: "addressCode",
-        label: "挂接表号",
-        input: "a-input",
-        props: {
-          placeholder: "请输入挂接表号",
-        },
-      },
-      {
-        name: "addressCode",
-        label: "挂接表号",
-        input: "a-input",
-        props: {
-          placeholder: "请输入挂接表号",
-        },
+        name: "mon",
+        label: "统计月份",
+        input: "a-month-picker",
+        props: { format: "YYYY-MM", valueFormat: "YYYYMM" },
       },
     ];
   }
-  //#endregion
-  //#region 组件挂载成功后执行
 
+  /**
+   * 组件挂载成功后执行
+   */
   mounted() {
     this.queryAreaTree();
     this.queryList();
   }
-  //#endregion
-  //#region 查询方法
 
+  /**
+   * 查询方法
+   */
   private onSearch() {
     this.getPagination.current = 1;
     //处理其它查询条件逻辑。。。。
     this.queryList();
   }
-  //#endregion
-  //#region 表格控件相关
+
   /**
    * 分页查询列表
    */
   private queryList() {
-    let page = this.getPagination;
-    /**
-     * 查询条件
-     */
     let queryModel = Object.assign(
       {
         MaxResultCount: this.getMaxResultCount,
@@ -265,7 +289,6 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
     );
 
     api.getQueryList(queryModel).then((res) => {
-      console.log("数据", res);
       this.loading = false;
       this.dataSource = res.items;
       this.getPagination.total = res.totalCount;
@@ -276,6 +299,7 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
 
   /*树点击事件*/
   private getTreeNode(val: any) {
+    this.selecteTreeData = val;
     let area: any = val.area;
     if (area) {
       this.searchModel.AreaName = area.areaName;
