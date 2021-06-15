@@ -21,7 +21,7 @@
           </a-button-group>
           <a-button-group>
             <a-button @click="queryList" icon="sync">刷新</a-button>
-            <a-button @click="createTab" icon="ordered-list">生成报表</a-button>
+            <a-button @click="queryList" icon="ordered-list">生成报表</a-button>
             <a-button @click="isEcharts" icon="bar-chart">生成图表</a-button>
           </a-button-group>
         </template>
@@ -46,7 +46,7 @@
         </vxe-table>
       </div>
       <div class="chart-container" v-if="showEcharts">
-        <area-chart ref="demoCharts" height="100%" width="100%"/>
+        <line-chart ref="demoCharts" height="100%" width="100%" id="lineChart"/>
       </div>
       <div class="table-pagination" v-if="showTable">
         <a-pagination
@@ -69,14 +69,20 @@ import MonitorTree from "@/components/Tree/MonitorTree.vue"
 import AreaTree from "@/components/Tree/AreaTree.vue"
 import { ArmRealDataDto } from "@/api/dma/types";
 import moment from "moment";
-import AreaChart from "@/components/Charts/AreaChart.vue";
+import LineChart from "@/components/Charts/LineChart.vue";
 import NewsApi from "@/api/platform/generatorApis/News";
 
 @Component<DayAnalyseRealValue>({
   name: "DayAnalyseRealValue",
-  components:{AddressTree, AreaTree, MonitorTree,AreaChart}
+  components:{AddressTree, AreaTree, MonitorTree,LineChart}
 })
 export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, string> {
+  //图表数据
+  private chartsData: Array<any> = [];
+
+  //图表表头数据
+  private chartsTitle: Array<any> = [];
+
   //#region 树控件相关
   private expandedKeys: string[] = [];
 
@@ -93,7 +99,6 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
   private isEcharts(){
     this.showTable = false;
     this.showEcharts = true;
-    this.initialDate();
     this.getStatData();
   }
 
@@ -222,7 +227,6 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
      */
     //本页查询条件添加
     if(!this.searchModel.addressCodes || !this.searchModel.addressCodes.length){
-      // this.alertInfo();
       this.loading = false;
       return false
     }
@@ -303,14 +307,32 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
    * 获取echarts数据
    * */
   private getStatData() {
-    const postModel = {
-      beginTime: this.searchModel.startTime,
-      endTime: this.searchModel.endTime,
-    };
-    NewsApi.getStat(postModel).then((res: any) => {
-      console.log(res)
-      this.initCharts(res.xData, res.yData);
-    });
+    if(this.dataSource){
+      let chartsDatas:Array<any> = this.dataSource;
+      let xArry:Array<any> = [];
+      let data:Array<any> = [];
+      chartsDatas.map( (items:any) => {
+        Object.keys(items).forEach(key => {
+          key === 'avg' && delete items.avg;
+          key === 'createDate' && this.chartsTitle.push(items.createDate);
+          key === 'createDate' && delete items.createDate;
+          key === 'max' && delete items.max;
+          key === 'maxDT' && delete items.maxDT;
+          key === 'min' && delete items.min;
+          key === 'minDT' && delete items.minDT;
+          key === 'sum' && delete items.sum;
+          key === '_XID' && delete items._XID;
+          xArry.push(key);
+          data.push(items[key]);
+        })
+      });
+      console.log(chartsDatas);
+      console.log(this.chartsTitle);
+      console.log(xArry);
+      console.log(data);
+      this.chartsData = chartsDatas;
+      this.initCharts(xArry, data);
+    }
   }
 
   /**
@@ -318,91 +340,41 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
    * */
   private initCharts(xArry: any, data: any) {
     const options = {
+      title: {
+        text: '瞬时流量日环比'
+      },
       tooltip: {
-        trigger: "axis",
+        trigger: 'axis'
+      },
+      legend: {
+        data: this.chartsTitle
       },
       grid: {
-        containLabel: true,
-        left: "20",
-        right: "20",
-        bottom: "30",
-        top: "30",
+        left: '3%',
+        right: '4%',
+        bottom: '3%',
+        containLabel: true
+      },
+      toolbox: {
+        feature: {
+          saveAsImage: {}
+        }
       },
       xAxis: {
-        type: "category",
+        type: 'category',
         boundaryGap: false,
-        data: xArry,
-        axisTick: {
-          show: false,
-        },
-        axisLine: {
-          show: false,
-        },
-        axisLabel: {
-          textStyle: {
-            color: "#999",
-          },
-          rotate: 40,
-        },
+        data: xArry
       },
       yAxis: {
-        type: "value",
-        axisTick: {
-          show: false,
-        },
-        axisLine: {
-          show: false,
-        },
-        axisLabel: {
-          textStyle: {
-            color: "#999",
-          },
-        },
-        splitLine: {
-          show: true,
-          lineStyle: {
-            color: ["#eee"],
-            width: 1,
-            type: "solid",
-          },
-        },
+        type: 'value'
       },
       series: [
         {
-          data,
-          type: "line",
-          smooth: true,
-          itemStyle: {
-            borderWidth: 2,
-            color: "rgb(65, 196, 134,1)",
-          },
-          symbol: "emptyCircle", // 设定为实心点
-          symbolSize: 6,
-
-          areaStyle: {
-            normal: {
-              color: {
-                type: "linear", // 设置线性渐变
-                x: 0,
-                y: 0,
-                x2: 0,
-                y2: 1,
-                colorStops: [
-                  {
-                    offset: 0,
-                    color: "rgb(65, 196, 134,1)", // 0% 处的颜色
-                  },
-                  {
-                    offset: 1,
-                    color: "rgb(65, 196, 134,0.1)", // 100% 处的颜色
-                  },
-                ],
-                globalCoord: false, // 缺省为 false
-              },
-            },
-          },
-        },
-      ],
+          // name: this.chartsTitle,
+          type: 'line',
+          data
+        }
+      ]
     };
     (this.$refs.demoCharts as any).initChart(options);
   }
@@ -416,7 +388,7 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
   height: calc(100vh - 100px);
 }
 
-chart-container {
+.chart-container {
   width: 100%;
   height: 100%;
 }
