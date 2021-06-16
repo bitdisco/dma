@@ -95,6 +95,17 @@ export const indexRoutes: RouteConfig[] = [
           title: "漏损排行榜",
         },
         component: () => import("@/views/dma/leakAnanalysis/sortAnalyze/Index.vue"),
+      },
+      {
+        path: "nightFlow",
+        name: "nightFlow",
+        meta: {
+          keepAlive: true,
+          permissionCode: "DMA.NightFlow",
+          allowAnonymous: false,
+          title: "夜间流量分析",
+        },
+        component: () => import("@/views/dma/leakAnanalysis/nightFlow/Index.vue"),
       }
     ]
   },
