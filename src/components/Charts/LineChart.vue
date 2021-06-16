@@ -40,7 +40,7 @@ export default class extends mixins(ResizeMixin) {
     this.chart = echarts.init(
       document.getElementById(this.id) as HTMLDivElement,
     );
-    this.chart.setOption(opitons);
+    this.chart.setOption(opitons,true);
   }
 }
 </script>
