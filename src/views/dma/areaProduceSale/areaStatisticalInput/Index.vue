@@ -1,7 +1,6 @@
 <template>
   <tree-layout-page-wrapper hide-title-bar :treeWidth="260">
     <template slot="tree">
-      <!-- <address-tree :checkable="true" @getTreeNode="getTreeNode"/> -->
       <monitor-tree @getTreeNode="getTreeNode" />
     </template>
     <div class="compact-page-wrapper">
@@ -73,36 +72,33 @@
           @change="onPageChanged"
         ></a-pagination>
       </div>
-      <!--添加修改模块-->
-      <form-view
-        v-if="popupModel.visible"
-        :action="popupModel.action"
-        v-model="popupModel.visible"
-        :id="popupModel.id"
-        :item="popupModel.data"
-        @success="queryList"
-      />
     </div>
+    <!--添加修改模块-->
+    <form-view
+      v-if="popupModel.visible"
+      :action="popupModel.action"
+      v-model="popupModel.visible"
+      :id="popupModel.id"
+      :item="popupModel.data"
+      @success="queryList"
+    />
   </tree-layout-page-wrapper>
 </template>
 
 <script lang="ts">
 import { Component, Vue, Watch, Prop } from "vue-property-decorator";
 import { SortedInfo, ToolbarActionItem, ListPageVxe } from "@cr/types";
-import { PaginationConfig } from "ant-design-vue/types/list/list";
 import api from "@/api/dma/generatorApis/armRealData";
 import AreaApi from "@/api/dma/generatorApis/area";
-import AddressTree from "@/components/Tree/AddressTree.vue";
 import MonitorTree from "@/components/Tree/MonitorTree.vue";
 import AreaTree from "@/components/Tree/AreaTree.vue";
-import { ArmRealDataDto } from "@/api/dma/types";
 import FormView from "./Form.vue";
 
-@Component<RealDataList>({
-  name: "RealDataList",
-  components: { AddressTree, AreaTree, MonitorTree, FormView },
+@Component<AreaStatisticalList>({
+  name: "AreaStatisticalList",
+  components: { AreaTree, MonitorTree, FormView },
 })
-export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
+export default class AreaStatisticalList extends ListPageVxe<any, string> {
   //#region 树控件相关
   private expandedKeys: string[] = [];
   private autoExpandParent: boolean = true;
@@ -121,13 +117,13 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
       this.expandedKeys.push(res[0].id);
     });
   }
+
   private onExpand(expandedKeys: any) {
-    //console.log("onExpand " + expandedKeys, expandedKeys);
     this.expandedKeys = expandedKeys;
     this.autoExpandParent = false;
   }
+
   private onSelect(selectedKeys: any, info: any) {
-    //console.log("onSelect " + selectedKeys, info);
     this.selectedKeys = selectedKeys;
     this.searchModel.AreaId = selectedKeys[0];
     this.queryList();
@@ -154,73 +150,73 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
     this.columns = [
       {
         title: "分区名称",
-        field: "meterName",
+        field: "areaName",
         width: 150,
       },
       {
         title: "分区编号",
-        field: "addressCode",
+        field: "areaCode",
         width: 120,
       },
 
       {
         title: "统计日期",
-        field: "meterCode",
+        field: "statisticalDate",
         width: 100,
       },
       {
         title: "计量售水量",
-        field: "realValue",
+        field: "waterSale",
         width: 100,
       },
       {
         title: "未计量售水量",
-        field: "forValue",
+        field: "waterUnsold",
         width: 120,
       },
       {
         title: "计量免费售水量",
-        field: "revValue",
+        field: "waterFree",
         width: 120,
       },
       {
         title: "未计量免费售水量",
-        field: "pressValue",
+        field: "waterUnsoldFree",
         width: 125,
       },
       {
         title: "失窃水量",
-        field: "celVal",
+        field: "waterStolen",
         width: 80,
       },
       {
         title: "计量误差水量",
-        field: "pressValue",
+        field: "waterError",
         width: 100,
       },
       {
         title: "渗水量",
-        field: "pressValue",
+        field: "waterSeepage",
         width: 80,
       },
       {
         title: "其他耗损水量",
-        field: "pressValue",
+        field: "waterOtherLoss",
         width: 100,
       },
       {
         title: "创建日期",
-        field: "createTime",
+        field: "creationTime",
         width: 145,
       },
       {
         title: "创建用户",
-        field: "createTim",
+        field: "creatorId",
         width: 85,
       },
       {
         title: "备注",
-        field: "createTi",
+        field: "description",
         width: 85,
       },
     ];
@@ -338,7 +334,7 @@ export default class RealDataList extends ListPageVxe<ArmRealDataDto, string> {
   /**
    * 删除选择项
    */
-  private onDeleteItem(row: ArmRealDataDto) {
+  private onDeleteItem(row: any) {
     api.delete(row.id).then((res) => {
       this.$message.success({ content: "删除成功~" });
       this.queryList();

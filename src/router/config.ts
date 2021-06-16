@@ -180,16 +180,27 @@ export const indexRoutes: RouteConfig[] = [
     ],
   },
   {
-    path: "/produceSaleAnalyze",
-    name: "produceSaleAnalyze",
+    path: "/areaProduceSale",
+    name: "areaProduceSale",
     component: Layout,
     redirect: "/areaStatisticalInput",
     meta: {
-      permissionCode: "",
+      permissionCode: "DMA.ProduceSale",
       allowAnonymous: false,
-      title: "产销差分析",
+      title: "分区产销差",
     },
     children: [
+      {
+        path: "produceSaleAnalyze",
+        name: "produceSaleAnalyze",
+        meta: {
+          keepAlive: true,
+          permissionCode: "DMA.AreaProduceSale",	
+          allowAnonymous: false,
+          title: "产销差分析"
+        },
+        component: () => import("@/views/dma/areaProduceSale/produceSaleAnalyze/Index.vue"),
+      },
       {
         path: "areaStatisticalInput",
         name: "areaStatisticalInput",
@@ -199,7 +210,7 @@ export const indexRoutes: RouteConfig[] = [
           allowAnonymous: false,
           title: "分区统计项录入"
         },
-        component: () => import("@/views/dma/produceSaleAnalyze/areaStatisticalInput/Index.vue"),
+        component: () => import("@/views/dma/areaProduceSale/areaStatisticalInput/Index.vue"),
       },
     ],
   },

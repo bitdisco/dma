@@ -48,6 +48,7 @@
           highlight-hover-row
           @cell-click="onTableCellClick"
           border
+          :empty-render="{ name: 'NotData' }"
           height="auto"
           :seq-config="{ startIndex: getSkipCount }"
           :custom-config="{ storage: true }"

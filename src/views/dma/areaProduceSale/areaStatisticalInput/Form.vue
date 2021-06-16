@@ -14,19 +14,14 @@
           <a-form-model-item
             v-bind="formLayoutText"
             has-feedback
-            label="父级分区"
-            prop="parentId"
+            label="统计日期"
+            prop="statisticalDate"
           >
-            <a-tree-select
-              v-model="model.parentId"
+            <a-month-picker
+              placeholder="请选择月份"
+              v-model="model.statisticalDate"
               style="width: 100%"
-              :dropdown-style="{ maxHeight: '400px', overflow: 'auto' }"
-              :tree-data="treeData"
-              placeholder="Please select"
-              :replaceFields="replaceFields"
-              @select="onSelect"
-            >
-            </a-tree-select>
+            />
           </a-form-model-item>
           <a-form-model-item
             v-bind="formLayoutText"
@@ -46,20 +41,42 @@
               <a-form-model-item
                 v-bind="formLayoutInput"
                 has-feedback
-                label="分区级别"
-                prop="areaGrade"
+                label="计量售水量"
+                prop="waterSale"
               >
-                <a-input v-model="model.areaGrade"></a-input>
+                <a-input-number class="input-number" v-model="model.waterSale"></a-input-number>
               </a-form-model-item>
             </a-col>
             <a-col :span="12">
               <a-form-model-item
                 v-bind="formLayoutInput"
                 has-feedback
-                label="分区级别"
-                prop="areaGrade"
+                label="未计量售水量"
+                prop="waterUnsold"
               >
-                <a-input v-model="model.areaGrade"></a-input>
+                <a-input-number  class="input-number" v-model="model.waterUnsold"></a-input-number>
+              </a-form-model-item>
+            </a-col>
+          </a-row>
+          <a-row>
+            <a-col :span="12">
+              <a-form-model-item
+                v-bind="formLayoutInput"
+                has-feedback
+                label="计量免费售水量"
+                prop="waterFree"
+              >
+                <a-input-number class="input-number" v-model="model.waterFree"></a-input-number>
+              </a-form-model-item>
+            </a-col>
+            <a-col :span="12">
+              <a-form-model-item
+                v-bind="formLayoutInput"
+                has-feedback
+                label="未计量免费售水量	"
+                prop="waterUnsoldFree"
+              >
+                <a-input-number  class="input-number" v-model="model.waterUnsoldFree"></a-input-number>
               </a-form-model-item>
             </a-col>
           </a-row>
@@ -73,20 +90,42 @@
               <a-form-model-item
                 v-bind="formLayoutInput"
                 has-feedback
-                label="分区级别"
-                prop="areaGrade"
+                label="失窃水量"
+                prop="waterStolen"
               >
-                <a-input v-model="model.areaGrade"></a-input>
+                <a-input-number  class="input-number" v-model="model.waterStolen"></a-input-number>
               </a-form-model-item>
             </a-col>
             <a-col :span="12">
               <a-form-model-item
                 v-bind="formLayoutInput"
                 has-feedback
-                label="分区级别"
-                prop="areaGrade"
+                label="计量误差水量"
+                prop="waterError"
               >
-                <a-input v-model="model.areaGrade"></a-input>
+                <a-input v-model="model.waterError"></a-input>
+              </a-form-model-item>
+            </a-col>
+          </a-row>
+          <a-row>
+            <a-col :span="12">
+              <a-form-model-item
+                v-bind="formLayoutInput"
+                has-feedback
+                label="渗水量"
+                prop="waterSeepage"
+              >
+                <a-input-number  class="input-number" v-model="model.waterSeepage"></a-input-number>
+              </a-form-model-item>
+            </a-col>
+            <a-col :span="12">
+              <a-form-model-item
+                v-bind="formLayoutInput"
+                has-feedback
+                label="其它漏损水量"
+                prop="waterOtherLoss"
+              >
+                <a-input-number  class="input-number" v-model="model.waterOtherLoss"></a-input-number>
               </a-form-model-item>
             </a-col>
           </a-row>
@@ -97,14 +136,13 @@
 </template>
 <script lang="ts">
 import { Component, Watch, Prop } from "vue-property-decorator";
-import { FormPageVue, ISelectOptionItem, ITreeOptionItem, ITreeOptions } from "@cr/types";
+import { FormPageVue } from "@cr/types";
 import api from "@/api/dma/generatorApis/area";
-
+import { CreateOrUpdateAreaItemDto } from "@/api/dma/types";
 import { FormModel, List } from "ant-design-vue";
-import { FormLayoutInfo } from "@cr/types/app/form";
 
-@Component<AreaFormPage>({ name: "AreaFormPage" })
-export default class AreaFormPage extends FormPageVue<any, string> {
+@Component<FormView>({ name: "FormView" })
+export default class FormView extends FormPageVue<CreateOrUpdateAreaItemDto, string> {
   @Prop({ default: () => [] }) public treeData!: Array<any>;
 
   private enabledMark: boolean = false;
@@ -116,12 +154,12 @@ export default class AreaFormPage extends FormPageVue<any, string> {
     title: "areaName",
   };
 
-  protected formLayoutInput: FormLayoutInfo = {
+  protected formLayoutInput: any = {
     labelAlign: "right",
-    labelCol: { span: 5 },
-    wrapperCol: { span: 19 },
+    labelCol: { span: 9 },
+    wrapperCol: { span: 15 },
   };
-  protected formLayoutText: FormLayoutInfo = {
+  protected formLayoutText: any = {
     labelAlign: "right",
     labelCol: { span: 3 },
     wrapperCol: { span: 21 },
@@ -248,30 +286,8 @@ export default class AreaFormPage extends FormPageVue<any, string> {
       this.model = res;
       this.noWater = res.noWater ? true : false;
       this.enabledMark = res.enabledMark ? true : false;
-      this.getModel.areaGrade = res.areaGrade + "级分区";
     });
     this.loading = true;
-  }
-
-  /**
-   *分区选择事件
-   */
-  onSelect(selectedKeys: any, { dataRef }: any) {
-    this.getModel.areaGrade = dataRef.areaGrade + 1 + "级分区";
-  }
-
-  /**
-   *通水滑块事件
-   */
-  noWaterChange(e: any) {
-    this.getModel.noWater = e ? 1 : 0;
-  }
-
-  /**
-   * 有效标志滑块事件
-   */
-  enabledMarkChange(e: any) {
-    this.getModel.enabledMark = e ? 1 : 0;
   }
 
   /**
@@ -279,8 +295,6 @@ export default class AreaFormPage extends FormPageVue<any, string> {
    */
   private onSubmit() {
     let form = this.$refs.form as FormModel;
-
-    this.getModel.areaGrade = this.getModel.areaGrade.slice(0, 1);
     form.validate((isValid: boolean, model: any) => {
       if (isValid) {
         if (this.isEdit) {
@@ -313,11 +327,9 @@ export default class AreaFormPage extends FormPageVue<any, string> {
    * 修改
    */
   private submitUpdate() {
-    this.getModel.noWater = this.getModel.noWater ? 1 : 0;
-    this.getModel.enabledMark = this.getModel.enabledMark ? 1 : 0;
     this.submitLoading = true;
     api
-      .update(this.getModel.id, this.getModel)
+      .update(this.getModel.areaId, this.getModel)
       .then((res) => {
         this.submitLoading = false;
         this.$emit("input", false);
@@ -341,6 +353,9 @@ export default class AreaFormPage extends FormPageVue<any, string> {
   }
   &-item {
     margin: 5px 20px;
+   .input-number{
+      width: 100%;
+    }
   }
 }
 </style>
