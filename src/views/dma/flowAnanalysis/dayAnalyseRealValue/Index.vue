@@ -310,8 +310,10 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
     if(this.dataSource){
       let chartsDatas:Array<any> = this.dataSource;
       let xArry:Array<any> = [];
+      let yArry:Array<any> = [];
       let data:Array<any> = [];
       chartsDatas.map( (items:any) => {
+        data = [];
         Object.keys(items).forEach(key => {
           key === 'avg' && delete items.avg;
           key === 'createDate' && this.chartsTitle.push(items.createDate);
@@ -325,20 +327,25 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
           xArry.push(key);
           data.push(items[key]);
         })
+        yArry.push({
+          name: items.createDate,
+          type: 'line',
+          data
+        });
       });
       console.log(chartsDatas);
       console.log(this.chartsTitle);
       console.log(xArry);
       console.log(data);
       this.chartsData = chartsDatas;
-      this.initCharts(xArry, data);
+      this.initCharts(xArry, yArry);
     }
   }
 
   /**
    * 初始化echarts
    * */
-  private initCharts(xArry: any, data: any) {
+  private initCharts(xArry: any, yArry: any) {
     const options = {
       title: {
         text: '瞬时流量日环比'
@@ -368,13 +375,7 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
       yAxis: {
         type: 'value'
       },
-      series: [
-        {
-          // name: this.chartsTitle,
-          type: 'line',
-          data
-        }
-      ]
+      series: yArry
     };
     (this.$refs.demoCharts as any).initChart(options);
   }
