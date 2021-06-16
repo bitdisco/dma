@@ -311,10 +311,15 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
       return false
     }
     let chartsDatas:Array<any> = this.dataSource;
+    //横坐标参数
     let xArry:Array<any> = [];
+    //纵坐标参数
     let yArry:Array<any> = [];
+    //纵坐标data数据
     let data:Array<any> = [];
+    //可以选标题内容
     let name:string = '';
+    //处理表单显示数据
     chartsDatas.map( (items:any) => {
       data = [];
       name = items.createDate;
