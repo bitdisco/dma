@@ -307,45 +307,47 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
    * 获取echarts数据
    * */
   private getStatData() {
-    if(this.dataSource){
-      let chartsDatas:Array<any> = this.dataSource;
-      let xArry:Array<any> = [];
-      let yArry:Array<any> = [];
-      let data:Array<any> = [];
-      chartsDatas.map( (items:any) => {
-        data = [];
-        Object.keys(items).forEach(key => {
-          key === 'avg' && delete items.avg;
-          key === 'createDate' && this.chartsTitle.push(items.createDate);
-          key === 'createDate' && delete items.createDate;
-          key === 'max' && delete items.max;
-          key === 'maxDT' && delete items.maxDT;
-          key === 'min' && delete items.min;
-          key === 'minDT' && delete items.minDT;
-          key === 'sum' && delete items.sum;
-          key === '_XID' && delete items._XID;
-          xArry.push(key);
-          data.push(items[key]);
-        })
-        yArry.push({
-          name: items.createDate,
-          type: 'line',
-          data
-        });
+    if(!this.dataSource){
+      return false
+    }
+    let chartsDatas:Array<any> = this.dataSource;
+    let xArry:Array<any> = [];
+    let yArry:Array<any> = [];
+    let data:Array<any> = [];
+    let name:string = '';
+    chartsDatas.map( (items:any) => {
+      data = [];
+      name = items.createDate;
+      Object.keys(items).forEach(key => {
+        key === 'avg' && delete items.avg;
+        key === 'createDate' && this.chartsTitle.push(items.createDate);
+        key === 'createDate' && delete items.createDate;
+        key === 'max' && delete items.max;
+        key === 'maxDT' && delete items.maxDT;
+        key === 'min' && delete items.min;
+        key === 'minDT' && delete items.minDT;
+        key === 'sum' && delete items.sum;
+        key === '_XID' && delete items._XID;
+        xArry.push(key);
+        data.push(items[key]);
+      })
+      yArry.push({
+        name: name,
+        type: 'line',
+        data
       });
-      console.log(chartsDatas);
-      console.log(this.chartsTitle);
-      console.log(xArry);
-      console.log(data);
-      this.chartsData = chartsDatas;
-      this.initCharts(xArry, yArry);
+    });
+    console.log(yArry);
+    // this.chartsData = chartsDatas;
+    if(xArry && yArry){
+      this.initECharts(xArry, yArry);
     }
   }
 
   /**
    * 初始化echarts
    * */
-  private initCharts(xArry: any, yArry: any) {
+  private initECharts(xArry: any, yArry: any) {
     const options = {
       title: {
         text: '瞬时流量日环比'
