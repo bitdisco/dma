@@ -27,7 +27,7 @@
         </template>
       </advanced-search-panel>
 
-      <div class="compact-page-table" v-if="showTable">
+      <div class="compact-page-table" v-show="showTable">
         <vxe-table
           id="vxeTable"
           :data="dataSource"
@@ -44,16 +44,16 @@
           <vxe-table-column type="seq" width="50" align="center"></vxe-table-column>
           <vxe-table-column v-bind="col" v-for="(col, index) in columns" :key="index"></vxe-table-column>
         </vxe-table>
+        <div class="table-pagination">
+          <a-pagination
+            v-bind="pagination"
+            @showSizeChange="onShowSizeChange"
+            @change="onPageChanged"
+          ></a-pagination>
+        </div>
       </div>
-      <div class="chart-container" v-if="showEcharts">
-        <line-chart ref="demoCharts" height="100%" width="100%" id="lineChart"/>
-      </div>
-      <div class="table-pagination" v-if="showTable">
-        <a-pagination
-          v-bind="pagination"
-          @showSizeChange="onShowSizeChange"
-          @change="onPageChanged"
-        ></a-pagination>
+      <div class="chart-container" v-show="showEcharts">
+        <line-chart ref="demoCharts" height="100%" width="100%" class="lineChart"/>
       </div>
     </div>
   </tree-layout-page-wrapper>
@@ -319,7 +319,7 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
     let data:Array<any> = [];
     //可以选标题内容
     let name:string = '';
-    //处理表单显示数据
+    //处理图表显示数据
     chartsDatas.map( (items:any) => {
       data = [];
       name = items.createDate;
@@ -397,6 +397,11 @@ export default class DayAnalyseRealValue extends ListPageVxe<ArmRealDataDto, str
 }
 
 .chart-container {
+  width: 100%;
+  height: 100%;
+}
+
+.lineChart {
   width: 100%;
   height: 100%;
 }
