@@ -24,6 +24,7 @@
             highlight-hover-row
             @cell-click="onTableCellClick"
             border
+            auto-resize
             height="330"
             :seq-config="{ startIndex: getSkipCount }"
             :custom-config="{ storage: true }"
