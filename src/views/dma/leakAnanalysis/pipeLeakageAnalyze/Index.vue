@@ -276,7 +276,7 @@ export default class AreaStatisticalList extends ListPageVxe<any, string> {
     const options = {
       backgroundColor: "rgba(41,52,65,1)",
       title: {
-        text: "日流量对比",
+        text: "分区参数对比",
         textStyle: {
           color: "#ffffff",
         },

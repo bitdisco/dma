@@ -33,6 +33,7 @@
           highlight-current-row
           highlight-hover-row
           @cell-click="onTableCellClick"
+          auto-resize
           border
           height="auto"
           :seq-config="{ startIndex: getSkipCount }"

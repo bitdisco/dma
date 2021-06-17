@@ -58,6 +58,7 @@
           highlight-hover-row
           border
           height="350"
+          auto-resize
           :seq-config="{ startIndex: getSkipCount }"
           :custom-config="{ storage: true }"
         >

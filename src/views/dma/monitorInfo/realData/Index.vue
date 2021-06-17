@@ -53,6 +53,7 @@
           @cell-click="onTableCellClick"
           border
           height="auto"
+          auto-resize
           :seq-config="{ startIndex: getSkipCount }"
           :custom-config="{ storage: true }"
         >
