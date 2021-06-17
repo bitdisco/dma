@@ -95,6 +95,17 @@ export const indexRoutes: RouteConfig[] = [
           title: "漏损排行榜",
         },
         component: () => import("@/views/dma/leakAnanalysis/sortAnalyze/Index.vue"),
+      },
+      {
+        path: "nightFlow",
+        name: "nightFlow",
+        meta: {
+          keepAlive: true,
+          permissionCode: "DMA.NightFlow",
+          allowAnonymous: false,
+          title: "夜间流量分析",
+        },
+        component: () => import("@/views/dma/leakAnanalysis/nightFlow/Index.vue"),
       }
     ]
   },
@@ -173,9 +184,20 @@ export const indexRoutes: RouteConfig[] = [
           keepAlive: true,
           permissionCode: "DMA.DayAnalyseRealValue",
           allowAnonymous: false,
-          title: "瞬时流量日环比（分区）"
+          title: "瞬时流量日分析（分区）"
         },
         component: () => import("@/views/dma/flowAnanalysis/dayAnalyseRealValue/Index.vue"),
+      },
+      {
+        path: "dayContrastRealValue",
+        name: "dayContrastRealValue",
+        meta: {
+          keepAlive: true,
+          permissionCode: "DMA.DayContrastRealValue",
+          allowAnonymous: false,
+          title: "瞬时流量日环比（分区）"
+        },
+        component: () => import("@/views/dma/flowAnanalysis/dayContrastRealValue/Index.vue"),
       },
     ],
   },
@@ -195,7 +217,7 @@ export const indexRoutes: RouteConfig[] = [
         name: "produceSaleAnalyze",
         meta: {
           keepAlive: true,
-          permissionCode: "DMA.AreaProduceSale",	
+          permissionCode: "DMA.AreaProduceSale",
           allowAnonymous: false,
           title: "产销差分析"
         },
@@ -206,7 +228,7 @@ export const indexRoutes: RouteConfig[] = [
         name: "areaStatisticalInput",
         meta: {
           keepAlive: true,
-          permissionCode: "DMA.AreaStatisticalInput",	
+          permissionCode: "DMA.AreaStatisticalInput",
           allowAnonymous: false,
           title: "分区统计项录入"
         },

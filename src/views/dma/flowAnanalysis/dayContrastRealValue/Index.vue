@@ -89,14 +89,14 @@ import { ArmRealDataDto } from "@/api/dma/types";
 import moment from "moment";
 import LineChart from "@/components/Charts/LineChart.vue";
 
-@Component<DayAnalyseRealValue>({
-  name: "DayAnalyseRealValue",
+@Component<DayContrastRealValue>({
+  name: "DayContrastRealValue",
   components: { AddressTree, AreaTree, MonitorTree, LineChart },
 })
-export default class DayAnalyseRealValue extends ListPageVxe<
+export default class DayContrastRealValue extends ListPageVxe<
   ArmRealDataDto,
   string
-> {
+  > {
   //图表数据
   private chartsData: Array<any> = [];
 
