@@ -106,6 +106,17 @@ export const indexRoutes: RouteConfig[] = [
           title: "夜间流量分析",
         },
         component: () => import("@/views/dma/leakAnanalysis/nightFlow/Index.vue"),
+      },
+      {
+        path: "pipeLeakageAnalyze",
+        name: "pipeLeakageAnalyze",
+        meta: {
+          keepAlive: true,
+          permissionCode: "DMA.PipeLeakageAnalyze",
+          allowAnonymous: false,
+          title: "管网漏损分析",
+        },
+        component: () => import("@/views/dma/leakAnanalysis/pipeLeakageAnalyze/Index.vue"),
       }
     ]
   },
