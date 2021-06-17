@@ -71,6 +71,7 @@
           v-bind="pagination"
           @showSizeChange="onShowSizeChange"
           @change="onPageChanged"
+          v-if="!selecteTreeData"
         ></a-pagination>
       </div>
     </div>
@@ -81,6 +82,7 @@
       v-model="popupModel.visible"
       :id="popupModel.id"
       :item="popupModel.data"
+      :treeData="selecteTreeData"
       @success="queryList"
     />
   </tree-layout-page-wrapper>
@@ -89,7 +91,7 @@
 <script lang="ts">
 import { Component, Vue, Watch, Prop } from "vue-property-decorator";
 import { SortedInfo, ToolbarActionItem, ListPageVxe } from "@cr/types";
-import api from "@/api/dma/generatorApis/armRealData";
+import api from "@/api/dma/generatorApis/areaItem";
 import AreaApi from "@/api/dma/generatorApis/area";
 import MonitorTree from "@/components/Tree/MonitorTree.vue";
 import AreaTree from "@/components/Tree/AreaTree.vue";
@@ -111,7 +113,6 @@ export default class AreaStatisticalList extends ListPageVxe<any, string> {
   };
   private treeData: any[] = [];
   private selecteTreeData: any = null;
-
   private queryAreaTree() {
     AreaApi.getAreaTree({}).then((res) => {
       this.treeData = res;
@@ -284,8 +285,7 @@ export default class AreaStatisticalList extends ListPageVxe<any, string> {
       },
       this.searchModel
     );
-
-    api.getQueryList(queryModel).then((res) => {
+    api.getPageList(queryModel).then((res) => {
       this.loading = false;
       this.dataSource = res.items;
       this.getPagination.total = res.totalCount;
@@ -297,13 +297,17 @@ export default class AreaStatisticalList extends ListPageVxe<any, string> {
   /*树点击事件*/
   private getTreeNode(val: any) {
     this.selecteTreeData = val;
+    console.log(this.selecteTreeData,"this.selecteTreeData")
     let area: any = val.area;
     if (area) {
       this.searchModel.AreaName = area.areaName;
       this.searchModel.AreaCode = area.areaCode;
       this.searchModel.AreaGrade = area.areaGrade;
     }
-    this.queryList();
+     api.get(val.id).then((res:any) => {
+      this.loading = false;
+      this.dataSource = res.items;
+    });
   }
 
   /**

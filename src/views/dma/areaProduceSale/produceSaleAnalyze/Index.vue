@@ -5,7 +5,7 @@
         :showInput="false"
         v-model="searchModel"
         :fields="searchFields"
-        :dropdownWidth="350"
+        :dropdownWidth="380"
         :layoutColumn="1"
         :inputStyle="{ placeholder: '请输入关键词', style: { width: '150px' } }"
         @search="onSearch"
@@ -13,60 +13,45 @@
         <template slot="actions">
           <a-button-group>
             <a-button @click="queryList" icon="sync">刷新</a-button>
-            <a-button
-              @click="defaultHandleCreate()"
-              v-auth="{ action: 'Create' }"
-              icon="plus"
-              >新增
-            </a-button>
-            <a-button
-              :disabled="!currentRow"
-              @click.stop="defaultHandleUpdate(currentRow)"
-              v-auth="{ action: 'Update' }"
-              >编辑
-            </a-button>
-            <a-popconfirm
-              title="确定要删除当前数据吗？"
-              @confirm.stop="onDeleteItem(currentRow)"
-            >
-              <a-button
-                type="danger"
-                v-auth="{ action: 'Delete' }"
-                :disabled="!currentRow"
-                >删除
-              </a-button>
-            </a-popconfirm>
           </a-button-group>
         </template>
       </advanced-search-panel>
-      <div class="compact-page-table">
-        <vxe-table
-          id="vxeTable"
-          :data="dataSource"
-          :loading="loading"
-          highlight-current-row
-          highlight-hover-row
-          @cell-click="onTableCellClick"
-          border
-          size="small"
-          auto-resize
-          height="auto"
-          :seq-config="{ startIndex: getSkipCount }"
-          :custom-config="{ storage: true }"
-          :tree-config="{ children: 'children', expandAll: true }"
-        >
-          <vxe-table-column
-            title="DMA分区名称"
-            field="areaName"
-            width="400"
-            tree-node
-          ></vxe-table-column>
-          <vxe-table-column
-            v-bind="col"
-            v-for="(col, index) in columns"
-            :key="index"
-          ></vxe-table-column>
-        </vxe-table>
+
+      <div class="compact-panel-table">
+        <div class="tree-table">
+          <vxe-table
+            id="vxeTable"
+            :data="dataSource"
+            :loading="loading"
+            highlight-current-row
+            highlight-hover-row
+            @cell-click="onTableCellClick"
+            border
+            size="small"
+            auto-resize
+            height="auto"
+            :seq-config="{ startIndex: getSkipCount }"
+            :custom-config="{ storage: true }"
+            :tree-config="{ children: 'children', expandAll: true }"
+          >
+            <vxe-table-column
+              title="DMA分区名称"
+              field="areaName"
+              width="300"
+              tree-node
+            ></vxe-table-column>
+            <vxe-table-column
+              v-bind="col"
+              v-for="(col, index) in columns"
+              :key="index"
+            ></vxe-table-column>
+          </vxe-table>
+        </div>
+
+        <div class="statistic-table">
+          <!-- <h1>4444</h1> -->
+          <WaterBalance />
+        </div>
       </div>
     </div>
   </page-header-wrapper>
@@ -77,10 +62,12 @@ import { Component, Vue } from "vue-property-decorator";
 import { ToolbarActionItem, ListPageVxe } from "@cr/types";
 import api from "@/api/dma/generatorApis/area";
 import { AreaDto } from "@/api/dma/types";
+import moment from "moment";
+import WaterBalance from "./components/WaterBalanceTable.vue";
 
 @Component<AreaList>({
   name: "AreaList",
-  components: {},
+  components: { WaterBalance },
 })
 export default class AreaList extends ListPageVxe<AreaDto, string> {
   /**
@@ -106,30 +93,46 @@ export default class AreaList extends ListPageVxe<AreaDto, string> {
       {
         title: "分区编码",
         field: "areaCode",
-        width: 150,
+        width: 100,
       },
       {
         title: "分区级别",
         field: "areaGrade",
-        width: 150,
+        width: 100,
       },
       {
         title: "建设年代",
         field: "constructionYear",
-        width: 150,
+        width: 100,
       },
       {
         title: "创建时间",
         field: "creationTime",
+        width: 150,
       },
     ];
     this.searchFields = [
       {
-        name: "Keyword",
-        label: "关键字",
-        input: "a-input",
+        name: "chargeTime",
+        label: "日期",
+        wholeLine: true,
+        input: "a-range-picker",
         props: {
-          placeholder: "请输入编号/名称",
+          style: {
+            width: "100%",
+          },
+          valueFormat: "YYYY-MM-DD",
+          format: "YYYY-MM-DD",
+          ranges: {
+            近7天: [moment().subtract(7, "days"), moment()],
+            近1个月: [moment().subtract(1, "months"), moment()],
+            近3个月: [moment().subtract(3, "months"), moment()],
+          },
+        },
+        events: {
+          change: (dates: any, dateStrings: any) => {
+            console.log();
+          },
         },
       },
     ];
@@ -220,8 +223,18 @@ export default class AreaList extends ListPageVxe<AreaDto, string> {
 }
 </script>
 
-<style scoped>
-.vxetable {
-  height: calc(100vh - 100px);
+<style lang="less" scoped>
+.compact-panel-table {
+  display: flex;
+  height: 100%;
+
+  .statistic-table {
+    flex: 1;
+    height: 100%;
+  }
+  .tree-table {
+    height: 100%;
+    width: 50%;
+  }
 }
 </style>
