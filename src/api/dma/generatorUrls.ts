@@ -1,6 +1,6 @@
 /**
  * 全局URL配置说明 - 本文件由前端工具生成器自动生成
- * 生成日期：2021-6-1 17:55:33
+ * 生成日期：2021-6-18 11:21:04
  * 接口生成地址：http://36.133.33.128:4003/swagger/v1/swagger.json
  */
 export default {
@@ -39,7 +39,9 @@ export default {
     getPageList:"/api/dMA/areaItem", //获取列表
     delete:"/api/dMA/areaItem/{id}", //删除
     get:"/api/dMA/areaItem/{id}", //获取某条记录
-    update:"/api/dMA/areaItem/{id}" //修改
+    update:"/api/dMA/areaItem/{id}", //修改
+    getInfoByAreaIdAsync:"/api/dMA/areaItem/GetInfoByAreaIdAsync", //获取某条记录
+    getQueryList:"/api/dMA/areaItem/getQueryList" //按条件查询列表
   },
   /**
    * 分区监测点关联项
