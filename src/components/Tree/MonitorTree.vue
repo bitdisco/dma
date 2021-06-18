@@ -1,6 +1,6 @@
 <!--
- * @Descripttion: 
- * @version: 
+ * @Descripttion:
+ * @version:
  * @Author: 李星
  * @Date: 2021-03-21 14:42:23
  * @LastEditors: 张小凡
@@ -25,12 +25,13 @@
       <div class="example" v-if="isLoadingBooks">
         <a-spin />
       </div>
-      <a-tree 
-          v-if="!isLoadingBooks"
-        :treeData="treeData" 
+      <a-tree
+        v-if="!isLoadingBooks"
+        :treeData="treeData"
         :checkable="checkable"
-        :replaceFields="replaceFields" 
-        @select="onSelect" 
+        :replaceFields="replaceFields"
+        @select="onSelect"
+        @check="onCheck"
         :expandedKeys="expandedKeys"
         :autoExpandParent="autoExpandParent"
         :load-data="onLoadData"
@@ -64,7 +65,7 @@ export default class Tree extends Vue {
    * 组件创建时执行
    */
   created() {
-    
+
   }
 
   /**
@@ -75,7 +76,7 @@ export default class Tree extends Vue {
     this.$nextTick(()=>{
       this.queryAreaTree();
     })
-    
+
     // this.getWriteBooks();
   }
 
@@ -131,9 +132,9 @@ export default class Tree extends Vue {
           keyList.push(node.id);
         }
       }
-      
+
       //如果拥有孩子继续遍历
-      
+
       if(node.children){
         if (node.children.length>0) {
           this.getkeyList(value,node.children,keyList);
@@ -235,7 +236,7 @@ export default class Tree extends Vue {
       } else if (typeof val === 'object') {
         // 属性值为对象，递归调用
         this.clearDeep(obj[key])
- 
+
         if (Object.keys(obj[key]).length === 0) {
           // 如某属性的值为不包含任何属性的独享，则将该属性删除
           delete obj[key]
@@ -268,10 +269,17 @@ export default class Tree extends Vue {
   /**
    * 树型节点点击事件
    */
-  private onSelect(selectedKeys: any, info: any) {
-    this.$emit('getTreeNode', info.node.dataRef)
+  private onSelect(info: any) {
+    this.$emit('getTreeNode' ,info.node.dataRef)
   }
-  
+
+  /**
+   * 树型节点复选框勾选事件
+   */
+  private onCheck(key:any, info:any){
+    this.$emit('checkTreeNode' ,info.checkedNodes)
+  }
+
   /**
    * 点击加载下级数据节点  (模拟异步)
    */

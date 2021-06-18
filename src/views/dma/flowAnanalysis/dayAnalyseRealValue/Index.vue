@@ -262,7 +262,7 @@ export default class DayAnalyseRealValue extends ListPageVxe<
       this.searchModel
     );
 
-    MachApi.getDayContrast(queryModel)
+    MachApi.getDayAnalyse(queryModel)
       .then((res: any) => {
         if (!res) {
           this.loading = false;

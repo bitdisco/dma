@@ -1,7 +1,7 @@
 <template>
   <tree-layout-page-wrapper :treeWidth="260">
     <template slot="tree">
-      <monitor-tree @getTreeNode="getTreeNode" />
+      <monitor-tree :checkable="true" @getTreeNode="getTreeNode" @checkTreeNode="checkTreeNode"/>
     </template>
     <div class="compact-page-wrapper">
       <advanced-search-panel
@@ -292,6 +292,18 @@ export default class DayContrastRealValue extends ListPageVxe<
       }
       this.searchModel.addressCodes = [];
       this.searchModel.addressCodes.push(val.addressCode);
+      this.queryList();
+    }
+  }
+
+  /*树勾选事件*/
+  private checkTreeNode(info:any){
+    console.log('树勾选', info);
+    if (info) {
+      this.searchModel.addressCodes = [];
+      info.map((items: any) => {
+        this.searchModel.addressCodes.push(items.data.props.addressCode);
+      });
       this.queryList();
     }
   }
