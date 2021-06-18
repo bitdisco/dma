@@ -48,8 +48,9 @@
           highlight-hover-row
           @cell-click="onTableCellClick"
           border
-          :empty-render="{ name: 'NotData' }"
           height="auto"
+          auto-resize
+          :empty-render="{ name: 'NotData' }"
           :seq-config="{ startIndex: getSkipCount }"
           :custom-config="{ storage: true }"
         >
@@ -160,6 +161,8 @@ export default class <%=model.className %> extends ListPageVxe<<%=model.dtoType%
       this.loading = false;
       this.dataSource = res.items;
       this.getPagination.total = res.totalCount;
+    }).catch(ex=>{
+      this.loading=false;
     });
     this.loading = true;
   }

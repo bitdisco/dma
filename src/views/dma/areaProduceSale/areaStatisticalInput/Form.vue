@@ -21,6 +21,8 @@
               placeholder="请选择月份"
               v-model="model.statisticalDate"
               style="width: 100%"
+              format="YYYY-MM"
+              valueFormat="YYYY-MM"
             />
           </a-form-model-item>
           <a-form-model-item
@@ -44,7 +46,10 @@
                 label="计量售水量"
                 prop="waterSale"
               >
-                <a-input-number class="input-number" v-model="model.waterSale"></a-input-number>
+                <a-input-number
+                  class="input-number"
+                  v-model="model.waterSale"
+                ></a-input-number>
               </a-form-model-item>
             </a-col>
             <a-col :span="12">
@@ -54,7 +59,10 @@
                 label="未计量售水量"
                 prop="waterUnsold"
               >
-                <a-input-number  class="input-number" v-model="model.waterUnsold"></a-input-number>
+                <a-input-number
+                  class="input-number"
+                  v-model="model.waterUnsold"
+                ></a-input-number>
               </a-form-model-item>
             </a-col>
           </a-row>
@@ -66,7 +74,10 @@
                 label="计量免费售水量"
                 prop="waterFree"
               >
-                <a-input-number class="input-number" v-model="model.waterFree"></a-input-number>
+                <a-input-number
+                  class="input-number"
+                  v-model="model.waterFree"
+                ></a-input-number>
               </a-form-model-item>
             </a-col>
             <a-col :span="12">
@@ -76,7 +87,10 @@
                 label="未计量免费售水量	"
                 prop="waterUnsoldFree"
               >
-                <a-input-number  class="input-number" v-model="model.waterUnsoldFree"></a-input-number>
+                <a-input-number
+                  class="input-number"
+                  v-model="model.waterUnsoldFree"
+                ></a-input-number>
               </a-form-model-item>
             </a-col>
           </a-row>
@@ -93,7 +107,10 @@
                 label="失窃水量"
                 prop="waterStolen"
               >
-                <a-input-number  class="input-number" v-model="model.waterStolen"></a-input-number>
+                <a-input-number
+                  class="input-number"
+                  v-model="model.waterStolen"
+                ></a-input-number>
               </a-form-model-item>
             </a-col>
             <a-col :span="12">
@@ -103,7 +120,10 @@
                 label="计量误差水量"
                 prop="waterError"
               >
-                <a-input v-model="model.waterError"></a-input>
+                <a-input-number
+                  class="input-number"
+                  v-model="model.waterError"
+                ></a-input-number>
               </a-form-model-item>
             </a-col>
           </a-row>
@@ -115,7 +135,10 @@
                 label="渗水量"
                 prop="waterSeepage"
               >
-                <a-input-number  class="input-number" v-model="model.waterSeepage"></a-input-number>
+                <a-input-number
+                  class="input-number"
+                  v-model="model.waterSeepage"
+                ></a-input-number>
               </a-form-model-item>
             </a-col>
             <a-col :span="12">
@@ -125,7 +148,10 @@
                 label="其它漏损水量"
                 prop="waterOtherLoss"
               >
-                <a-input-number  class="input-number" v-model="model.waterOtherLoss"></a-input-number>
+                <a-input-number
+                  class="input-number"
+                  v-model="model.waterOtherLoss"
+                ></a-input-number>
               </a-form-model-item>
             </a-col>
           </a-row>
@@ -137,13 +163,13 @@
 <script lang="ts">
 import { Component, Watch, Prop } from "vue-property-decorator";
 import { FormPageVue } from "@cr/types";
-import api from "@/api/dma/generatorApis/area";
+import api from "@/api/dma/generatorApis/areaItem";
 import { CreateOrUpdateAreaItemDto } from "@/api/dma/types";
 import { FormModel, List } from "ant-design-vue";
 
 @Component<FormView>({ name: "FormView" })
 export default class FormView extends FormPageVue<CreateOrUpdateAreaItemDto, string> {
-  @Prop({ default: () => [] }) public treeData!: Array<any>;
+  @Prop({ default: () => {} }) public treeData!: any;
 
   private enabledMark: boolean = false;
   private noWater: boolean = false;
@@ -175,73 +201,69 @@ export default class FormView extends FormPageVue<CreateOrUpdateAreaItemDto, str
 
   created() {
     this.model = {
-      enterpriseWaterDemand: 0,
-      averageNightPressure: 30,
-      residentNumber: 1500,
-      mainPipeLength: 2000,
-      subPipeLength: 2,
-      subPipeNumber: 1500,
-      icfFactor: 4,
-      enabledMark: false,
-      noWater: false,
+      enabledMark: 0,
+      sortCode: 0,
+      areaId: this.treeData?this.treeData.id:this.model.areaId,
+      areaCode: this.treeData?this.treeData.code:this.model.areaCode,
+      areaName: this.treeData?this.treeData.name:this.model.areaName,
     };
-    this.rules = {
-      // areaGrade: [{ required: true, type: "number", defaultField: 1 }],
-      areaName: [{ required: true, message: "请输入DMA分区名称~", trigger: "blur" }],
-      areaCode: [{ required: true, message: "请输入DMA分区编码~", trigger: "blur" }],
 
-      //大用户夜间用水量
-      enterpriseWaterDemand: [
-        { required: true, type: "number", message: "请输入用水量", trigger: "blur" },
+    this.rules = {
+      statisticalDate: [{ required: true, message: "请选择统计日期", trigger: "change" }],
+      description: [{ required: true, message: "请输入备注", trigger: "blur" }],
+      waterSale: [
+        { required: true, type: "number", message: "请输入计量售水量", trigger: "blur" },
       ],
-      //夜间平均压力
-      averageNightPressure: [
+      waterUnsold: [
         {
           required: true,
           type: "number",
-          message: "请输入夜间平均压力",
+          message: "请输入未计量售水量",
           trigger: "blur",
         },
       ],
-      //居民用户数量
-      residentNumber: [
+      waterFree: [
         {
           required: true,
           type: "number",
-          message: "请输入居民用户数量",
+          message: "请输入计量免费售水量",
           trigger: "blur",
         },
       ],
-      //主干管道长度
-      mainPipeLength: [
+      waterUnsoldFree: [
         {
           required: true,
           type: "number",
-          message: "请输入主干管道长度",
+          message: "请输入未计量免费售水量",
           trigger: "blur",
         },
       ],
-      //私有管道平均长度
-      subPipeLength: [
+      waterStolen: [
         {
           required: true,
           type: "number",
-          message: "请输入私有管道平均长度",
+          message: "请输入失窃水量",
           trigger: "blur",
         },
       ],
-      //私有管道数量
-      subPipeNumber: [
+      waterError: [
         {
           required: true,
           type: "number",
-          message: "请输入私有管道数量",
+          message: "请输入计量误差水量",
           trigger: "blur",
         },
       ],
-      //ICF因子
-      icfFactor: [
-        { required: true, type: "number", message: "请输入ICF因子", trigger: "blur" },
+      waterSeepage: [
+        { required: true, type: "number", message: "请输入渗水量", trigger: "blur" },
+      ],
+      waterOtherLoss: [
+        {
+          required: true,
+          type: "number",
+          message: "请输入其它漏损水量",
+          trigger: "blur",
+        },
       ],
     };
     this.formLayout = {
@@ -256,19 +278,6 @@ export default class FormView extends FormPageVue<CreateOrUpdateAreaItemDto, str
     await this.loadData();
   }
 
-  private treeNodeFilter(data: any) {
-    let list = data.map((item: any) => {
-      if (item.children.length === 0 || !item.children) {
-        delete item.children;
-        return item;
-      } else {
-        this.treeNodeFilter(item.children);
-        return item;
-      }
-    });
-    return list;
-  }
-
   /**
    * 加载数据
    */
@@ -276,16 +285,9 @@ export default class FormView extends FormPageVue<CreateOrUpdateAreaItemDto, str
     if (!this.isEdit) {
       return;
     }
-    // if (this.item) {
-    //   this.onItemChanged();
-
-    //   return;
-    // }
     api.get(this.id).then((res: any) => {
       this.loading = false;
       this.model = res;
-      this.noWater = res.noWater ? true : false;
-      this.enabledMark = res.enabledMark ? true : false;
     });
     this.loading = true;
   }
@@ -327,9 +329,10 @@ export default class FormView extends FormPageVue<CreateOrUpdateAreaItemDto, str
    * 修改
    */
   private submitUpdate() {
+    let id = (this.getModel as any).id
     this.submitLoading = true;
     api
-      .update(this.getModel.areaId, this.getModel)
+      .update(id, this.getModel)
       .then((res) => {
         this.submitLoading = false;
         this.$emit("input", false);
@@ -353,7 +356,7 @@ export default class FormView extends FormPageVue<CreateOrUpdateAreaItemDto, str
   }
   &-item {
     margin: 5px 20px;
-   .input-number{
+    .input-number {
       width: 100%;
     }
   }

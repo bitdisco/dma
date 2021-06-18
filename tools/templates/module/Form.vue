@@ -1,6 +1,6 @@
 <template>
   <cr-modal
-    :title="isEdit ? '添加' : '修改'"
+    :title="isEdit ? '修改' : '添加'"
     :width="800"
     :height="500"
     v-model="modalVisible"
