@@ -9,7 +9,7 @@
  * swagger文档接口地址
  */
 const swaggerUrls = {
-    material: "http://36.133.33.128:4001/swagger/v1/swagger.json",
+    dma: "http://36.133.33.128:4003/swagger/v1/swagger.json",
 };
 
 /**
@@ -29,7 +29,7 @@ const generateConfig = {
          * 指定生成控制器的集合（后端控制器名称）
          * 键值对格式，键名同swaggerUrls配置的键名称一致及
          */
-        includes: ['MaterialsCategory']
+        includes: []
     },
     /**
      * 要生成的VUE模块
@@ -44,14 +44,14 @@ const generateConfig = {
           * 指定生成控制器的集合（后端控制器名称）
           * 键值对格式，键名同swaggerUrls配置的键名称一致及
           */
-         includes: ['Allcation','MaterialsCategory']
+         includes: []
     }
 }
 
 /**
  * 枚举接口地址
  */
-const enumUrl = "http://36.133.33.128:4002/api/utils/enum";
+const enumUrl = "http://36.133.33.128:4003/api/utils/enum";
 
 
 /**
@@ -65,7 +65,7 @@ const dictionaryUrl = {
     /**
      * 要生成的模块名
      */
-    moduleName: 'Module.Charge'
+    moduleName: 'Module.DMA'
 };
 
 module.exports = {
