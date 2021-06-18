@@ -96,6 +96,7 @@ import AreaApi from "@/api/dma/generatorApis/area";
 import MonitorTree from "@/components/Tree/MonitorTree.vue";
 import AreaTree from "@/components/Tree/AreaTree.vue";
 import FormView from "./Form.vue";
+import moment from "moment";
 
 @Component<AreaStatisticalList>({
   name: "AreaStatisticalList",
@@ -249,10 +250,10 @@ export default class AreaStatisticalList extends ListPageVxe<any, string> {
         },
       },
       {
-        name: "mon",
+        name: "StatisticalDate",
         label: "统计月份",
         input: "a-month-picker",
-        props: { format: "YYYY-MM", valueFormat: "YYYYMM" },
+        props: { format: "YYYY-MM", valueFormat: "YYYY-MM" },
       },
     ];
   }
@@ -285,7 +286,7 @@ export default class AreaStatisticalList extends ListPageVxe<any, string> {
       },
       this.searchModel
     );
-    api.getPageList(queryModel).then((res) => {
+    api.getQueryList(queryModel).then((res) => {
       this.loading = false;
       this.dataSource = res.items;
       this.getPagination.total = res.totalCount;
@@ -296,17 +297,20 @@ export default class AreaStatisticalList extends ListPageVxe<any, string> {
 
   /*树点击事件*/
   private getTreeNode(val: any) {
+    this.dataSource = [];
     this.selecteTreeData = val;
-    console.log(this.selecteTreeData,"this.selecteTreeData")
     let area: any = val.area;
     if (area) {
-      this.searchModel.AreaName = area.areaName;
-      this.searchModel.AreaCode = area.areaCode;
-      this.searchModel.AreaGrade = area.areaGrade;
+      this.searchModel.AreaName = this.selecteTreeData.name;
+      this.searchModel.AreaCode = this.selecteTreeData.code;
     }
-     api.get(val.id).then((res:any) => {
+    api.getInfoByAreaIdAsync(this.selecteTreeData.id).then((res: any) => {
       this.loading = false;
-      this.dataSource = res.items;
+      if (res) {
+        this.dataSource?.push(res);
+      } else {
+        this.dataSource = [];
+      }
     });
   }
 

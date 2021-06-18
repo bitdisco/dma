@@ -22,7 +22,7 @@
               v-model="model.statisticalDate"
               style="width: 100%"
               format="YYYY-MM"
-              @change="monChange"
+              valueFormat="YYYY-MM"
             />
           </a-form-model-item>
           <a-form-model-item
@@ -201,12 +201,13 @@ export default class FormView extends FormPageVue<CreateOrUpdateAreaItemDto, str
 
   created() {
     this.model = {
-      enabledMark: false,
+      enabledMark: 0,
       sortCode: 0,
-      areaId: this.treeData.id,
-      areaCode: this.treeData.code,
-      areaName: this.treeData.name,
+      areaId: this.treeData?this.treeData.id:this.model.areaId,
+      areaCode: this.treeData?this.treeData.code:this.model.areaCode,
+      areaName: this.treeData?this.treeData.name:this.model.areaName,
     };
+
     this.rules = {
       statisticalDate: [{ required: true, message: "请选择统计日期", trigger: "change" }],
       description: [{ required: true, message: "请输入备注", trigger: "blur" }],
@@ -306,12 +307,7 @@ export default class FormView extends FormPageVue<CreateOrUpdateAreaItemDto, str
       }
     });
   }
-  /**
-   * 月份选择事件
-   */
-  private monChange(date: string, dateString: string) {
-    this.model.statisticalDate = dateString;
-  }
+
   /**
    * 添加
    */
@@ -333,9 +329,10 @@ export default class FormView extends FormPageVue<CreateOrUpdateAreaItemDto, str
    * 修改
    */
   private submitUpdate() {
+    let id = (this.getModel as any).id
     this.submitLoading = true;
     api
-      .update(this.getModel.areaId, this.getModel)
+      .update(id, this.getModel)
       .then((res) => {
         this.submitLoading = false;
         this.$emit("input", false);
