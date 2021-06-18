@@ -14,6 +14,11 @@
           :inputStyle="{ placeholder: '请输入关键词', style: { width: '150px' } }"
           @search="onSearch"
         >
+          <template slot="actions">
+            <a-button-group>
+              <a-button @click="queryList" icon="sync">刷新</a-button>
+            </a-button-group>
+          </template>
         </advanced-search-panel>
         <div class="compact-page-table">
           <vxe-table
@@ -56,7 +61,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { ToolbarActionItem, ListPageVxe } from "@cr/types";
-import api from "@/api/dma/generatorApis/armRealData";
+import api from "@/api/dma/generatorApis/leakageDay";
 import AreaApi from "@/api/dma/generatorApis/area";
 import MonitorTree from "@/components/Tree/MonitorTree.vue";
 import LineChart from "@/components/Charts/LineChart.vue";
@@ -131,12 +136,8 @@ export default class AreaStatisticalList extends ListPageVxe<any, string> {
         field: "supplyMax",
       },
       {
-        title: "最小瞬时流量（m³）",
-        field: "realValuemin",
-      },
-      {
         title: "最小夜间流量（m³）",
-        field: "waterFree",
+        field: "mnf",
       },
 
       {
@@ -145,7 +146,7 @@ export default class AreaStatisticalList extends ListPageVxe<any, string> {
       },
       {
         title: "统计日期",
-        field: "statisticalDate",
+        field: "createTime",
       },
     ];
     this.getPagination.pageSize = 10;
@@ -176,6 +177,7 @@ export default class AreaStatisticalList extends ListPageVxe<any, string> {
             近3个月: [moment().subtract(3, "months"), moment()],
           },
         },
+
         events: {
           change: (dates: any, dateStrings: any) => {
             let date: any = this.datedifference(dateStrings[0], dateStrings[1]);
@@ -211,20 +213,30 @@ export default class AreaStatisticalList extends ListPageVxe<any, string> {
    * 分页查询列表
    */
   private queryList() {
-    let queryModel = Object.assign(
-      {
-        MaxResultCount: this.getMaxResultCount,
-        SkipCount: this.getSkipCount,
-      },
-      this.searchModel
-    );
+    let queryModel = Object.assign({
+      MaxResultCount: this.getMaxResultCount,
+      SkipCount: this.getSkipCount,
+    });
+    Object.keys(this.searchModel).forEach((key) => {
+      let item = this.searchModel[key];
+      if (key == "chargeTime") {
+        queryModel.startTime = item[0];
+        queryModel.endTime = item[1];
+      } else {
+        queryModel[key] = item;
+      }
+    });
 
-    api.getQueryList(queryModel).then((res) => {
+    api.getNightFlow(queryModel).then((res) => {
       this.loading = false;
       this.dataSource = res.items;
       this.getPagination.total = res.totalCount;
+      let arr: Array<any> = [];
+      this.dataSource?.map((x: any) => {
+        arr.push(x.mnf);
+      });
       this.$nextTick(() => {
-        this.initCharts(this.xAxis, "");
+        this.initCharts(this.xAxis, arr);
       });
     });
     this.currentRow = null;
@@ -234,11 +246,8 @@ export default class AreaStatisticalList extends ListPageVxe<any, string> {
   /*树点击事件*/
   private getTreeNode(val: any) {
     this.selecteTreeData = val;
-    let area: any = val.area;
-    if (area) {
-      this.searchModel.AreaName = area.areaName;
-      this.searchModel.AreaCode = area.areaCode;
-      this.searchModel.AreaGrade = area.areaGrade;
+    if (val) {
+      this.searchModel.AreaId = val.id;
     }
     this.queryList();
   }
@@ -330,7 +339,7 @@ export default class AreaStatisticalList extends ListPageVxe<any, string> {
         {
           name: "最小夜间流量",
           type: "line",
-          data: [10, 11, 13, 11, 12, 12, 9],
+          data: data,
           markPoint: {
             data: [
               { type: "max", name: "最大值" },
