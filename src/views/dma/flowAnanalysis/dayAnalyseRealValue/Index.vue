@@ -341,6 +341,7 @@ export default class DayAnalyseRealValue extends ListPageVxe<
     let yArry: Array<any> = [];
     //可以选标题内容
     let name: string = "";
+    let newData: Array<any> = [];
     //处理表单显示数据
     chartsDatas.map((items: any) => {
       let data: Array<any> = [];
@@ -358,6 +359,7 @@ export default class DayAnalyseRealValue extends ListPageVxe<
         key === "sum" && delete items.sum;
         key === "_XID" && delete items._XID;
         data.push(items[key]);
+        newData.push(...items);
       });
       xArry = Object.keys(items) as any;
       yArry.push({
@@ -366,11 +368,20 @@ export default class DayAnalyseRealValue extends ListPageVxe<
         data,
       });
     });
+    console.log('newdata',newData);
     console.log(yArry);
     // this.chartsData = chartsDatas;
     if (xArry && yArry && this.chartsTitle) {
       this.initECharts(xArry, yArry);
     }
+  }
+
+  /**
+   * echarts数据处理
+   * */
+  private eChartsData(data:any){
+
+    // this.chartsData
   }
 
   /**
