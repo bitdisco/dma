@@ -14,6 +14,11 @@
           :inputStyle="{ placeholder: '请输入关键词', style: { width: '150px' } }"
           @search="onSearch"
         >
+          <template slot="actions">
+            <a-button-group>
+              <a-button @click="queryList" icon="sync">刷新</a-button>
+            </a-button-group>
+          </template>
         </advanced-search-panel>
         <div class="compact-page-table">
           <vxe-table
@@ -56,7 +61,7 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { ToolbarActionItem, ListPageVxe } from "@cr/types";
-import api from "@/api/dma/generatorApis/armRealData";
+import api from "@/api/dma/generatorApis/leakageDay";
 import AreaApi from "@/api/dma/generatorApis/area";
 import MonitorTree from "@/components/Tree/MonitorTree.vue";
 import LineChart from "@/components/Charts/LineChart.vue";
@@ -120,32 +125,58 @@ export default class AreaStatisticalList extends ListPageVxe<any, string> {
       {
         title: "分区名称",
         field: "areaName",
-        width: 160,
+        width: 120,
+      },
+      {
+        title: "进水流量（m³）",
+        field: "inFlow",
+        width: 120,
+      },
+      {
+        title: "出水流量（m³）",
+        field: "outFlow",
+        width: 120,
       },
       {
         title: "平均供水量（m³）",
         field: "supplyAvg",
+        width: 130,
       },
       {
         title: "最大供水量（m³）",
         field: "supplyMax",
-      },
-      {
-        title: "最小瞬时流量（m³）",
-        field: "realValuemin",
+        width: 130,
       },
       {
         title: "最小夜间流量（m³）",
-        field: "waterFree",
+        field: "mnf",
+        width: 150,
+      },
+      {
+        title: "背景漏水量（m³）",
+        field: "backgroundLeakage",
+        width: 130,
+      },
+      {
+        title: "破管漏水量（m³）",
+        field: "brokenlLeakage",
+        width: 130,
+      },
+      {
+        title: "漏失量（m³）",
+        field: "missValue",
+        width: 110,
       },
 
       {
         title: "漏损率（%）",
         field: "leakageRate",
+        width: 110,
       },
       {
         title: "统计日期",
-        field: "statisticalDate",
+        field: "createTime",
+        width: 130,
       },
     ];
     this.getPagination.pageSize = 10;
@@ -176,6 +207,7 @@ export default class AreaStatisticalList extends ListPageVxe<any, string> {
             近3个月: [moment().subtract(3, "months"), moment()],
           },
         },
+
         events: {
           change: (dates: any, dateStrings: any) => {
             let date: any = this.datedifference(dateStrings[0], dateStrings[1]);
@@ -211,20 +243,50 @@ export default class AreaStatisticalList extends ListPageVxe<any, string> {
    * 分页查询列表
    */
   private queryList() {
-    let queryModel = Object.assign(
-      {
-        MaxResultCount: this.getMaxResultCount,
-        SkipCount: this.getSkipCount,
-      },
-      this.searchModel
-    );
+    let queryModel = Object.assign({
+      MaxResultCount: this.getMaxResultCount,
+      SkipCount: this.getSkipCount,
+    });
+    Object.keys(this.searchModel).forEach((key) => {
+      let item = this.searchModel[key];
+      if (key == "chargeTime") {
+        queryModel.startTime = item[0];
+        queryModel.endTime = item[1];
+      } else {
+        queryModel[key] = item;
+      }
+    });
 
-    api.getQueryList(queryModel).then((res) => {
+    api.getPipeLeakage(queryModel).then((res) => {
       this.loading = false;
       this.dataSource = res.items;
       this.getPagination.total = res.totalCount;
+      let yData: any = {
+        inFlow: [],
+        outFlow: [],
+        missValue: [],
+        backgroundLeakage: [],
+        mnf: [],
+      };
+      if (this.dataSource?.length) {
+        this.dataSource?.map((x: any) => {
+          yData.inFlow.push(x.inFlow);
+          yData.outFlow.push(x.outFlow);
+          yData.missValue.push(x.missValue);
+          yData.backgroundLeakage.push(x.backgroundLeakage);
+          yData.mnf.push(x.mnf);
+        });
+      } else {
+        yData = {
+          inFlow: [],
+          outFlow: [],
+          missValue: [],
+          backgroundLeakage: [],
+          mnf: [],
+        };
+      }
       this.$nextTick(() => {
-        this.initCharts(this.xAxis, "");
+        this.initCharts(this.xAxis, yData);
       });
     });
     this.currentRow = null;
@@ -234,11 +296,9 @@ export default class AreaStatisticalList extends ListPageVxe<any, string> {
   /*树点击事件*/
   private getTreeNode(val: any) {
     this.selecteTreeData = val;
-    let area: any = val.area;
-    if (area) {
-      this.searchModel.AreaName = area.areaName;
-      this.searchModel.AreaCode = area.areaCode;
-      this.searchModel.AreaGrade = area.areaGrade;
+    console.log(val, "val");
+    if (val) {
+      this.searchModel.AreaId = val.id;
     }
     this.queryList();
   }
@@ -273,6 +333,7 @@ export default class AreaStatisticalList extends ListPageVxe<any, string> {
    * 初始化echarts
    * */
   private initCharts(xArry: any, data: any) {
+    console.log(data, "data");
     const options = {
       backgroundColor: "rgba(41,52,65,1)",
       title: {
@@ -285,7 +346,7 @@ export default class AreaStatisticalList extends ListPageVxe<any, string> {
         trigger: "axis",
       },
       legend: {
-        data: ["最小夜间流量"],
+        data: ["进水流量", "出水流量", "小时漏失率", "背景漏水量", "最小夜间流量"],
         textStyle: {
           color: "#ffffff",
         },
@@ -328,9 +389,9 @@ export default class AreaStatisticalList extends ListPageVxe<any, string> {
       },
       series: [
         {
-          name: "最小夜间流量",
+          name: "进水流量",
           type: "line",
-          data: [10, 11, 13, 11, 12, 12, 9],
+          data: data.inFlow,
           markPoint: {
             data: [
               { type: "max", name: "最大值" },
@@ -345,6 +406,94 @@ export default class AreaStatisticalList extends ListPageVxe<any, string> {
               color: "#DB6A65", //折线点的颜色
               lineStyle: {
                 color: "#DB6A65", //折线的颜色
+              },
+            },
+          },
+        },
+        {
+          name: "出水流量",
+          type: "line",
+          data: data.outFlow,
+          markPoint: {
+            data: [
+              { type: "max", name: "最大值" },
+              { type: "min", name: "最小值" },
+            ],
+          },
+          markLine: {
+            data: [{ type: "average", name: "平均值" }],
+          },
+          itemStyle: {
+            normal: {
+              color: "#80A9B0", //折线点的颜色
+              lineStyle: {
+                color: "#80A9B0", //折线的颜色
+              },
+            },
+          },
+        },
+        {
+          name: "小时漏失率",
+          type: "line",
+          data: data.missValue,
+          markPoint: {
+            data: [
+              { type: "max", name: "最大值" },
+              { type: "min", name: "最小值" },
+            ],
+          },
+          markLine: {
+            data: [{ type: "average", name: "平均值" }],
+          },
+          itemStyle: {
+            normal: {
+              color: "#f49f42", //折线点的颜色
+              lineStyle: {
+                color: "#f49f42", //折线的颜色
+              },
+            },
+          },
+        },
+        {
+          name: "背景漏水量",
+          type: "line",
+          data: data.backgroundLeakage,
+          markPoint: {
+            data: [
+              { type: "max", name: "最大值" },
+              { type: "min", name: "最小值" },
+            ],
+          },
+          markLine: {
+            data: [{ type: "average", name: "平均值" }],
+          },
+          itemStyle: {
+            normal: {
+              color: "#9b8bba", //折线点的颜色
+              lineStyle: {
+                color: "#9b8bba", //折线的颜色
+              },
+            },
+          },
+        },
+        {
+          name: "最小夜间流量",
+          type: "line",
+          data: data.mnf,
+          markPoint: {
+            data: [
+              { type: "max", name: "最大值" },
+              { type: "min", name: "最小值" },
+            ],
+          },
+          markLine: {
+            data: [{ type: "average", name: "平均值" }],
+          },
+          itemStyle: {
+            normal: {
+              color: "#cc70af", //折线点的颜色
+              lineStyle: {
+                color: "#cc70af", //折线的颜色
               },
             },
           },

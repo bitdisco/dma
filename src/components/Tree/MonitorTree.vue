@@ -269,7 +269,7 @@ export default class Tree extends Vue {
   /**
    * 树型节点点击事件
    */
-  private onSelect(info: any) {
+  private onSelect(selectedKeys: any, info: any) {
     this.$emit('getTreeNode' ,info.node.dataRef)
   }
 

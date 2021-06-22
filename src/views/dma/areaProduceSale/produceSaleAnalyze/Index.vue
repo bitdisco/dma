@@ -49,8 +49,7 @@
         </div>
 
         <div class="statistic-table">
-          <!-- <h1>4444</h1> -->
-          <WaterBalance />
+          <WaterBalance :tableData="tableData" />
         </div>
       </div>
     </div>
@@ -60,7 +59,8 @@
 <script lang="ts">
 import { Component, Vue } from "vue-property-decorator";
 import { ToolbarActionItem, ListPageVxe } from "@cr/types";
-import api from "@/api/dma/generatorApis/area";
+import api from "@/api/dma/generatorApis/areaItem";
+import AreaApi from "@/api/dma/generatorApis/area";
 import { AreaDto } from "@/api/dma/types";
 import moment from "moment";
 import WaterBalance from "./components/WaterBalanceTable.vue";
@@ -84,6 +84,7 @@ export default class AreaList extends ListPageVxe<AreaDto, string> {
   ];
 
   private treeData: any = [];
+  private tableData: Array<any> = [{}];
 
   /**
    * 组件创建时执行
@@ -169,7 +170,7 @@ export default class AreaList extends ListPageVxe<AreaDto, string> {
       this.searchModel
     );
 
-    api.getPageList(queryModel).then((res: any) => {
+    AreaApi.getPageList(queryModel).then((res: any) => {
       this.loading = false;
       this.dataSource = this.createDataSource(res.items) || [];
     });
@@ -197,20 +198,16 @@ export default class AreaList extends ListPageVxe<AreaDto, string> {
    */
   private onTableCellClick({ row }: any) {
     this.currentRow = row;
-  }
-
-  /**
-   * 删除选择项
-   */
-  private onDeleteItem(row: AreaDto) {
-    api.delete(row.id).then((res) => {
-      this.$message.success({ content: "删除成功~" });
-      this.queryList();
+    this.tableData = [{}];
+    api.getInfoByAreaIdAsync(row.id).then((res: any) => {
+      this.loading = false;
+      if (res) {
+        this.tableData=[res];
+      } else {
+        this.tableData = [{}];
+      }
     });
   }
-
-  /** 批量删除 */
-  private deleteSelectedItems() {}
 
   /**
    * 表格选择行事件

@@ -7,103 +7,102 @@
           <label id="areaname"></label>
           <br />
           分区供水总量<br />
-          <!-- <label>{{ item.supplyvalue }} m³(null%)</label> -->
-          <label>m³(null%)</label>
+          <label>{{ item.waterError?item.waterError:0 }} m³</label>
         </td>
         <td style="background-color: #73b9bc64" rowspan="4">
           有效供水量<br />
-          <label id="effective">null&nbsp;M<sup>3</sup>(null%)</label>
+          <label id="effective">{{ item.waterError?item.waterError:0  }} m³</label>
         </td>
         <td style="background-color: #91ca8c64" rowspan="2">
           售水量<br />
-          <label id="watersale1">null&nbsp;M<sup>3</sup>(null%)</label>
+          <label id="watersale1">{{ item.waterError?item.waterError:0  }} m³</label>
         </td>
         <td style="background-color: #91ca8c64">
           计量售水量 :
-          <label id="watersale">null&nbsp;M<sup>3</sup>(null%)</label>
+          <label id="watersale">{{ item.waterSale?item.waterSale:0  }} m³</label>
         </td>
         <td style="background-color: #91ca8c64" rowspan="2">
           售水量<br />
-          <label id="watersale2">null&nbsp;M<sup>3</sup>(null%)</label>
+          <label id="watersale2">{{ item.waterError?item.waterError:0 }} m³</label>
         </td>
       </tr>
       <tr>
         <td style="background-color: #91ca8c64">
           未计量售水量:
-          <label id="waterunsold">null&nbsp;M<sup>3</sup>(null%)</label>
+          <label id="waterunsold">{{ item.waterunSold?item.waterunSold:0 }} m³</label>
         </td>
       </tr>
       <tr>
         <td style="background-color: #ea7e5364" rowspan="2">
           免费售水量<br />
-          <label id="freewatersales">null&nbsp;M<sup>3</sup>(null%)</label>
+          <label id="freewatersales">{{ item.waterError?item.waterError:0 }} m³</label>
         </td>
         <td style="background-color: #ea7e5364">
           计量免费售水量:
-          <label id="waterfree">null&nbsp;M<sup>3</sup>(null%)</label>
+          <label id="waterfree">{{ item.waterFree?item.waterFree:0 }} m³</label>
         </td>
         <td style="background-color: #e69d8764" rowspan="8">
           产销差水量<br />
-          <label id="producesale">null&nbsp;M<sup>3</sup>(null%)</label>
+          <label id="producesale">{{ item.waterError?item.waterError:0 }} m³</label>
         </td>
       </tr>
       <tr>
         <td style="background-color: #ea7e5364">
           未计量免费售水量:
-          <label id="waterunsoldfree">null&nbsp;M<sup>3</sup>(null%)</label>
+          <label id="waterunsoldfree">{{ item.waterUnsoldFree?item.waterUnsoldFree:0 }} m³</label>
         </td>
       </tr>
       <tr>
         <td style="background-color: #dd6b6664" rowspan="6">
           无效供水量<br />
-          <label id="leaking">null&nbsp;M<sup>3</sup>(null%)</label>
+          <label id="leaking">{{ item.waterError?item.waterError:0 }} m³</label>
         </td>
         <td style="background-color: #e69d8764" rowspan="2">
           表观损失水量<br />
-          <label id="apparentleaking">null&nbsp;M<sup>3</sup>(null%)</label>
+          <label id="apparentleaking">{{ item.waterError?item.waterError:0 }} m³</label>
         </td>
         <td style="background-color: #e69d8764">
           失窃水量:
-          <label id="waterstolen">null&nbsp;M<sup>3</sup>(null%)</label>
+          <label id="waterstolen">{{ item.waterStolen?item.waterStolen:0 }} m³</label>
         </td>
       </tr>
       <tr>
         <td style="background-color: #e69d8764">
           计量误差水量:
-          <label id="watererror">null&nbsp;M<sup>3</sup>(null%)</label>
+          <label id="watererror">{{ item.waterError?item.waterError:0 }} m³</label>
         </td>
       </tr>
       <tr>
         <td style="background-color: #e69d8764" rowspan="3">
           管网漏失水量<br />
-          <label id="pipeleaking">null&nbsp;M<sup>3</sup>(null%)</label>
+          <label id="pipeleaking">{{ item.waterError?item.waterError:0 }} m³</label>
         </td>
         <td style="background-color: #e69d8764">
           爆管漏水量:
-          <label id="brokenlleakage">null&nbsp;M<sup>3</sup>(null%)</label>
+          <label id="brokenlleakage">{{ item.waterError?item.waterError:0 }} m³</label>
         </td>
       </tr>
       <tr>
         <td style="background-color: #e69d8764">
           背景漏失水量:
-          <label id="backgroundleakage">null&nbsp;M<sup>3</sup>(null%)</label>
+          <label id="backgroundleakage">{{ item.waterError?item.waterError:0 }} m³</label>
         </td>
       </tr>
       <tr>
         <td style="background-color: #e69d8764">
           水箱、水池的漏损水量及渗水量:
-          <label id="waterseepage">null&nbsp;M<sup>3</sup>(null%)</label>
+          <label id="waterseepage">{{ item.waterSeepage?item.waterSeepage:0 }} m³</label>
         </td>
       </tr>
       <tr>
         <td style="background-color: #e69d8764">
           其它漏损水量<br />
-          <label id="waterotherloss1">null&nbsp;M<sup>3</sup>(null%)</label>
+          <label id="waterotherloss1">{{ item.waterOtherLoss?item.waterOtherLoss:0 }} m³</label>
         </td>
         <td style="background-color: #e69d8764">
           未注册用户用水和用户拒查等<br />
           管理因素导致的损失水量<br />
-          <label id="waterotherloss">null&nbsp;M<sup>3</sup>(null%)</label>
+          <label id="waterotherloss">{{ item.waterError?item.waterSale:0 }} m³</label>
         </td>
       </tr>
     </table>
