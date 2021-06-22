@@ -5,76 +5,72 @@
         <ul class="data-list">
           <li>
             <p>
-              <span>总用户</span>
-              <em>{{ statsData.totalUser }}</em>
+              <em>{{ statsData.totalUser }} 个</em>
+              <span>监测点总量</span>
             </p>
             <img src="/img/home_icon_01.png"/>
           </li>
           <li>
             <p>
-              <span>模块数</span>
-              <em>{{ statsData.totalModule }}</em>
+              <em>{{ statsData.totalModule }} 个</em>
+              <span>DMA分区总量</span>
             </p>
             <img src="/img/home_icon_03.png"/>
           </li>
           <li>
             <p>
-              <span>组织机构</span>
               <em>{{ statsData.totalOrg }}</em>
+              <span>管网漏损率</span>
             </p>
             <img src="/img/home_icon_04.png"/>
           </li>
           <li>
             <p>
-              <span>角色数量</span>
-              <em>{{ statsData.totalRole }}</em>
+              <em>{{ statsData.totalRole }} %</em>
+              <span>产销差率</span>
+            </p>
+            <img src="/img/home_icon_02.png"/>
+          </li>
+        </ul>
+        <ul class="data-list">
+          <li>
+            <p>
+              <em>{{ statsData.totalUser }}  km³ </em>
+              <span>近30天分区供水量</span>
+            </p>
+            <img src="/img/home_icon_01.png"/>
+          </li>
+          <li>
+            <p>
+              <em>{{ statsData.totalModule }} km³</em>
+              <span>本月售水量</span>
+            </p>
+            <img src="/img/home_icon_03.png"/>
+          </li>
+          <li>
+            <p>
+              <em>{{ statsData.totalOrg }} km³</em>
+              <span>昨日供水总量</span>
+            </p>
+            <img src="/img/home_icon_04.png"/>
+          </li>
+          <li>
+            <p>
+              <em>{{ statsData.totalRole }} km³ </em>
+              <span>昨日预估漏水量</span>
             </p>
             <img src="/img/home_icon_02.png"/>
           </li>
         </ul>
         <div class="today-history">
           <div class="com-tit">
-            <h2>今日访问趋势</h2>
+            <h4>漏损分析图</h4>
           </div>
           <div class="chart-container">
             <area-chart ref="demoCharts" height="100%" width="100%"/>
           </div>
         </div>
-        <div class="news-list">
-          <div class="news-item">
-            <div class="com-tit">
-              <h2>最新公告</h2>
-              <a href>更多&gt;&gt;</a>
-            </div>
-            <ul>
-              <li
-                v-for="(item, index) in noticeItems"
-                :key="index"
-              >
-                <a>
-                  <em>{{ item.creationTime }}&nbsp;&nbsp;&nbsp;&nbsp;{{ item.title }}</em>
-                </a>
-              </li>
-            </ul>
-          </div>
-          <div class="news-item">
-            <div class="com-tit">
-              <h2>企业新闻</h2>
-              <a href>更多&gt;&gt;</a>
-            </div>
-            <ul>
-              <li
-                v-for="(item, index) in newsItems"
-                :key="index"
-              >
-                <a>
-                  <em>{{ item.creationTime }}&nbsp;&nbsp;&nbsp;&nbsp;{{ item.description }}</em>
-                </a>
-              </li>
-            </ul>
-          </div>
-        </div>
-        <div class="table-container"/>
+       
       </div>
       <div class="dashboard-R">
         <div class="weather">
@@ -373,11 +369,13 @@ ul {
 }
 
 .dashboard-L {
-  width: calc(100% - 320px);
+  width: calc(100% - 480px);
 }
 
 .dashboard-R {
-  width: 305px;
+  width: 465px;
+  height: 100%;
+
 }
 
 .com-tit {
@@ -387,7 +385,7 @@ ul {
   box-sizing: border-box;
   display: flex;
   justify-content: space-between;
-  line-height: 55px;
+  line-height: 35px;
 
   a {
     color: #1991ff;
@@ -398,9 +396,9 @@ ul {
     }
   }
 
-  h2 {
+  h4,h2 {
     color: #000;
-    font-size: 18px;
+    font-size: 15px;
     margin: 0;
 
     span {
@@ -418,7 +416,7 @@ ul {
   justify-content: space-between;
   list-style: none;
   margin: 0;
-  padding: 0;
+  padding: 0 0 10px 0;
 
   li {
     border-radius: 4px;
@@ -677,6 +675,6 @@ ul {
 .chart-container {
   position: relative;
   width: 100%;
-  height: 300px;
+  height: 450px;
 }
 </style>
