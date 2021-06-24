@@ -331,6 +331,7 @@ export default class DayAnalyseRealValue extends ListPageVxe<
    * 获取echarts数据
    * */
   private getChartData() {
+    console.log('dataSource',this.dataSource);
     if (!this.dataSource) {
       return false;
     }
@@ -341,25 +342,22 @@ export default class DayAnalyseRealValue extends ListPageVxe<
     let yArry: Array<any> = [];
     //可以选标题内容
     let name: string = "";
-    let newData: Array<any> = [];
+    //正则匹配信息
+    let patt1: any = /[1-4]/g;
     //处理表单显示数据
     chartsDatas.map((items: any) => {
       let data: Array<any> = [];
+      if(!items.createDate){
+        return false
+      }
       name = items.createDate;
       Object.keys(items).forEach((key) => {
-        key === "avg" && delete items.avg;
+        if(key.match(patt1)){
+          data.push(items[key]);
+        }
         if(items.createDate){
           key === "createDate" && this.chartsTitle.push(items.createDate);
         }
-        key === "createDate" && delete items.createDate;
-        key === "max" && delete items.max;
-        key === "maxDT" && delete items.maxDT;
-        key === "min" && delete items.min;
-        key === "minDT" && delete items.minDT;
-        key === "sum" && delete items.sum;
-        key === "_XID" && delete items._XID;
-        data.push(items[key]);
-        newData.push(...items);
       });
       xArry = Object.keys(items) as any;
       yArry.push({
@@ -368,8 +366,7 @@ export default class DayAnalyseRealValue extends ListPageVxe<
         data,
       });
     });
-    console.log('newdata',newData);
-    console.log(yArry);
+    console.log('yArry',yArry);
     // this.chartsData = chartsDatas;
     if (xArry && yArry && this.chartsTitle) {
       this.initECharts(xArry, yArry);
