@@ -311,6 +311,15 @@ export const oidcRoutes: RouteConfig[] = [
  */
 export const baseRoutes: RouteConfig[] = [
   {
+    path: "/test",
+    name: "test",
+    meta: {
+      allowAnonymous: true,
+      title: "测试",
+    },
+    component: () => import("@/layout/test/a/Index.vue"),
+  },
+  {
     path: "/login",
     name: "login",
     meta: {

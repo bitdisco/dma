@@ -1,12 +1,60 @@
 <template>
-<page-header-wrapper hide-title-bar><div class="dashboard-admin-container"><div class="dashboard-L"><ul class="data-list"><li><p><em>{{ statsData.totalUser }} 个</em><span>监测点总量</span></p><img src="/img/home_icon_01.png"></li><li><p><em>{{ statsData.totalModule }} 个</em><span>DMA分区总量</span></p><img src="/img/home_icon_03.png"></li><li><p><em>{{ statsData.totalOrg }}</em><span>管网漏损率</span></p><img src="/img/home_icon_04.png"></li><li><p><em>{{ statsData.totalRole }} %</em><span>产销差率</span></p><img src="/img/home_icon_02.png"></li></ul><ul class="data-list"><li><p><em>{{ statsData.totalUser }}  km³</em><span>近30天分区供水量</span></p><img src="/img/home_icon_01.png"></li><li><p><em>{{ statsData.totalModule }} km³</em><span>本月售水量</span></p><img src="/img/home_icon_03.png"></li><li><p><em>{{ statsData.totalOrg }} km³</em><span>昨日供水总量</span></p><img src="/img/home_icon_04.png"></li><li><p><em>{{ statsData.totalRole }} km³</em><span>昨日预估漏水量</span></p><img src="/img/home_icon_02.png"></li></ul><div class="today-history"><div class="com-tit"><h4>漏损分析图</h4></div><div class="chart-container"><area-chart ref="demoCharts" height="100%" width="100%"></area-chart></div></div></div><div class="dashboard-R"><div class="weather"><div class="map"><p><img src="/img/home_icon_05.png"><span>{{ weatherData.city }}</span></p><img v-if="weatherData.wea_img" :src="'/img/' + weatherData.wea_img + '.png'"></div><div class="temperature"><b>{{ weatherData.tem }}℃</b><small>{{ weatherData.wea }}</small></div><div class="detail"><p>{{ weatherData.tem2 }}~{{ weatherData.tem1 }}℃</p><p>{{ weatherData.win }}</p><em>{{ weatherData.air }} {{ weatherData.air_level }}</em></div></div><div class="nav-fast"><div class="com-tit"><h2>快捷导航</h2></div><ul><li v-for="(item, index) in modulesItems" :key="index" v-show="index<8"><router-link class="router" :to="item.url"><cr-icon class="icon-style" v-if="item.icon && item.icon.indexOf('cr-')===0" :name="item.icon"></cr-icon><a-icon class="icon-style" v-else-if="item.icon" :type="item.icon"></a-icon><p>{{ item.title }}</p></router-link></li></ul></div></div></div></page-header-wrapper></template>
+  <page-header-wrapper hide-title-bar>
+    <div class="dashboard-admin-container">
+
+
+      
+
+      <div class="dashboard-L">
+        <div class="today-history">
+          <div class="com-tit"><h4>漏损分析图</h4></div>
+          <div class="chart-container">
+            <area-chart
+              id="demoCharts"
+              ref="demoCharts"
+              height="100%"
+              width="100%"
+            ></area-chart>
+          </div>
+        </div>
+        <div class="today-history">
+          <div class="com-tit"><h4>饼状图</h4></div>
+          <div class="chart-container">
+            <area-chart
+              id="pieCharts"
+              ref="pieCharts"
+              height="100%"
+              width="100%"
+            ></area-chart>
+          </div>
+        </div>
+        
+        
+      </div>
+      <div class="dashboard-R">
+        <div class="boxall">
+          范德萨范德萨范德萨发的撒范德萨狗头人狗头人给他们为热情你感觉发多少国际男团让我哥
+          <div class="boxfoot"></div>
+        </div>
+        <div class="div1">
+          大多数范德萨发光时代丰东股份
+        </div>
+        <div class="div2"></div>
+        <div class="div3"></div>
+        <div class="partcomwithborder">
+          <div class="partcomwithbordersubcontent"></div>
+        </div>
+      </div>
+    </div>
+  </page-header-wrapper>
+</template>
 
 <script lang="ts">
-import {Component, Vue} from "vue-property-decorator";
+import { Component, Vue } from "vue-property-decorator";
 import AreaChart from "@/components/Charts/AreaChart.vue";
-import {weatherApi} from "@cr/utils";
-import {defaultBaseConfig} from "@/config";
-import {QuickNav} from "@/config/dashboard";
+import { weatherApi } from "@cr/utils";
+import { defaultBaseConfig } from "@/config";
+import { QuickNav } from "@/config/dashboard";
 import NewsApi from "@/api/platform/generatorApis/News";
 import StatApi from "@/api/platform/generatorApis/Stat";
 import QuartzTaskApi from "@/api/platform/generatorApis/QuartzTask";
@@ -47,7 +95,10 @@ export default class extends Vue {
     this.getQuartzTaskList();
     this.getNoticeItems();
   }
-
+  public mounted() {
+    this.pieInitCharts();
+    
+  }
   private get modulesItems() {
     return QuickNav;
   }
@@ -103,6 +154,7 @@ export default class extends Vue {
     };
     NewsApi.getStat(postModel).then((res: any) => {
       this.initCharts(res.xData, res.yData);
+      
     });
   }
 
@@ -143,7 +195,44 @@ export default class extends Vue {
         console.log(r);
       });
   }
-
+  private pieInitCharts() {
+    const options = {
+      title: {
+        text: "某站点用户访问来源",
+        subtext: "纯属虚构",
+        left: "center",
+      },
+      tooltip: {
+        trigger: "item",
+      },
+      legend: {
+        orient: "vertical",
+        left: "left",
+      },
+      series: [
+        {
+          name: "访问来源",
+          type: "pie",
+          radius: "50%",
+          data: [
+            { value: 1048, name: "搜索引擎" },
+            { value: 735, name: "直接访问" },
+            { value: 580, name: "邮件营销" },
+            { value: 484, name: "联盟广告" },
+            { value: 300, name: "视频广告" },
+          ],
+          emphasis: {
+            itemStyle: {
+              shadowBlur: 10,
+              shadowOffsetX: 0,
+              shadowColor: "rgba(0, 0, 0, 0.5)",
+            },
+          },
+        },
+      ],
+    };
+    (this.$refs.pieCharts as any).initChart(options);
+  }
   /**
    * 初始化echarts
    * */
@@ -260,7 +349,6 @@ ul {
 .dashboard-R {
   width: 465px;
   height: 100%;
-
 }
 
 .com-tit {
@@ -281,7 +369,8 @@ ul {
     }
   }
 
-  h4,h2 {
+  h4,
+  h2 {
     color: #000;
     font-size: 15px;
     margin: 0;
@@ -561,5 +650,120 @@ ul {
   position: relative;
   width: 100%;
   height: 450px;
+}
+.boxall {
+  border: 1px solid rgba(25, 186, 139, .17);
+  padding: 0rem .3rem .3rem; 
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.boxall:before,
+.boxall:after {
+  position: absolute;
+  width: 0.5rem;
+  height: 0.5rem;
+  content: "";
+  border-top: 2px solid #02a6b5;
+  top: 0;
+}
+
+.boxall:before,
+.boxfoot:before {
+  border-left: 2px solid #02a6b5;
+  left: 0;
+}
+
+.boxall:after,
+.boxfoot:after {
+  border-right: 2px solid #02a6b5;
+  right: 0;
+}
+
+.boxfoot {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  left: 0;
+}
+
+.boxfoot:before,
+.boxfoot:after {
+  position: absolute;
+  width: 0.5rem;
+  height: 0.5rem;
+  content: "";
+  border-bottom: 2px solid #02a6b5;
+  bottom: 0;
+}
+.div1{
+  // position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(to left, #f00, #f00) left top no-repeat,
+  linear-gradient(to bottom, #f00, #f00) left top no-repeat,
+  linear-gradient(to left, #f00, #f00) right top no-repeat,
+  linear-gradient(to bottom, #f00, #f00) right top no-repeat,
+  linear-gradient(to left, #f00, #f00) left bottom no-repeat,
+  linear-gradient(to bottom, #f00, #f00) left bottom no-repeat,
+  linear-gradient(to left, #f00, #f00) right bottom no-repeat,
+  linear-gradient(to left, #f00, #f00) right bottom no-repeat;
+  background-size: 1px 20px, 20px 1px, 1px 20px, 20px 1px;
+}
+.div2{
+  border: 1px red solid;
+  // position: absolute;
+  top: 20px;
+  left: 150px;
+  width: 100px;
+  height: 100px;
+  background: linear-gradient(to left, #f00, #f00) left top no-repeat,
+  linear-gradient(to bottom, #f00, #f00) left top no-repeat,
+  linear-gradient(to left, #f00, #f00) right top no-repeat,
+  linear-gradient(to bottom, #f00, #f00) right top no-repeat,
+  linear-gradient(to left, #f00, #f00) left bottom no-repeat,
+  linear-gradient(to bottom, #f00, #f00) left bottom no-repeat,
+  linear-gradient(to left, #f00, #f00) right bottom no-repeat,
+  linear-gradient(to left, #f00, #f00) right bottom no-repeat;
+  background-size: 2px 20px, 20px 2px, 2px 20px, 20px 2px;
+}
+.div3{
+
+  box-shadow: 0 0 2.5vw #237ad4 inset;
+  background: linear-gradient(#1359df, #1359df) left top,
+  linear-gradient(#1359df, #1359df) left top,
+  linear-gradient(#1359df, #1359df) right top,
+  linear-gradient(#1359df, #1359df) right top,
+  linear-gradient(#1359df, #1359df) left bottom,
+  linear-gradient(#1359df, #1359df) left bottom,
+  linear-gradient(#1359df, #1359df) right bottom,
+  linear-gradient(#1359df, #1359df) right bottom;
+  background-repeat: no-repeat;
+  background-size: 0.1vw 18vw, 1.5vw 0.1vw;
+
+}
+.partcomwithborder{
+  background:
+          linear-gradient(to bottom,#33cdfa 0px,#33cdfa 2px,transparent 3px,transparent 100%) left top no-repeat,
+          linear-gradient(to right,#33cdfa 0px,#33cdfa 2px,transparent 3px,transparent 100%) left top no-repeat,
+          linear-gradient(to bottom,#33cdfa 0px,#33cdfa 2px,transparent 3px,transparent 100%) right top no-repeat,
+          linear-gradient(to left,#33cdfa 0px,#33cdfa 2px,transparent 3px,transparent 100%) right top no-repeat,
+          linear-gradient(to top,#33cdfa 0px,#33cdfa 2px,transparent 3px,transparent 100%) left bottom no-repeat,
+          linear-gradient(to right,#33cdfa 0px,#33cdfa 2px,transparent 3px,transparent 100%) left bottom no-repeat,
+          linear-gradient(to top,#33cdfa 0px,#33cdfa 2px,transparent 3px,transparent 100%) right bottom no-repeat,
+          linear-gradient(to left,#33cdfa 0px,#33cdfa 2px,transparent 3px,transparent 100%) right bottom no-repeat;
+  background-size: 18px 18px;
+  padding: 2px;
+  width: 200px;
+  height: 200px;
+}
+.partcomwithbordersubcontent{
+  border: 1px solid #33cdfa;
+  background:#01356799;
+  width: 100%;
+  height: 100%;
+  padding: 10px;
 }
 </style>
